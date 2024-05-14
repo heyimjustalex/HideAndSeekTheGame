@@ -1,2 +1,18 @@
-Main.java
- Main
+AdministrationClient/Repositories/PlayerRepository.java
+ AdministrationClient.Repositories.PlayerRepository
+AdministrationClient/Schemas/PlayerAddRequest.java
+ AdministrationClient.Schemas.PlayerAddRequest
+AdministrationClient/Models/Player.java
+ AdministrationClient.Models.Player
+AdministrationClient/Main.java
+ AdministrationClient.Main
+AdministrationClient/Schemas/PlayerDeleteRequest.java
+ AdministrationClient.Schemas.PlayerDeleteRequest
+AdministrationClient/Services/PlayerService.java
+ AdministrationClient.Services.PlayerService
+AdministrationClient/Schemas/PlayerAddResponse.java
+ AdministrationClient.Schemas.PlayerAddResponse
+AdministrationClient/Schemas/PlayerDeleteResponse.java
+ AdministrationClient.Schemas.PlayerDeleteResponse
+AdministrationClient/Controllers/PlayerController.java
+ AdministrationClient.Controllers.PlayerController
