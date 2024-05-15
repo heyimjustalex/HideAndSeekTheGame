@@ -4,8 +4,8 @@ AdministrationClient/Schemas/PlayerAddRequest.java
  AdministrationClient.Schemas.PlayerAddRequest
 AdministrationClient/Models/Player.java
  AdministrationClient.Models.Player
-AdministrationClient/Main.java
- AdministrationClient.Main
+AdministrationClient/Controllers/PlayerController.java
+ AdministrationClient.Controllers.PlayerController
 AdministrationClient/Schemas/PlayerDeleteRequest.java
  AdministrationClient.Schemas.PlayerDeleteRequest
 AdministrationClient/Services/PlayerService.java
@@ -14,5 +14,17 @@ AdministrationClient/Schemas/PlayerAddResponse.java
  AdministrationClient.Schemas.PlayerAddResponse
 AdministrationClient/Schemas/PlayerDeleteResponse.java
  AdministrationClient.Schemas.PlayerDeleteResponse
-AdministrationClient/Controllers/PlayerController.java
- AdministrationClient.Controllers.PlayerController
+AdministrationClient/Main.java
+ AdministrationClient.Main
+Simulators/Simulator.java
+ Simulators.Simulator
+Simulators/MyBuffer.java
+ Simulators.MyBuffer
+Simulators/Measurement.java
+ Simulators.Measurement
+Simulators/Buffer.java
+ Simulators.Buffer
+Simulators/HRSimulator.java
+ Simulators.HRSimulator
+Simulators/Main.java
+ Simulators.Main
