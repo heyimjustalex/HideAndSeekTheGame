@@ -1,12 +1,10 @@
-package AdministrationClient.Controllers;
+package AdministrationServer.Controllers;
 
-import AdministrationClient.Models.Player;
-import AdministrationClient.Repositories.PlayerRepository;
-import AdministrationClient.Schemas.PlayerAddRequest;
-import AdministrationClient.Schemas.PlayerAddResponse;
-import AdministrationClient.Schemas.PlayerDeleteRequest;
-import AdministrationClient.Schemas.PlayerDeleteResponse;
-import AdministrationClient.Services.PlayerService;
+import AdministrationServer.Schemas.PlayerAddRequest;
+import AdministrationServer.Schemas.PlayerAddResponse;
+import AdministrationServer.Schemas.PlayerDeleteRequest;
+import AdministrationServer.Schemas.PlayerDeleteResponse;
+import AdministrationServer.Services.PlayerService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;

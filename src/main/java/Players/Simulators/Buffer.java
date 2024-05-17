@@ -1,4 +1,4 @@
-package Simulators;
+package Players.Simulators;
 
 import java.util.List;
 

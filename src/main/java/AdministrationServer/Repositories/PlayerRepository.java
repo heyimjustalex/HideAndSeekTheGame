@@ -1,5 +1,5 @@
-package AdministrationClient.Repositories;
-import AdministrationClient.Models.Player;
+package AdministrationServer.Repositories;
+import AdministrationServer.Models.Player;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -9,10 +9,6 @@ import java.util.List;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-
-
-
-
 
 public class PlayerRepository {
     @XmlElement(name="players")

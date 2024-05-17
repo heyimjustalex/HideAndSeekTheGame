@@ -1,7 +1,7 @@
-package AdministrationClient.Schemas;
+package AdministrationServer.Schemas;
 
 
-import AdministrationClient.Models.Player;
+import AdministrationServer.Models.Player;
 
 public class PlayerDeleteResponse {
 

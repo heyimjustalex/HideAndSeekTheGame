@@ -1,9 +1,12 @@
-package Simulators;
+package Players.SimulatorsImplementation;
+
+import Players.Simulators.Buffer;
+import Players.Simulators.Measurement;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyBuffer implements Buffer{
+public class MyBuffer implements Buffer {
 
     List<Measurement> measurements = new ArrayList<>();
     @Override

@@ -1,30 +1,32 @@
-AdministrationClient/Repositories/PlayerRepository.java
- AdministrationClient.Repositories.PlayerRepository
-AdministrationClient/Schemas/PlayerAddRequest.java
- AdministrationClient.Schemas.PlayerAddRequest
-AdministrationClient/Models/Player.java
- AdministrationClient.Models.Player
-AdministrationClient/Controllers/PlayerController.java
- AdministrationClient.Controllers.PlayerController
-AdministrationClient/Schemas/PlayerDeleteRequest.java
- AdministrationClient.Schemas.PlayerDeleteRequest
-AdministrationClient/Services/PlayerService.java
- AdministrationClient.Services.PlayerService
-AdministrationClient/Schemas/PlayerAddResponse.java
- AdministrationClient.Schemas.PlayerAddResponse
-AdministrationClient/Schemas/PlayerDeleteResponse.java
- AdministrationClient.Schemas.PlayerDeleteResponse
-AdministrationClient/Main.java
- AdministrationClient.Main
-Simulators/Simulator.java
- Simulators.Simulator
-Simulators/MyBuffer.java
- Simulators.MyBuffer
-Simulators/Measurement.java
- Simulators.Measurement
-Simulators/Buffer.java
- Simulators.Buffer
-Simulators/HRSimulator.java
- Simulators.HRSimulator
-Simulators/Main.java
- Simulators.Main
+AdministrationServer/Controllers/PlayerController.java
+ AdministrationServer.Controllers.PlayerController
+AdministrationServer/Models/Player.java
+ AdministrationServer.Models.Player
+AdministrationServer/Schemas/PlayerAddRequest.java
+ AdministrationServer.Schemas.PlayerAddRequest
+AdministrationServer/Schemas/PlayerDeleteRequest.java
+ AdministrationServer.Schemas.PlayerDeleteRequest
+AdministrationServer/Main.java
+ AdministrationServer.Main
+AdministrationServer/Schemas/PlayerDeleteResponse.java
+ AdministrationServer.Schemas.PlayerDeleteResponse
+AdministrationServer/Schemas/PlayerAddResponse.java
+ AdministrationServer.Schemas.PlayerAddResponse
+Players/Simulators/Measurement.java
+ Players.Simulators.Measurement
+Players/SimulatorsImplementation/MyBuffer.java
+ Players.SimulatorsImplementation.MyBuffer
+AdministrationServer/Repositories/PlayerRepository.java
+ AdministrationServer.Repositories.PlayerRepository
+Players/Simulators/Buffer.java
+ Players.Simulators.Buffer
+Players/SimulatorsImplementation/Main.java
+ Players.SimulatorsImplementation.Main
+Players/Simulators/Simulator.java
+ Players.Simulators.Simulator
+Players/Simulators/HRSimulator.java
+ Players.Simulators.HRSimulator
+AdministrationServer/Services/PlayerService.java
+ AdministrationServer.Services.PlayerService
+ AdministrationServer.Services.PlayerService$1
+ AdministrationServer.Services.PlayerService$BAR

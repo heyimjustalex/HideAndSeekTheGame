@@ -1,4 +1,4 @@
-package Simulators;
+package Players.Simulators;
 
 public class Measurement implements Comparable<Measurement> {
 

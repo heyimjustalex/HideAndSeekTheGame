@@ -1,4 +1,4 @@
-package AdministrationClient.Schemas;
+package AdministrationServer.Schemas;
 
 public class PlayerAddRequest {
 
