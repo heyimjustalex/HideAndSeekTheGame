@@ -1,5 +1,5 @@
-AdministrationServer/Controllers/PlayerController.java
- AdministrationServer.Controllers.PlayerController
+Players/Simulators/Simulator.java
+ Players.Simulators.Simulator
 AdministrationServer/Models/Player.java
  AdministrationServer.Models.Player
 AdministrationServer/Schemas/PlayerAddRequest.java
@@ -14,19 +14,31 @@ AdministrationServer/Schemas/PlayerAddResponse.java
  AdministrationServer.Schemas.PlayerAddResponse
 Players/Simulators/Measurement.java
  Players.Simulators.Measurement
-Players/SimulatorsImplementation/MyBuffer.java
- Players.SimulatorsImplementation.MyBuffer
+Players/Simulators/HRSimulator.java
+ Players.Simulators.HRSimulator
 AdministrationServer/Repositories/PlayerRepository.java
  AdministrationServer.Repositories.PlayerRepository
 Players/Simulators/Buffer.java
  Players.Simulators.Buffer
-Players/SimulatorsImplementation/Main.java
- Players.SimulatorsImplementation.Main
-Players/Simulators/Simulator.java
- Players.Simulators.Simulator
-Players/Simulators/HRSimulator.java
- Players.Simulators.HRSimulator
 AdministrationServer/Services/PlayerService.java
  AdministrationServer.Services.PlayerService
  AdministrationServer.Services.PlayerService$1
  AdministrationServer.Services.PlayerService$BAR
+AdministrationServer/Schemas/MeasurementAddResponse.java
+ AdministrationServer.Schemas.MeasurementAddResponse
+Players/SimulatorsImplementation/SharedAverageBuffer.java
+ Players.SimulatorsImplementation.SharedAverageBuffer
+AdministrationServer/Models/Measurement.java
+ AdministrationServer.Models.Measurement
+Players/SimulatorsImplementation/AverageComputer.java
+ Players.SimulatorsImplementation.AverageComputer
+Players/SimulatorsImplementation/SharedMeasurementBuffer.java
+ Players.SimulatorsImplementation.SharedMeasurementBuffer
+Players/SimulatorsImplementation/AverageSender.java
+ Players.SimulatorsImplementation.AverageSender
+Players/Main.java
+ Players.Main
+AdministrationServer/Schemas/MeasurementAddRequest.java
+ AdministrationServer.Schemas.MeasurementAddRequest
+AdministrationServer/Controllers/PlayerController.java
+ AdministrationServer.Controllers.PlayerController

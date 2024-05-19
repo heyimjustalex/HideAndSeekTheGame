@@ -1,13 +1,12 @@
 package AdministrationServer.Controllers;
 
-import AdministrationServer.Schemas.PlayerAddRequest;
-import AdministrationServer.Schemas.PlayerAddResponse;
-import AdministrationServer.Schemas.PlayerDeleteRequest;
-import AdministrationServer.Schemas.PlayerDeleteResponse;
+import AdministrationServer.Models.Measurement;
+import AdministrationServer.Schemas.*;
 import AdministrationServer.Services.PlayerService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("players")
 public class PlayerController {
@@ -45,6 +44,16 @@ public class PlayerController {
         }
         return Response.ok(playerDeleteResponse).status(Response.Status.NO_CONTENT).build();
     }
+    @Path("measurements")
+    @POST
+    @Consumes({"application/json", "application/xml"})
+    @Produces({"application/json", "application/xml"})
+    public Response addMeasurement(MeasurementAddRequest request) {
+        List<Measurement> measurements = request.getMeasurements();
+        System.out.println(measurements);
+        System.out.println(measurements.get(0).getValue());
 
+        return Response.ok().status(Response.Status.NO_CONTENT).build();
+    }
 
 }
