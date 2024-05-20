@@ -12,6 +12,7 @@ public class HRSimulator extends Simulator {
 
     //Use this constructor to initialize the HR simulator in your project
     public HRSimulator(Buffer buffer){
+
         this("HR-"+(ID++), buffer);
     }
 

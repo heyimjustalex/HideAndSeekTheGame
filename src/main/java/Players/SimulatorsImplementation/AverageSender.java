@@ -51,11 +51,14 @@ public class AverageSender implements Runnable{
         Map<String, List<Measurement>> map = new HashMap<>();
         map.put("measurements", averages);
 
+        System.out.println("MAP "+ averages);
+
         Gson gson = new GsonBuilder()
                 .serializeNulls()
                 .create();
 
         String json = gson.toJson(map);
+
         String endpointUrl = "http://localhost:1337/players/measurements"; // Replace with your endpoint URL
 
         Client client = Client.create();
@@ -64,7 +67,7 @@ public class AverageSender implements Runnable{
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON_TYPE)
                 .post(ClientResponse.class, json);
 
-        if (response.getStatus() == 200) {
+        if (response.getStatus() == 201) {
             System.out.println("Averages sent successfully.");
         } else {
             System.out.println("Failed to send averages. Status code: " + response.getStatus());

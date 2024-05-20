@@ -19,6 +19,7 @@ public class MeasurementAddRequest{
 
     }
     public MeasurementAddRequest(List<Measurement> measurements) {
+        this.measurements = measurements;
 
     }
 

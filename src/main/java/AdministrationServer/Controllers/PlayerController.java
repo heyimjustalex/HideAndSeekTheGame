@@ -1,18 +1,23 @@
 package AdministrationServer.Controllers;
 
 import AdministrationServer.Models.Measurement;
+import AdministrationServer.Repositories.MeasurementRepository;
 import AdministrationServer.Schemas.*;
+import AdministrationServer.Services.MeasurementService;
 import AdministrationServer.Services.PlayerService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.time.Instant;
 import java.util.List;
 
 @Path("players")
 public class PlayerController {
     private PlayerService playerService;
+    private MeasurementService measurementService;
     public PlayerController() {
         this.playerService = new PlayerService();
+        this.measurementService = new MeasurementService();
     }
 
     @Path("add")
@@ -48,12 +53,43 @@ public class PlayerController {
     @POST
     @Consumes({"application/json", "application/xml"})
     @Produces({"application/json", "application/xml"})
-    public Response addMeasurement(MeasurementAddRequest request) {
-        List<Measurement> measurements = request.getMeasurements();
-        System.out.println(measurements);
-        System.out.println(measurements.get(0).getValue());
+    public Response addMeasurements(MeasurementAddRequest request) {
+        MeasurementAddResponse measurementAddResponse = this.measurementService.addMeasurements(request);
+        System.out.println("REQUEST "+ request);
+        System.out.println("RESPONSE " + measurementAddResponse);
 
-        return Response.ok().status(Response.Status.NO_CONTENT).build();
+        return Response.ok(measurementAddResponse).status(Response.Status.CREATED).build();
     }
+
+    @Path("measurements")
+    @GET
+    @Consumes({"application/json", "application/xml"})
+    @Produces({"application/json", "application/xml"})
+    public Response getMeasurements(@QueryParam("t1") String t1, @QueryParam("t2") String t2) {
+        if (t1 == null || t2 == null) {
+        MeasurementGetResponse measurementGetResponse = this.measurementService.getMeasurements();
+        System.out.println(measurementGetResponse.getMeasurements());
+        return Response.ok(measurementGetResponse).status(Response.Status.OK).build();
+        }
+        else {
+            try{
+
+                MeasurementGetResponse measurementGetResponse = this.measurementService.getMeasurementsByTimestamp(t1,t2);
+                return Response.ok(measurementGetResponse).status(Response.Status.OK).build();
+            }
+            catch (Exception e)
+            {
+                System.out.println("BAD DATE FORMAT"+e.getMessage());
+                return Response.status(Response.Status.BAD_REQUEST).entity("{\"message\": \"Bad timestamp format!\"}").build();
+
+            }
+
+
+        }
+    }
+
+
+
+
 
 }

@@ -1,10 +1,11 @@
 package AdministrationServer.Schemas;
 
+import AdministrationServer.Models.Measurement;
 import AdministrationServer.Models.MeasurementConverted;
 
 import java.util.List;
 
-public class MeasurementAddResponse{
+public class MeasurementGetResponse {
     private List<MeasurementConverted> measurements;
 
     public List<MeasurementConverted> getMeasurements() {
@@ -15,13 +16,11 @@ public class MeasurementAddResponse{
         this.measurements = measurements;
     }
 
-    public MeasurementAddResponse() {
+    public MeasurementGetResponse() {
 
     }
-    public MeasurementAddResponse(List<MeasurementConverted> measurements) {
-
+    public MeasurementGetResponse(List<MeasurementConverted> measurements) {
         this.measurements = measurements;
-
     }
 
 

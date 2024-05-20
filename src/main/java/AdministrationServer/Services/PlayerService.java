@@ -100,9 +100,8 @@ public class PlayerService {
         }
 
     public synchronized PlayerAddResponse addPlayer(PlayerAddRequest playerAddRequest) {
-        Player existingPlayer = PlayerRepository.getInstance().getPlayerById(playerAddRequest.id);
+        Player existingPlayer = PlayerRepository.getInstance().getPlayerById(playerAddRequest.id.toLowerCase());
         if (existingPlayer != null) {
-
             return null;
         }
         Boolean hasTheSameCoordinatesAsOtherPlayer = true;
@@ -113,7 +112,7 @@ public class PlayerService {
             hasTheSameCoordinatesAsOtherPlayer = checkIfOtherPlayersHaveSameCoordinates(coordinates[0], coordinates[1]);
         }
 
-        PlayerRepository.getInstance().addPlayer(new Player(playerAddRequest.id, playerAddRequest.port,playerAddRequest.address,coordinates[0],coordinates[1] ));
+        PlayerRepository.getInstance().addPlayer(new Player(playerAddRequest.id.toLowerCase(), playerAddRequest.port,playerAddRequest.address,coordinates[0],coordinates[1] ));
         List<Player> players = PlayerRepository.getInstance().getPlayers();
         String message = "Player has been created";
 
@@ -122,7 +121,7 @@ public class PlayerService {
     }
 
     public synchronized PlayerDeleteResponse deletePlayer(PlayerDeleteRequest request) {
-        Player deletedPlayer = PlayerRepository.getInstance().deletePlayerById(request.id);
+        Player deletedPlayer = PlayerRepository.getInstance().deletePlayerById(request.id.toLowerCase());
 
         if (deletedPlayer != null) {
             String message = "Player has been deleted";

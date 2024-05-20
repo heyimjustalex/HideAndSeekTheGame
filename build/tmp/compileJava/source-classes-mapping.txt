@@ -14,31 +14,39 @@ AdministrationServer/Schemas/PlayerAddResponse.java
  AdministrationServer.Schemas.PlayerAddResponse
 Players/Simulators/Measurement.java
  Players.Simulators.Measurement
-Players/Simulators/HRSimulator.java
- Players.Simulators.HRSimulator
+Players/SimulatorsImplementation/SharedMeasurementBuffer.java
+ Players.SimulatorsImplementation.SharedMeasurementBuffer
 AdministrationServer/Repositories/PlayerRepository.java
  AdministrationServer.Repositories.PlayerRepository
 Players/Simulators/Buffer.java
  Players.Simulators.Buffer
-AdministrationServer/Services/PlayerService.java
- AdministrationServer.Services.PlayerService
- AdministrationServer.Services.PlayerService$1
- AdministrationServer.Services.PlayerService$BAR
-AdministrationServer/Schemas/MeasurementAddResponse.java
- AdministrationServer.Schemas.MeasurementAddResponse
+Players/SimulatorsImplementation/AverageComputer.java
+ Players.SimulatorsImplementation.AverageComputer
+Players/SimulatorsImplementation/AverageSender.java
+ Players.SimulatorsImplementation.AverageSender
 Players/SimulatorsImplementation/SharedAverageBuffer.java
  Players.SimulatorsImplementation.SharedAverageBuffer
 AdministrationServer/Models/Measurement.java
  AdministrationServer.Models.Measurement
-Players/SimulatorsImplementation/AverageComputer.java
- Players.SimulatorsImplementation.AverageComputer
-Players/SimulatorsImplementation/SharedMeasurementBuffer.java
- Players.SimulatorsImplementation.SharedMeasurementBuffer
-Players/SimulatorsImplementation/AverageSender.java
- Players.SimulatorsImplementation.AverageSender
 Players/Main.java
  Players.Main
+AdministrationServer/Services/PlayerService.java
+ AdministrationServer.Services.PlayerService
+ AdministrationServer.Services.PlayerService$1
+ AdministrationServer.Services.PlayerService$BAR
 AdministrationServer/Schemas/MeasurementAddRequest.java
  AdministrationServer.Schemas.MeasurementAddRequest
+Players/Simulators/HRSimulator.java
+ Players.Simulators.HRSimulator
+AdministrationServer/Schemas/MeasurementAddResponse.java
+ AdministrationServer.Schemas.MeasurementAddResponse
+AdministrationServer/Schemas/MeasurementGetResponse.java
+ AdministrationServer.Schemas.MeasurementGetResponse
+AdministrationServer/Models/MeasurementConverted.java
+ AdministrationServer.Models.MeasurementConverted
+AdministrationServer/Repositories/MeasurementRepository.java
+ AdministrationServer.Repositories.MeasurementRepository
+AdministrationServer/Services/MeasurementService.java
+ AdministrationServer.Services.MeasurementService
 AdministrationServer/Controllers/PlayerController.java
  AdministrationServer.Controllers.PlayerController

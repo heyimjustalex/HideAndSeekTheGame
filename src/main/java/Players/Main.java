@@ -19,7 +19,8 @@ public class Main {
 
         Buffer measurementBuffer = new SharedMeasurementBuffer();
         Buffer averageBuffer = new SharedAverageBuffer();
-        Simulator simulator = new HRSimulator(measurementBuffer);
+        Simulator simulator = new HRSimulator(playerId,measurementBuffer);
+
         Thread averageComputerThread = new Thread(new AverageComputer(measurementBuffer,averageBuffer,playerId));
         Thread averageSenderThread = new Thread(new AverageSender(measurementBuffer,playerId));
 
