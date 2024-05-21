@@ -1,6 +1,4 @@
 package AdministrationServer.Services;
-
-import AdministrationServer.Models.Measurement;
 import AdministrationServer.Models.MeasurementConverted;
 import AdministrationServer.Repositories.MeasurementRepository;
 import AdministrationServer.Schemas.MeasurementAddRequest;
@@ -8,24 +6,19 @@ import AdministrationServer.Schemas.MeasurementAddResponse;
 import AdministrationServer.Schemas.MeasurementGetResponse;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class MeasurementService {
 
-    public MeasurementAddResponse addMeasurements(MeasurementAddRequest request){
-
+    public MeasurementAddResponse addMeasurements(MeasurementAddRequest request)
+    {
         List<MeasurementConverted> allMeasurements = MeasurementRepository.getInstance().addMeasurements(request.getMeasurements());
-
         return new MeasurementAddResponse(allMeasurements);
-
     }
     public MeasurementGetResponse getMeasurements(){
-
         List<MeasurementConverted> allMeasurements = MeasurementRepository.getInstance().getMeasurements();
-        System.out.println("RETR MEASUREMETNS "+ allMeasurements);
-
+        System.out.println("MeasurementService: Retrieving measurements data: "+ allMeasurements);
         return new MeasurementGetResponse(allMeasurements);
 
     }
@@ -34,16 +27,23 @@ public class MeasurementService {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy:MM:dd:HH:mm:ss:SSS", Locale.ITALY);
 
-            LocalDateTime t1Converted = LocalDateTime.parse(t1,formatter);
-            LocalDateTime t2Converted = LocalDateTime.parse(t2,formatter);
+        LocalDateTime t1Converted = LocalDateTime.parse(t1,formatter);
+        LocalDateTime t2Converted = LocalDateTime.parse(t2,formatter);
 
 
-        System.out.println(t1Converted);
-        System.out.println(t2Converted);
+        System.out.println("MeasurementService: Retrieving measurements data from t1: "+t1Converted+" to t2: " +t2Converted);
 
         List<MeasurementConverted> allMeasurements = MeasurementRepository.getInstance().getMeasurementsByTimestamp(t1Converted,t2Converted);
-        System.out.println("RETR MEASUREMETNS "+ allMeasurements);
-//        return new MeasurementGetResponse();
+        System.out.println("MeasurementService: Retrieved data from t1 to t2: "+ allMeasurements);
+
+        return new MeasurementGetResponse(allMeasurements);
+
+    }
+
+    public MeasurementGetResponse getNMeasurementsByClientId(String clientId, Integer n){
+        List<MeasurementConverted> allMeasurements = MeasurementRepository.getInstance().getNMeasurementsByClientId(clientId,n);
+        System.out.println("MeasurementService: Retrieved "+n+" average data samples from "+clientId+" "+allMeasurements);
+
         return new MeasurementGetResponse(allMeasurements);
 
     }

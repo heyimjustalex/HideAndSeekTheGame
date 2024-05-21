@@ -13,7 +13,6 @@ import java.util.List;
 public class PlayerRepository {
     @XmlElement(name="players")
     private List<Player> players;
-
     private static PlayerRepository instance;
 
     private PlayerRepository(){

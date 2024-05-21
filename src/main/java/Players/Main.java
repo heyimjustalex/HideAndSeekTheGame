@@ -22,7 +22,7 @@ public class Main {
         Simulator simulator = new HRSimulator(playerId,measurementBuffer);
 
         Thread averageComputerThread = new Thread(new AverageComputer(measurementBuffer,averageBuffer,playerId));
-        Thread averageSenderThread = new Thread(new AverageSender(measurementBuffer,playerId));
+        Thread averageSenderThread = new Thread(new AverageSender(measurementBuffer));
 
         averageSenderThread.start();
 

@@ -22,12 +22,11 @@ import javax.ws.rs.core.MediaType;
 public class AverageSender implements Runnable{
 
     private Buffer averageBuffer;
-    private String playerId;
-    private Client jerseyClient;
-    private Gson gson;
-    public AverageSender(Buffer averageBuffer, String playerId){
+
+
+    public AverageSender(Buffer averageBuffer){
         this.averageBuffer = averageBuffer;
-        this.playerId = playerId;
+
     }
 
     @Override
@@ -61,6 +60,9 @@ public class AverageSender implements Runnable{
 
         String endpointUrl = "http://localhost:1337/players/measurements"; // Replace with your endpoint URL
 
+        try{
+
+
         Client client = Client.create();
         WebResource webResource = client.resource(endpointUrl);
 
@@ -73,6 +75,10 @@ public class AverageSender implements Runnable{
             System.out.println("Failed to send averages. Status code: " + response.getStatus());
         }
 
-        response.close();
+        response.close();}
+        catch (Exception e)
+        {
+            System.out.println("Administration Server is unavailable "+e);
+        }
     }}
 

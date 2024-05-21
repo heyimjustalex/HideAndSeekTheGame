@@ -58,7 +58,7 @@ public class MeasurementRepository {
             {
                 outputCollection.add(measurement);
             }
-            if (iterator>=n){
+            if (iterator>=n-1){
                 break;
             }
             iterator++;

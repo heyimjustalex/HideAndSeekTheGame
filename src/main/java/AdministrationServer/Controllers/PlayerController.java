@@ -65,30 +65,32 @@ public class PlayerController {
     @GET
     @Consumes({"application/json", "application/xml"})
     @Produces({"application/json", "application/xml"})
-    public Response getMeasurements(@QueryParam("t1") String t1, @QueryParam("t2") String t2) {
-        if (t1 == null || t2 == null) {
-        MeasurementGetResponse measurementGetResponse = this.measurementService.getMeasurements();
-        System.out.println(measurementGetResponse.getMeasurements());
-        return Response.ok(measurementGetResponse).status(Response.Status.OK).build();
-        }
-        else {
-            try{
-
-                MeasurementGetResponse measurementGetResponse = this.measurementService.getMeasurementsByTimestamp(t1,t2);
+    public Response getMeasurements(@QueryParam("t1") String t1, @QueryParam("t2") String t2, @QueryParam("n") Integer n, @QueryParam("clientId") String clientId) {
+        try {
+            // Case 1: Retrieve by specifying timestamps t1 and t2
+            if (t1 != null && t2 != null && n==null && clientId==null) {
+                MeasurementGetResponse measurementGetResponse = this.measurementService.getMeasurementsByTimestamp(t1, t2);
                 return Response.ok(measurementGetResponse).status(Response.Status.OK).build();
             }
-            catch (Exception e)
-            {
-                System.out.println("BAD DATE FORMAT"+e.getMessage());
-                return Response.status(Response.Status.BAD_REQUEST).entity("{\"message\": \"Bad timestamp format!\"}").build();
-
+            // Case 2: Retrieve by n and clientId
+            else if (n != null && clientId != null && t1==null && t2==null) {
+                MeasurementGetResponse measurementGetResponse = this.measurementService.getNMeasurementsByClientId(clientId, n);
+                return Response.ok(measurementGetResponse).status(Response.Status.OK).build();
             }
-
-
+            // Case 3: Retrieve all measurements
+            else if (t1 == null && t2 == null && n == null && clientId == null) {
+                MeasurementGetResponse measurementGetResponse = this.measurementService.getMeasurements();
+                return Response.ok(measurementGetResponse).status(Response.Status.OK).build();
+            }
+            // If none of the valid cases are met, return bad request
+            else {
+                return Response.status(Response.Status.BAD_REQUEST).entity("{\"message\": \"Invalid query parameters!\"}").build();
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity("{\"message\": \"Bad request format!\"}").build();
         }
     }
-
-
 
 
 

@@ -24,7 +24,7 @@ public class AverageComputer implements Runnable{
 
             OptionalDouble averageOrNone = measurements.stream().mapToDouble(Measurement::getValue).average();
             Double average = averageOrNone.isPresent() ? averageOrNone.getAsDouble() : 0;
-            Measurement computedAverageMeasurement = new Measurement(playerId,"avg",average,System.currentTimeMillis());
+            Measurement computedAverageMeasurement = new Measurement(playerId,"HR",average,System.currentTimeMillis());
             this.averagesBuffer.addMeasurement(computedAverageMeasurement);
             System.out.println("CURR TIME " +System.currentTimeMillis());
             System.out.println("CALCULATED AVG "+average);
