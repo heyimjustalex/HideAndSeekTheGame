@@ -2,10 +2,7 @@ package AdministrationServer.Services;
 
 import AdministrationServer.Models.Player;
 import AdministrationServer.Repositories.PlayerRepository;
-import AdministrationServer.Schemas.PlayerAddRequest;
-import AdministrationServer.Schemas.PlayerAddResponse;
-import AdministrationServer.Schemas.PlayerDeleteRequest;
-import AdministrationServer.Schemas.PlayerDeleteResponse;
+import AdministrationServer.Schemas.*;
 
 import java.util.List;
 import java.util.Random;
@@ -100,7 +97,7 @@ public class PlayerService {
         }
 
     public synchronized PlayerAddResponse addPlayer(PlayerAddRequest playerAddRequest) {
-        Player existingPlayer = PlayerRepository.getInstance().getPlayerById(playerAddRequest.id.toLowerCase());
+         Player existingPlayer = PlayerRepository.getInstance().getPlayerById(playerAddRequest.id.toLowerCase());
         if (existingPlayer != null) {
             return null;
         }
@@ -119,8 +116,13 @@ public class PlayerService {
         return new PlayerAddResponse(players, message);
 
     }
+    public PlayersGetResponse getPlayers() {
+        List<Player> players = PlayerRepository.getInstance().getPlayers();
+        return new PlayersGetResponse(players);
 
-    public synchronized PlayerDeleteResponse deletePlayer(PlayerDeleteRequest request) {
+    }
+
+    public PlayerDeleteResponse deletePlayer(PlayerDeleteRequest request) {
         Player deletedPlayer = PlayerRepository.getInstance().deletePlayerById(request.id.toLowerCase());
 
         if (deletedPlayer != null) {

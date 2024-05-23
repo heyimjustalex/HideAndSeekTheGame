@@ -1,4 +1,4 @@
-package AdministrationServer.Models;
+package AdministrationClient.Models;
 public class Player {
     String id;
     Integer port;
@@ -44,6 +44,11 @@ public class Player {
     }
     public void setPos_y(Integer pos_y) {
         this.pos_y = pos_y;
+    }
+
+    @Override
+    public String toString() {
+        return "Player{id:'" + id + "', port:'" + port + "', address:'" + address +"', pos_x:'"+pos_x +"', pos_y:'"+pos_y+"'"+ '}';
     }
 
 }

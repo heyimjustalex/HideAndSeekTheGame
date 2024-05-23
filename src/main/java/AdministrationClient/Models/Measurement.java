@@ -1,14 +1,11 @@
-package AdministrationServer.Models;
-
+package AdministrationClient.Models;
 public class Measurement {
-
     private String id;
     private String type;
     private double value;
-    private long timestamp;
+    private String timestamp;
     public Measurement(){}
-
-    public Measurement(String id, String type, double value, long timestamp) {
+    public Measurement(String id, String type, double value, String  timestamp) {
         this.value = value;
         this.timestamp = timestamp;
         this.id=id;
@@ -23,11 +20,11 @@ public class Measurement {
         this.value = value;
     }
 
-    public long getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(long timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -45,6 +42,11 @@ public class Measurement {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "Measurement{id:'" + id + "', type:'" + type + "', timestamp:'" + timestamp +"', value:'"+value+ '}';
     }
 
 }

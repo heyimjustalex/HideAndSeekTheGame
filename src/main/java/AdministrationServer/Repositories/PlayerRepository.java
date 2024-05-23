@@ -23,10 +23,10 @@ public class PlayerRepository {
             instance = new PlayerRepository();
         return instance;
     }
-    public List<Player> getPlayers(){
-        return this.players;
+    public synchronized List<Player> getPlayers(){
+        return new ArrayList<>(this.players);
     }
-    public Player addPlayer(Player player){
+    public synchronized Player addPlayer(Player player){
         this.players.add(player);
         return player;
     }

@@ -1,4 +1,4 @@
-package Players.Simulators;
+package Players.Smartwatch.Simulators;
 
 public class Measurement implements Comparable<Measurement> {
 

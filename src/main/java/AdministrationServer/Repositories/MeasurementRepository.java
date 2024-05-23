@@ -33,8 +33,8 @@ public class MeasurementRepository {
             instance = new MeasurementRepository();
         return instance;
     }
-    public List<MeasurementConverted> getMeasurements(){
-        return this.measurements;
+    public synchronized List<MeasurementConverted> getMeasurements(){
+        return new ArrayList<>(this.measurements);
     }
 
     public synchronized  List<MeasurementConverted> addMeasurements(List<Measurement> newMeasurements){
@@ -66,7 +66,7 @@ public class MeasurementRepository {
         return outputCollection;
     }
 
-    public List<MeasurementConverted> getMeasurementsByTimestamp(LocalDateTime timestampT1, LocalDateTime timestampT2){
+    public  List<MeasurementConverted> getMeasurementsByTimestamp(LocalDateTime timestampT1, LocalDateTime timestampT2){
         List<MeasurementConverted> measurementsCopy = getMeasurements();
         List<MeasurementConverted> outputCollection = new ArrayList<>();
 

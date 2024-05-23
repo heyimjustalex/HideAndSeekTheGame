@@ -1,89 +1,65 @@
-package Players;
-
-import Players.Simulators.Buffer;
-import Players.Simulators.HRSimulator;
-import Players.Simulators.Measurement;
-import Players.Simulators.Simulator;
-import Players.SimulatorsImplementation.AverageComputer;
-import Players.SimulatorsImplementation.AverageSender;
-import Players.SimulatorsImplementation.SharedAverageBuffer;
-import Players.SimulatorsImplementation.SharedMeasurementBuffer;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-
-import javax.ws.rs.core.MediaType;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+package AdministrationClient;
+import AdministrationClient.Utilities.HTTPUtilities;
 import java.util.Scanner;
-
 public class Main {
-
-    public static  boolean sendPlayerAddRequest(String playerId, String port, String address, String endpointUrl) {
-        Map<String, String> map = new HashMap<>();
-        map.put("id", playerId);
-        map.put("port",port);
-        map.put("address",address);
-
-        Gson gson = new GsonBuilder()
-                .serializeNulls()
-                .create();
-
-        String json = gson.toJson(map);
-
-        try{
-            Client client = Client.create();
-            WebResource webResource = client.resource(endpointUrl);
-
-            ClientResponse response = webResource.type(MediaType.APPLICATION_JSON_TYPE)
-                    .post(ClientResponse.class, json);
-
-            if (response.getStatus() == 201) {
-                System.out.println("Player added successfully.");
-                return true;
-            } else {
-                System.out.println("Player adding failed: player exists: " + response.getStatus());
-            }
-
-            response.close();}
-        catch (Exception e)
-        {
-            System.out.println("Administration Server is unavailable "+e);
-        }
-        return false;
-    }
-
     public static void main(String[] args) throws InterruptedException {
-        String playerId="";
-        String endpointUrlAddPlayers = "http://localhost:1337/players/add";
-        boolean playerWasAdded = false;
-        while (!playerWasAdded){
+        String endpointUrl = "http://localhost:1337/";
+        while (true){
             Scanner scanner = new Scanner(System.in);
-            System.out.println("Enter playerId");
-            playerId = scanner.nextLine();
-            String port = "2222";
-            String address="localhost";
-           playerWasAdded= sendPlayerAddRequest(playerId,port,address,endpointUrlAddPlayers);
+            System.out.println("Choose option: ");
+            System.out.println("1. GET the list of the players currently in the game");
+            System.out.println("2. GET The average of the last n heart rate values sent to the server by a given player");
+            System.out.println("3. GET The average of the heart rate values sent by all the Players to the server that occurred between timestamp t1 and timestamp t2");
+            System.out.println("4. SEND Custom text messages to all players");
+            System.out.println("5. Start game");
+            String option = scanner.nextLine();
+
+            switch (option){
+                case "1":
+                    HTTPUtilities.httpGetPlayers(endpointUrl+"players");
+                    break;
+
+                case "2":
+                    System.out.println("Give me playerId: ");
+                    String playerId = scanner.nextLine();
+                    System.out.println("Give me N: ");
+                    String n = scanner.nextLine();
+                    HTTPUtilities.httpGetNMeasurementsByPlayerId(endpointUrl+"players/measurements",playerId,n);
+                    break;
+
+                case "3":
+                    System.out.println("Give me t1 in the format: yyyy:mm:dd:hh:mm:ss:sss ");
+                    String t1 = scanner.nextLine();
+                    System.out.println("Give me t2 in the format: yyyy:mm:dd:hh:mm:ss:sss ");
+                    String t2 = scanner.nextLine();
+                    HTTPUtilities.httpGetNMeasurementsByTimestamps(endpointUrl+"players/measurements",t1,t2);
+                    break;
+
+                case "4":
+                    System.out.println("Specify message type");
+                    String messageType = scanner.nextLine();
+                    System.out.println("Specify message value");
+                    String messageValue = scanner.nextLine();
+
+                    try{
+                        HTTPUtilities.broadcastMqttMessage(messageType,messageValue,false);
+                    }
+                    catch (Exception e){
+                        System.out.println(e);
+                    }
+                    break;
+
+                case "5":
+                    try{
+                        HTTPUtilities.broadcastMqttMessage("gameState","started",false);
+                    }
+                    catch (Exception e){
+                        System.out.println(e);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
-
-        Buffer measurementBuffer = new SharedMeasurementBuffer();
-        Buffer averageBuffer = new SharedAverageBuffer();
-        Simulator simulator = new HRSimulator(playerId,measurementBuffer);
-
-        Thread averageComputerThread = new Thread(new AverageComputer(measurementBuffer,averageBuffer,playerId));
-        Thread averageSenderThread = new Thread(new AverageSender(measurementBuffer));
-
-        averageSenderThread.start();
-
-        averageComputerThread.start();
-        simulator.start();
-
-        averageComputerThread.join();
-        simulator.join();
-
-
     }
 }

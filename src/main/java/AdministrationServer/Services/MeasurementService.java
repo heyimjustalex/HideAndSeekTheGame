@@ -40,9 +40,9 @@ public class MeasurementService {
 
     }
 
-    public MeasurementGetResponse getNMeasurementsByClientId(String clientId, Integer n){
-        List<MeasurementConverted> allMeasurements = MeasurementRepository.getInstance().getNMeasurementsByClientId(clientId,n);
-        System.out.println("MeasurementService: Retrieved "+n+" average data samples from "+clientId+" "+allMeasurements);
+    public MeasurementGetResponse getNMeasurementsByPlayerId(String playerId, Integer n){
+        List<MeasurementConverted> allMeasurements = MeasurementRepository.getInstance().getNMeasurementsByClientId(playerId,n);
+        System.out.println("MeasurementService: Retrieved "+n+" average data samples from "+playerId+" "+allMeasurements);
 
         return new MeasurementGetResponse(allMeasurements);
 

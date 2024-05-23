@@ -1,17 +1,14 @@
-package Players.SimulatorsImplementation;
+package Players.Smartwatch.SimulatorsImplementation;
 
-import Players.Simulators.Buffer;
-import Players.Simulators.Measurement;
+import Players.Smartwatch.Simulators.Buffer;
+import Players.Smartwatch.Simulators.Measurement;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,15 +17,10 @@ import javax.ws.rs.core.MediaType;
 
 
 public class AverageSender implements Runnable{
-
     private Buffer averageBuffer;
-
-
     public AverageSender(Buffer averageBuffer){
         this.averageBuffer = averageBuffer;
-
     }
-
     @Override
     public void run() {
         while (true) {
@@ -39,7 +31,7 @@ public class AverageSender implements Runnable{
             }
             List<Measurement> averages = averageBuffer.readAllAndClean();
             if (!averages.isEmpty()) {
-                System.out.println("SENDING"+ averages);
+                System.out.println("Average sender: Sending the computed averages: "+ averages);
                 sendAverages(averages);
             }
 
@@ -49,8 +41,6 @@ public class AverageSender implements Runnable{
     private void sendAverages(List<Measurement> averages) {
         Map<String, List<Measurement>> map = new HashMap<>();
         map.put("measurements", averages);
-
-        System.out.println("MAP "+ averages);
 
         Gson gson = new GsonBuilder()
                 .serializeNulls()
@@ -70,15 +60,15 @@ public class AverageSender implements Runnable{
                 .post(ClientResponse.class, json);
 
         if (response.getStatus() == 201) {
-            System.out.println("Averages sent successfully.");
+            System.out.println("Average sender: Averages sent successfully.");
         } else {
-            System.out.println("Failed to send averages. Status code: " + response.getStatus());
+            System.out.println("Average sender: Failed to send averages. Status code: " + response.getStatus());
         }
 
         response.close();}
         catch (Exception e)
         {
-            System.out.println("Administration Server is unavailable "+e);
+            System.out.println("Average sender: Administration Server is unavailable "+e);
         }
     }}
 

@@ -1,4 +1,4 @@
-package Players.Simulators;
+package Players.Smartwatch.Simulators;
 
 public class HRSimulator extends Simulator {
 
@@ -26,8 +26,7 @@ public class HRSimulator extends Simulator {
 
             double hr = getHRValue(i);
             addMeasurement(hr);
-
-            System.out.println("HR value: "+hr);
+            System.out.println("HRSimulator: Added simulated measurement value: "+hr);
 
             waitingTime = 2000;
             sensorSleep(waitingTime);

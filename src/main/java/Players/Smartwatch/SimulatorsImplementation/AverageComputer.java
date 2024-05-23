@@ -1,13 +1,12 @@
-package Players.SimulatorsImplementation;
+package Players.Smartwatch.SimulatorsImplementation;
 
-import Players.Simulators.Buffer;
-import Players.Simulators.Measurement;
+import Players.Smartwatch.Simulators.Buffer;
+import Players.Smartwatch.Simulators.Measurement;
 
 import java.util.List;
 import java.util.OptionalDouble;
 
 public class AverageComputer implements Runnable{
-
     private Buffer measureamentsBuffer;
     private Buffer averagesBuffer;
     private String playerId;
@@ -19,19 +18,14 @@ public class AverageComputer implements Runnable{
     @Override
     public void run() {
         while (true){
-
             List<Measurement> measurements = measureamentsBuffer.readAllAndClean();
-
             OptionalDouble averageOrNone = measurements.stream().mapToDouble(Measurement::getValue).average();
             Double average = averageOrNone.isPresent() ? averageOrNone.getAsDouble() : 0;
-            Measurement computedAverageMeasurement = new Measurement(playerId,"HR",average,System.currentTimeMillis());
+            long timestamp = System.currentTimeMillis();
+            Measurement computedAverageMeasurement = new Measurement(playerId,"HR",average,timestamp);
             this.averagesBuffer.addMeasurement(computedAverageMeasurement);
-            System.out.println("CURR TIME " +System.currentTimeMillis());
-            System.out.println("CALCULATED AVG "+average);
-
-
-
+            System.out.println("AverageComputer: Timestamp of computation " +timestamp);
+            System.out.println("AverageComputer: Computed average "+average);
         }
-
     }
 }

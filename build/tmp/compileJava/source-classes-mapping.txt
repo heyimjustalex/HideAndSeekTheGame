@@ -1,52 +1,72 @@
-Players/Simulators/Simulator.java
- Players.Simulators.Simulator
-AdministrationServer/Models/MeasurementConverted.java
- AdministrationServer.Models.MeasurementConverted
-AdministrationServer/Schemas/PlayerAddRequest.java
- AdministrationServer.Schemas.PlayerAddRequest
-AdministrationServer/Schemas/PlayerDeleteRequest.java
- AdministrationServer.Schemas.PlayerDeleteRequest
-AdministrationServer/Main.java
- AdministrationServer.Main
-Players/SimulatorsImplementation/AverageComputer.java
- Players.SimulatorsImplementation.AverageComputer
-AdministrationServer/Schemas/PlayerAddResponse.java
- AdministrationServer.Schemas.PlayerAddResponse
-Players/Simulators/Measurement.java
- Players.Simulators.Measurement
+AdministrationServer/Schemas/PlayersGetResponse.java
+ AdministrationServer.Schemas.PlayersGetResponse
+Players/Smartwatch/SimulatorsImplementation/AverageComputer.java
+ Players.Smartwatch.SimulatorsImplementation.AverageComputer
 AdministrationServer/Schemas/MeasurementGetResponse.java
  AdministrationServer.Schemas.MeasurementGetResponse
-AdministrationServer/Schemas/MeasurementAddResponse.java
- AdministrationServer.Schemas.MeasurementAddResponse
-Players/Simulators/Buffer.java
- Players.Simulators.Buffer
-Players/SimulatorsImplementation/SharedMeasurementBuffer.java
- Players.SimulatorsImplementation.SharedMeasurementBuffer
-Players/SimulatorsImplementation/SharedAverageBuffer.java
- Players.SimulatorsImplementation.SharedAverageBuffer
-AdministrationServer/Schemas/MeasurementAddRequest.java
- AdministrationServer.Schemas.MeasurementAddRequest
-AdministrationServer/Models/Measurement.java
- AdministrationServer.Models.Measurement
-Players/Simulators/HRSimulator.java
- Players.Simulators.HRSimulator
-AdministrationServer/Repositories/PlayerRepository.java
- AdministrationServer.Repositories.PlayerRepository
-AdministrationServer/Schemas/PlayerDeleteResponse.java
- AdministrationServer.Schemas.PlayerDeleteResponse
-Players/Main.java
- Players.Main
 AdministrationServer/Models/Player.java
  AdministrationServer.Models.Player
+Players/Smartwatch/SimulatorsImplementation/SharedAverageBuffer.java
+ Players.Smartwatch.SimulatorsImplementation.SharedAverageBuffer
+AdministrationServer/Models/Measurement.java
+ AdministrationServer.Models.Measurement
+AdministrationClient/Models/Message.java
+ AdministrationClient.Models.Message
+Players/Smartwatch/Simulators/Buffer.java
+ Players.Smartwatch.Simulators.Buffer
+Players/Main.java
+ Players.Main
+Players/Smartwatch/SimulatorsImplementation/AverageSender.java
+ Players.Smartwatch.SimulatorsImplementation.AverageSender
+AdministrationServer/Models/MeasurementConverted.java
+ AdministrationServer.Models.MeasurementConverted
+AdministrationServer/Schemas/PlayerDeleteResponse.java
+ AdministrationServer.Schemas.PlayerDeleteResponse
+Players/Smartwatch/Simulators/Measurement.java
+ Players.Smartwatch.Simulators.Measurement
+AdministrationServer/Main.java
+ AdministrationServer.Main
+Players/Smartwatch/Simulators/Simulator.java
+ Players.Smartwatch.Simulators.Simulator
+AdministrationClient/Models/Player.java
+ AdministrationClient.Models.Player
+AdministrationServer/Schemas/PlayerDeleteRequest.java
+ AdministrationServer.Schemas.PlayerDeleteRequest
+Players/Models/Message.java
+ Players.Models.Message
+Players/Smartwatch/SimulatorsImplementation/SharedMeasurementBuffer.java
+ Players.Smartwatch.SimulatorsImplementation.SharedMeasurementBuffer
+AdministrationClient/Utilities/HTTPUtilities.java
+ AdministrationClient.Utilities.HTTPUtilities
+ AdministrationClient.Utilities.HTTPUtilities$1
+ AdministrationClient.Utilities.HTTPUtilities$2
+ AdministrationClient.Utilities.HTTPUtilities$3
+Players/Smartwatch/Simulators/HRSimulator.java
+ Players.Smartwatch.Simulators.HRSimulator
+Players/Broker/SubscriberHandler.java
+ Players.Broker.SubscriberHandler
+ Players.Broker.SubscriberHandler$1
+AdministrationServer/Schemas/MeasurementAddRequest.java
+ AdministrationServer.Schemas.MeasurementAddRequest
+AdministrationClient/Models/Measurement.java
+ AdministrationClient.Models.Measurement
+AdministrationServer/Schemas/PlayerAddResponse.java
+ AdministrationServer.Schemas.PlayerAddResponse
+AdministrationClient/Main.java
+ AdministrationClient.Main
+AdministrationServer/Schemas/MeasurementAddResponse.java
+ AdministrationServer.Schemas.MeasurementAddResponse
+AdministrationServer/Schemas/PlayerAddRequest.java
+ AdministrationServer.Schemas.PlayerAddRequest
+AdministrationServer/Repositories/PlayerRepository.java
+ AdministrationServer.Repositories.PlayerRepository
+AdministrationServer/Services/MeasurementService.java
+ AdministrationServer.Services.MeasurementService
+AdministrationServer/Controllers/PlayerController.java
+ AdministrationServer.Controllers.PlayerController
+AdministrationServer/Repositories/MeasurementRepository.java
+ AdministrationServer.Repositories.MeasurementRepository
 AdministrationServer/Services/PlayerService.java
  AdministrationServer.Services.PlayerService
  AdministrationServer.Services.PlayerService$1
  AdministrationServer.Services.PlayerService$BAR
-AdministrationServer/Controllers/PlayerController.java
- AdministrationServer.Controllers.PlayerController
-Players/SimulatorsImplementation/AverageSender.java
- Players.SimulatorsImplementation.AverageSender
-AdministrationServer/Services/MeasurementService.java
- AdministrationServer.Services.MeasurementService
-AdministrationServer/Repositories/MeasurementRepository.java
- AdministrationServer.Repositories.MeasurementRepository

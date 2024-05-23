@@ -1,23 +1,29 @@
 package AdministrationServer.Controllers;
-
-import AdministrationServer.Models.Measurement;
-import AdministrationServer.Repositories.MeasurementRepository;
 import AdministrationServer.Schemas.*;
 import AdministrationServer.Services.MeasurementService;
 import AdministrationServer.Services.PlayerService;
+import com.sun.jersey.api.core.InjectParam;
 
+import javax.jws.WebService;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-import java.time.Instant;
-import java.util.List;
+import javax.xml.ws.ServiceMode;
 
 @Path("players")
 public class PlayerController {
+    @InjectParam
     private PlayerService playerService;
+    @InjectParam
     private MeasurementService measurementService;
-    public PlayerController() {
-        this.playerService = new PlayerService();
-        this.measurementService = new MeasurementService();
+
+    @GET
+    @Consumes({"application/json", "application/xml"})
+    @Produces({"application/json", "application/xml"})
+    public Response getPlayers() {
+        PlayersGetResponse playersGetResponse = playerService.getPlayers();
+            return Response.status(Response.Status.OK)
+                    .entity(playersGetResponse)
+                    .build();
     }
 
     @Path("add")
@@ -57,7 +63,6 @@ public class PlayerController {
         MeasurementAddResponse measurementAddResponse = this.measurementService.addMeasurements(request);
         System.out.println("REQUEST "+ request);
         System.out.println("RESPONSE " + measurementAddResponse);
-
         return Response.ok(measurementAddResponse).status(Response.Status.CREATED).build();
     }
 
@@ -65,20 +70,20 @@ public class PlayerController {
     @GET
     @Consumes({"application/json", "application/xml"})
     @Produces({"application/json", "application/xml"})
-    public Response getMeasurements(@QueryParam("t1") String t1, @QueryParam("t2") String t2, @QueryParam("n") Integer n, @QueryParam("clientId") String clientId) {
+    public Response getMeasurements(@QueryParam("t1") String t1, @QueryParam("t2") String t2, @QueryParam("n") Integer n, @QueryParam("playerId") String playerId) {
         try {
             // Case 1: Retrieve by specifying timestamps t1 and t2
-            if (t1 != null && t2 != null && n==null && clientId==null) {
+            if (t1 != null && t2 != null && n==null && playerId==null) {
                 MeasurementGetResponse measurementGetResponse = this.measurementService.getMeasurementsByTimestamp(t1, t2);
                 return Response.ok(measurementGetResponse).status(Response.Status.OK).build();
             }
-            // Case 2: Retrieve by n and clientId
-            else if (n != null && clientId != null && t1==null && t2==null) {
-                MeasurementGetResponse measurementGetResponse = this.measurementService.getNMeasurementsByClientId(clientId, n);
+            // Case 2: Retrieve by n and playerId
+            else if (n != null && playerId != null && t1==null && t2==null) {
+                MeasurementGetResponse measurementGetResponse = this.measurementService.getNMeasurementsByPlayerId(playerId, n);
                 return Response.ok(measurementGetResponse).status(Response.Status.OK).build();
             }
             // Case 3: Retrieve all measurements
-            else if (t1 == null && t2 == null && n == null && clientId == null) {
+            else if (t1 == null && t2 == null && n == null && playerId == null) {
                 MeasurementGetResponse measurementGetResponse = this.measurementService.getMeasurements();
                 return Response.ok(measurementGetResponse).status(Response.Status.OK).build();
             }
