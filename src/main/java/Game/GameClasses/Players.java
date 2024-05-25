@@ -1,7 +1,5 @@
 package Game.GameClasses;
 
-import Game.Buffer.GameState;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,11 +24,11 @@ public class Players {
             }
         }
     }
-    synchronized void modifyPlayerState(String playerId,State state)
+    synchronized void modifyPlayerState(String playerId, PlayerState playerState)
     {
         for (PlayerExtended player : this.players){
             if (player.id.equals(playerId)){
-                player.state = state;
+                player.playerState = playerState;
             }
         }
 

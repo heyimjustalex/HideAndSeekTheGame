@@ -1,9 +1,5 @@
 package Game.GameClasses;
 
-enum Role{
-    HIDER,SEEKER
-}
-
-enum State{
+public enum PlayerState {
     UNTAGGED, TAGGED, WINNER
 }

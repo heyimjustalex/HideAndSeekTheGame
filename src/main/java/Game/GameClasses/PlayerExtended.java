@@ -1,6 +1,8 @@
 package Game.GameClasses;
 
 
+import Game.Models.Player;
+
 public class PlayerExtended {
     String id;
     Integer port;
@@ -9,10 +11,31 @@ public class PlayerExtended {
     Integer pos_y;
     Double distance;
     Role role;
-    State state;
+    PlayerState playerState;
 
     public PlayerExtended(){
 
+    }
+
+    public PlayerExtended(String id, String port, String address, String pos_x, String  pos_y, String role, String state) {
+        this.id = id;
+        this.port = Integer.valueOf(port);
+        this.address = address;
+        this.pos_x = Integer.valueOf(pos_x);
+        this.pos_y = Integer.valueOf(pos_y);
+        this.distance = this.calculateDistanceToNearestBasePoint();
+        this.role = Role.valueOf(role);
+        this.playerState = PlayerState.valueOf(state);
+    }
+    public PlayerExtended(String id, Integer port, String address, Integer pos_x, Integer pos_y, Role role, PlayerState playerState) {
+        this.id = id;
+        this.port = port;
+        this.address = address;
+        this.pos_x = pos_x;
+        this.pos_y = pos_y;
+        this.distance = this.calculateDistanceToNearestBasePoint();
+        this.role = role;
+        this.playerState = playerState;
     }
     public PlayerExtended(String id, Integer port, String address, Integer pos_x, Integer pos_y){
         this.id = id;
@@ -22,7 +45,17 @@ public class PlayerExtended {
         this.pos_y = pos_y;
         this.distance = this.calculateDistanceToNearestBasePoint();
         this.role = Role.HIDER;
-        this.state = State.UNTAGGED;
+        this.playerState = PlayerState.UNTAGGED;
+    }
+    public PlayerExtended(Player p) {
+        this.id = p.getId();
+        this.port = p.getPort();
+        this.address = p.getAddress();
+        this.pos_x = p.getPos_x();
+        this.pos_y = p.getPos_y();
+        this.distance = this.calculateDistanceToNearestBasePoint();
+        this.role = Role.HIDER;
+        this.playerState = PlayerState.UNTAGGED;
     }
 
     private Double calculateDistanceToNearestBasePoint() {
@@ -98,12 +131,12 @@ public class PlayerExtended {
         this.role = role;
     }
 
-    public State getState() {
-        return state;
+    public PlayerState getPlayerState() {
+        return playerState;
     }
 
-    public void setState(State state) {
-        this.state = state;
+    public void setPlayerState(PlayerState playerState) {
+        this.playerState = playerState;
     }
 
 }

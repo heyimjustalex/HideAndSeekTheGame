@@ -1,6 +1,6 @@
 package Game.Broker;
 
-import Game.Buffer.GameState;
+import Game.Global.GlobalState;
 import Game.Models.Message;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 import java.util.Scanner;
 
 public class SubscriberHandler {
-    public static void handleSubscription(GameState bufferGameState) throws InterruptedException, MqttException {
+    public static void handleSubscription(GlobalState bufferGlobalState) throws InterruptedException, MqttException {
         String topic = "/broadcast";
         MqttClient client;
         String broker = "tcp://localhost:1883";
@@ -46,7 +46,7 @@ public class SubscriberHandler {
 
                     if(topic.equals("/broadcast")){
                         Message message1= gson.fromJson(receivedMessage, Message.class);
-                        bufferGameState.messageAdd(message1);
+                        bufferGlobalState.messageAdd(message1);
                         System.out.println(message1.getType()+" "+message1.getValue());
                     }
                 }

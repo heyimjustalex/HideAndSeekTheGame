@@ -45,32 +45,70 @@ AdministrationServer/Services/PlayerService.java
  AdministrationServer.Services.PlayerService
  AdministrationServer.Services.PlayerService$1
  AdministrationServer.Services.PlayerService$BAR
-Smartwatch/HeartRate/SimulatorsImplementation/AverageSender.java
- Smartwatch.HeartRate.SimulatorsImplementation.AverageSender
-Smartwatch/HeartRate/SimulatorsImplementation/AverageComputer.java
- Smartwatch.HeartRate.SimulatorsImplementation.AverageComputer
-Smartwatch/Main.java
- Smartwatch.Main
-Smartwatch/HeartRate/SimulatorsImplementation/SharedMeasurementBuffer.java
- Smartwatch.HeartRate.SimulatorsImplementation.SharedMeasurementBuffer
-Smartwatch/HeartRate/Simulators/Buffer.java
- Smartwatch.HeartRate.Simulators.Buffer
-Smartwatch/HeartRate/Simulators/HRSimulator.java
- Smartwatch.HeartRate.Simulators.HRSimulator
-Smartwatch/Models/Player.java
- Smartwatch.Models.Player
 AdministrationClient/Main.java
  AdministrationClient.Main
-Smartwatch/HeartRate/Simulators/Measurement.java
- Smartwatch.HeartRate.Simulators.Measurement
-Smartwatch/Models/Message.java
- Smartwatch.Models.Message
-Smartwatch/Buffer/GameState.java
- Smartwatch.Buffer.GameState
-Smartwatch/Broker/SubscriberHandler.java
- Smartwatch.Broker.SubscriberHandler
- Smartwatch.Broker.SubscriberHandler$1
-Smartwatch/HeartRate/Simulators/Simulator.java
- Smartwatch.HeartRate.Simulators.Simulator
-Smartwatch/HeartRate/SimulatorsImplementation/SharedAverageBuffer.java
- Smartwatch.HeartRate.SimulatorsImplementation.SharedAverageBuffer
+Game/HeartRate/Simulators/Measurement.java
+ Game.HeartRate.Simulators.Measurement
+Game/HeartRate/SimulatorsImplementation/SharedAverageBuffer.java
+ Game.HeartRate.SimulatorsImplementation.SharedAverageBuffer
+Game/HeartRate/Simulators/Buffer.java
+ Game.HeartRate.Simulators.Buffer
+Game/HeartRate/SimulatorsImplementation/AverageSender.java
+ Game.HeartRate.SimulatorsImplementation.AverageSender
+Game/HeartRate/Simulators/HRSimulator.java
+ Game.HeartRate.Simulators.HRSimulator
+Game/HeartRate/Simulators/Simulator.java
+ Game.HeartRate.Simulators.Simulator
+Game/HeartRate/SimulatorsImplementation/AverageComputer.java
+ Game.HeartRate.SimulatorsImplementation.AverageComputer
+Game/Models/Message.java
+ Game.Models.Message
+Game/HeartRate/SimulatorsImplementation/SharedMeasurementBuffer.java
+ Game.HeartRate.SimulatorsImplementation.SharedMeasurementBuffer
+Game/Models/Player.java
+ Game.Models.Player
+Game/GameClasses/GameState.java
+ Game.GameClasses.GameState
+Game/GameClasses/PlayerExtended.java
+ Game.GameClasses.PlayerExtended
+Game/Broker/SubscriberHandler.java
+ Game.Broker.SubscriberHandler
+ Game.Broker.SubscriberHandler$1
+Game/Services/PlayerServiceImpl.java
+ Game.Services.PlayerServiceImpl
+Game/GameClasses/PlayerState.java
+ Game.GameClasses.PlayerState
+proto/Player.java
+ proto.Player
+ proto.Player$1
+ proto.Player$PlayerMessageRequest
+ proto.Player$PlayerMessageRequest$1
+ proto.Player$PlayerMessageRequest$Builder
+ proto.Player$PlayerMessageRequestOrBuilder
+ proto.Player$PlayerMessageResponse
+ proto.Player$PlayerMessageResponse$1
+ proto.Player$PlayerMessageResponse$Builder
+ proto.Player$PlayerMessageResponseOrBuilder
+Game/GameClasses/Role.java
+ Game.GameClasses.Role
+proto/PlayerServiceGrpc.java
+ proto.PlayerServiceGrpc
+ proto.PlayerServiceGrpc$1
+ proto.PlayerServiceGrpc$MethodHandlers
+ proto.PlayerServiceGrpc$PlayerServiceBaseDescriptorSupplier
+ proto.PlayerServiceGrpc$PlayerServiceBlockingStub
+ proto.PlayerServiceGrpc$PlayerServiceFileDescriptorSupplier
+ proto.PlayerServiceGrpc$PlayerServiceFutureStub
+ proto.PlayerServiceGrpc$PlayerServiceImplBase
+ proto.PlayerServiceGrpc$PlayerServiceMethodDescriptorSupplier
+ proto.PlayerServiceGrpc$PlayerServiceStub
+Game/Global/GlobalState.java
+ Game.Global.GlobalState
+Game/GameClasses/Players.java
+ Game.GameClasses.Players
+Game/Utilities/HTTPUtilities.java
+ Game.Utilities.HTTPUtilities
+ Game.Utilities.HTTPUtilities$1
+Game/Main.java
+ Game.Main
+ Game.Main$1
