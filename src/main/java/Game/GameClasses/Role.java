@@ -1,5 +1,5 @@
 package Game.GameClasses;
 
-public enum Role{
-    HIDER,SEEKER
+public enum Role {
+    HIDER, SEEKER
 }

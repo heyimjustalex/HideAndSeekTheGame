@@ -18,7 +18,8 @@ public class GlobalState {
     List<Message> mqttMessagesSent;
     List<PlayerExtended> players;
     private static GlobalState instance;
-    private GlobalState(){
+
+    private GlobalState() {
         // Available GAME states
         // BEFORE_ELECTION
         // ELECTION_STARTED
@@ -26,8 +27,14 @@ public class GlobalState {
         // GAME_ENDED
         gameState = BEFORE_ELECTION;
         mqttMessagesSent = new ArrayList<>();
-        players=new ArrayList<>();
+        players = new ArrayList<>();
 
+    }
+
+    synchronized static public GlobalState getStateObject() {
+        if (instance == null)
+            instance = new GlobalState();
+        return instance;
     }
 
     public GameState getGameState() {
@@ -38,11 +45,14 @@ public class GlobalState {
         this.gameState = gameState;
     }
 
-    synchronized static public GlobalState getStateObject(){
-        if(instance==null)
-            instance = new GlobalState();
-        return instance;
+    public String getMyPlayerId() {
+        return playerId;
     }
+
+    public void setMyPlayerId(String playerId) {
+        this.playerId = playerId;
+    }
+
     public synchronized List<Message> getMqttMessagesSent() {
         return mqttMessagesSent;
     }
@@ -62,7 +72,7 @@ public class GlobalState {
         }
     }
 
-    public synchronized void setPlayer(PlayerExtended playerOverwrite){
+    public synchronized void setPlayer(PlayerExtended playerOverwrite) {
         ListIterator<PlayerExtended> iterator = this.players.listIterator();
         while (iterator.hasNext()) {
             PlayerExtended pe = iterator.next();
@@ -71,6 +81,7 @@ public class GlobalState {
             }
         }
     }
+
     public synchronized PlayerExtended getMyPlayer() {
         for (PlayerExtended pe : this.players) {
             if (pe.getId().equals(this.playerId)) {
@@ -79,6 +90,7 @@ public class GlobalState {
         }
         return null;
     }
+
     public synchronized void addPlayer(PlayerExtended playerExtended) {
         boolean alreadyExists = false;
         for (PlayerExtended pe : this.players) {
@@ -87,46 +99,32 @@ public class GlobalState {
                 break;
             }
         }
-        if (!alreadyExists)
-        {
+        if (!alreadyExists) {
             this.players.add(playerExtended);
         }
     }
 
-    public synchronized List<PlayerExtended> getPlayers(){
+    public synchronized List<PlayerExtended> getPlayers() {
         return this.players;
-
     }
 
-    public synchronized String waitUntilElectionStarts() throws InterruptedException {
-        System.out.println("WAIT UNTIL ELECTION: "+ BEFORE_ELECTION);
-        while (this.gameState.equals(BEFORE_ELECTION)){
+    public synchronized GameState waitUntilElectionStarts() throws InterruptedException {
+        System.out.println("GlobalState: waitUntilElectionStarts: gameState " + BEFORE_ELECTION);
+        while (this.gameState.equals(BEFORE_ELECTION)) {
             wait();
         }
-        System.out.println("BufferGameState: Changed game state to true "+this.gameState.toString());
-
-        return this.gameState.toString();
+        System.out.println("GlobalState: waitUntilElectionStarts: Changed game state to " + this.gameState);
+        return this.gameState;
     }
 
-    public synchronized void messageAdd(Message message){
-        System.out.println("BufferGameState: "+" consumed message " + message.getValue());
-        if(message.getType().equals("gameState") && message.getValue().equals("ELECTION_STARTED") && this.gameState.equals(BEFORE_ELECTION)){
-               this.gameState=ELECTION_STARTED;
+    public synchronized void messageAdd(Message message) {
+        System.out.println("BufferGameState: " + " consumed message " + message.getValue());
+        if (message.getType().equals("gameState") && message.getValue().equals("ELECTION_STARTED") && this.gameState.equals(BEFORE_ELECTION)) {
+            this.gameState = ELECTION_STARTED;
         }
         mqttMessagesSent.add(message);
         notifyAll();
     }
 
 
-    public String getMyPlayerId() {
-        return playerId;
-    }
-
-    public void setMyPlayerId(String playerId) {
-        this.playerId = playerId;
-    }
-    
-    
-    
-    
 }

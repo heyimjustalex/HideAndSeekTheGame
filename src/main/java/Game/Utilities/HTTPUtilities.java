@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+
 import javax.ws.rs.core.MediaType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -21,8 +22,8 @@ public class HTTPUtilities {
 
         Map<String, String> map = new HashMap<>();
         map.put("id", playerId);
-        map.put("port",port);
-        map.put("address",address);
+        map.put("port", port);
+        map.put("address", address);
 
         Gson gson = new GsonBuilder()
                 .serializeNulls()
@@ -45,27 +46,27 @@ public class HTTPUtilities {
                 JsonObject jsonObject = jsonElement.getAsJsonObject();
 
                 if (jsonObject.has("players")) {
-                    Type playerListType = new TypeToken<List<Player>>() {}.getType();
+                    Type playerListType = new TypeToken<List<Player>>() {
+                    }.getType();
                     List<Player> players = gson.fromJson(jsonObject.get("players"), playerListType);
-                    if(players.isEmpty()){
-                        System.out.println("\nNo players returned from admin server!\n");
+                    if (players.isEmpty()) {
+                        System.out.println("HTTPUtilities: No players returned from admin server!\n");
                         return false;
-                    }
-                    else {
-                        System.out.println("\nPlayers: ");
-                            GlobalState.getStateObject().addPlayers(players);
-                            System.out.println(players);
+                    } else {
+                        System.out.println("HTTPUtilities: Players: ");
+                        GlobalState.getStateObject().addPlayers(players);
+                        System.out.println(players);
 
                         return true;
 
                     }
 
                 } else {
-                    System.out.println("No players found in the response.");
+                    System.out.println("HTTPUtilities: No players found in the response.");
                     return false;
                 }
             } else {
-                System.out.println("Failed to get players. Status code: " + response.getStatus());
+                System.out.println("HTTPUtilities: Failed to get players. Status code: " + response.getStatus());
 
             }
 
@@ -73,7 +74,7 @@ public class HTTPUtilities {
             return false;
         } catch (Exception e) {
 
-            System.out.println("Administration Server is unavailable " + e);
+            System.out.println("HTTPUtilities: Administration Server is unavailable " + e);
             return false;
         }
     }

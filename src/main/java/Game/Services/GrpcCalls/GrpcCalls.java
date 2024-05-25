@@ -13,7 +13,6 @@ public class GrpcCalls {
 
         ManagedChannel channel = ManagedChannelBuilder.forTarget(serverAddress).usePlaintext().build();
         PlayerServiceGrpc.PlayerServiceStub stub = PlayerServiceGrpc.newStub(channel);
-
         PlayerExtended myPlayer = GlobalState.getStateObject().getMyPlayer();
 
         Player.PlayerMessageRequest request = Player.PlayerMessageRequest
@@ -30,7 +29,7 @@ public class GrpcCalls {
         stub.greeting(request, new StreamObserver<Player.PlayerMessageResponse>() {
             @Override
             public void onNext(Player.PlayerMessageResponse res) {
-                System.out.println("Response code: " + res.getResponseCode());
+                System.out.println("greetingCallAsync: Response code: " + res.getResponseCode());
             }
 
             @Override
