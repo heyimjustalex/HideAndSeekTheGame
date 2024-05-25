@@ -13,15 +13,6 @@ import static Game.GameClasses.GameState.BEFORE_ELECTION;
 import static Game.GameClasses.GameState.ELECTION_STARTED;
 
 public class GlobalState {
-
-    public GameState getGameState() {
-        return gameState;
-    }
-
-    public void setGameState(GameState gameState) {
-        this.gameState = gameState;
-    }
-
     GameState gameState;
     String playerId;
     List<Message> mqttMessagesSent;
@@ -33,11 +24,19 @@ public class GlobalState {
         // ELECTION_STARTED
         // ELECTION_ENDED
         // GAME_ENDED
+        gameState = BEFORE_ELECTION;
         mqttMessagesSent = new ArrayList<>();
         players=new ArrayList<>();
 
     }
 
+    public GameState getGameState() {
+        return gameState;
+    }
+
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
+    }
 
     synchronized static public GlobalState getStateObject(){
         if(instance==null)
@@ -111,7 +110,7 @@ public class GlobalState {
 
     public synchronized void messageAdd(Message message){
         System.out.println("BufferGameState: "+" consumed message " + message.getValue());
-        if(message.getType().equals("gameState") && message.getValue().equals("ELECTION_STARTED")){
+        if(message.getType().equals("gameState") && message.getValue().equals("ELECTION_STARTED") && this.gameState.equals(BEFORE_ELECTION)){
                this.gameState=ELECTION_STARTED;
         }
         mqttMessagesSent.add(message);

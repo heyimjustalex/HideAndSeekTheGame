@@ -42,7 +42,6 @@ public class SubscriberHandler {
                             "\n\tTopic:   " + topic +
                             "\n\tMessage: " + receivedMessage +
                             "\n\tQoS:     " + message.getQos() + "\n");
-                    System.out.println("\n ***  Press a random key to exit *** \n");
 
                     if(topic.equals("/broadcast")){
                         Message message1= gson.fromJson(receivedMessage, Message.class);
@@ -67,9 +66,6 @@ public class SubscriberHandler {
             client.subscribe(topic,qos);
             System.out.println(" Subscriber: "+clientId + " Subscribed to topics : " + topic);
 
-            System.out.println("\n ***  Press a random key to exit *** \n");
-            Scanner command = new Scanner(System.in);
-            command.nextLine();
 
             client.disconnect();
 
