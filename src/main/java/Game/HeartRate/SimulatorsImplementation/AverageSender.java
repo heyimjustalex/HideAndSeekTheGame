@@ -1,7 +1,7 @@
-package Players.Smartwatch.SimulatorsImplementation;
+package Game.HeartRate.SimulatorsImplementation;
 
-import Players.Smartwatch.Simulators.Buffer;
-import Players.Smartwatch.Simulators.Measurement;
+import Game.HeartRate.Simulators.Buffer;
+import Game.HeartRate.Simulators.Measurement;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.jersey.api.client.Client;
@@ -31,7 +31,7 @@ public class AverageSender implements Runnable{
             }
             List<Measurement> averages = averageBuffer.readAllAndClean();
             if (!averages.isEmpty()) {
-                System.out.println("Average sender: Sending the computed averages: "+ averages);
+//                System.out.println("Average sender: Sending the computed averages: "+ averages);
                 sendAverages(averages);
             }
 
@@ -60,15 +60,15 @@ public class AverageSender implements Runnable{
                 .post(ClientResponse.class, json);
 
         if (response.getStatus() == 201) {
-            System.out.println("Average sender: Averages sent successfully.");
+//            System.out.println("Average sender: Averages sent successfully.");
         } else {
-            System.out.println("Average sender: Failed to send averages. Status code: " + response.getStatus());
+//            System.out.println("Average sender: Failed to send averages. Status code: " + response.getStatus());
         }
 
         response.close();}
         catch (Exception e)
         {
-            System.out.println("Average sender: Administration Server is unavailable "+e);
+//            System.out.println("Average sender: Administration Server is unavailable "+e);
         }
     }}
 

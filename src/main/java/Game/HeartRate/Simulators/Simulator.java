@@ -1,4 +1,4 @@
-package Players.Smartwatch.Simulators;
+package Game.HeartRate.Simulators;
 
 import java.util.Random;
 

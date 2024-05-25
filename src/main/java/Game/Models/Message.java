@@ -1,4 +1,4 @@
-package Players.Models;
+package Game.Models;
 public class Message {
     String type;
     String value;
@@ -17,7 +17,6 @@ public class Message {
     public void setValue(String value) {
         this.value = value;
     }
-
 
     public Message(){}
     public Message(String type, String value) {

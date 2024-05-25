@@ -51,7 +51,7 @@ public class Main {
 
                 case "5":
                     try{
-                        HTTPUtilities.broadcastMqttMessage("gameState","started",false);
+                        HTTPUtilities.broadcastMqttMessage("gameState","ELECTION_STARTED",true);
                     }
                     catch (Exception e){
                         System.out.println(e);

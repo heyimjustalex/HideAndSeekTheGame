@@ -1,6 +1,7 @@
-package Players.Broker;
+package Game.Broker;
 
-import Players.Models.Message;
+import Game.Buffer.GameState;
+import Game.Models.Message;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.eclipse.paho.client.mqttv3.*;
@@ -9,7 +10,7 @@ import java.sql.Timestamp;
 import java.util.Scanner;
 
 public class SubscriberHandler {
-    public static void handleSubscription() throws InterruptedException, MqttException {
+    public static void handleSubscription(GameState bufferGameState) throws InterruptedException, MqttException {
         String topic = "/broadcast";
         MqttClient client;
         String broker = "tcp://localhost:1883";
@@ -44,7 +45,8 @@ public class SubscriberHandler {
                     System.out.println("\n ***  Press a random key to exit *** \n");
 
                     if(topic.equals("/broadcast")){
-                        Message message1 = gson.fromJson(receivedMessage, Message.class);
+                        Message message1= gson.fromJson(receivedMessage, Message.class);
+                        bufferGameState.messageAdd(message1);
                         System.out.println(message1.getType()+" "+message1.getValue());
                     }
                 }
@@ -65,11 +67,11 @@ public class SubscriberHandler {
             client.subscribe(topic,qos);
             System.out.println(" Subscriber: "+clientId + " Subscribed to topics : " + topic);
 
-//            System.out.println("\n ***  Press a random key to exit *** \n");
-//            Scanner command = new Scanner(System.in);
-//            command.nextLine();
+            System.out.println("\n ***  Press a random key to exit *** \n");
+            Scanner command = new Scanner(System.in);
+            command.nextLine();
 
-//            client.disconnect();
+            client.disconnect();
 
 
 

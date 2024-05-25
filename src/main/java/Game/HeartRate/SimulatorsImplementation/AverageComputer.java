@@ -1,7 +1,7 @@
-package Players.Smartwatch.SimulatorsImplementation;
+package Game.HeartRate.SimulatorsImplementation;
 
-import Players.Smartwatch.Simulators.Buffer;
-import Players.Smartwatch.Simulators.Measurement;
+import Game.HeartRate.Simulators.Buffer;
+import Game.HeartRate.Simulators.Measurement;
 
 import java.util.List;
 import java.util.OptionalDouble;
@@ -24,8 +24,8 @@ public class AverageComputer implements Runnable{
             long timestamp = System.currentTimeMillis();
             Measurement computedAverageMeasurement = new Measurement(playerId,"HR",average,timestamp);
             this.averagesBuffer.addMeasurement(computedAverageMeasurement);
-            System.out.println("AverageComputer: Timestamp of computation " +timestamp);
-            System.out.println("AverageComputer: Computed average "+average);
+//            System.out.println("AverageComputer: Timestamp of computation " +timestamp);
+//            System.out.println("AverageComputer: Computed average "+average);
         }
     }
 }
