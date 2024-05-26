@@ -1,8 +1,5 @@
 package AdministrationServer.Schemas;
-
-import AdministrationServer.Models.Measurement;
 import AdministrationServer.Models.MeasurementConverted;
-
 import java.util.List;
 
 public class MeasurementGetResponse {

@@ -1,9 +1,6 @@
 package AdministrationServer.Schemas;
-
 import AdministrationServer.Models.Measurement;
-
 import java.util.List;
-
 public class MeasurementAddRequest{
     private List<Measurement> measurements;
 
@@ -22,6 +19,4 @@ public class MeasurementAddRequest{
         this.measurements = measurements;
 
     }
-
-
 }

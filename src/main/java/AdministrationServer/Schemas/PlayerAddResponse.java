@@ -1,18 +1,17 @@
 package AdministrationServer.Schemas;
 
-
 import AdministrationServer.Models.Player;
 
 import java.util.List;
 
 public class PlayerAddResponse {
-
     private String message;
     private List<Player> players;
+
     public PlayerAddResponse(List<Player> players, String message) {
         this.message = message;
         this.players = players;
-
+        
     }
 
     public String getMessage() {
@@ -23,9 +22,6 @@ public class PlayerAddResponse {
         this.message = message;
     }
 
-
-
-
     public List<Player> getPlayers() {
         return players;
     }
@@ -33,11 +29,5 @@ public class PlayerAddResponse {
     public void setPlayers(List<Player> players) {
         this.players = players;
     }
-
-
-
-
-
-
 
 }

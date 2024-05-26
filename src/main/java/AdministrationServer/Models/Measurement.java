@@ -1,18 +1,19 @@
 package AdministrationServer.Models;
 
 public class Measurement {
-
     private String id;
     private String type;
     private double value;
     private long timestamp;
-    public Measurement(){}
+
+    public Measurement() {
+    }
 
     public Measurement(String id, String type, double value, long timestamp) {
         this.value = value;
         this.timestamp = timestamp;
-        this.id=id;
-        this.type=type;
+        this.id = id;
+        this.type = type;
     }
 
     public double getValue() {
