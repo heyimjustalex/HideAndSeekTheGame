@@ -1,9 +1,7 @@
 package AdministrationClient.Utilities;
 
-import AdministrationClient.Models.Message;
 import AdministrationClient.Models.Measurement;
-
-
+import AdministrationClient.Models.Message;
 import AdministrationClient.Models.Player;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -23,6 +21,20 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 public class HTTPUtilities {
+
+    public static void calculateAndPrintAverage(List<Measurement> measurements) {
+        double total = 0.0;
+
+        for (Measurement measurement : measurements) {
+            total += measurement.getValue();
+        }
+
+        double average = total / measurements.size();
+        System.out.println("Averages of " + measurements.size() + " averages: ");
+        System.out.println(average);
+        System.out.println("\n");
+    }
+
     public static void httpGetPlayers(String endpointUrl) {
         try {
             Client client = Client.create();
@@ -40,16 +52,17 @@ public class HTTPUtilities {
 
 
                 if (jsonObject.has("players")) {
-                    Type playerListType = new TypeToken<List<Player>>() {}.getType();
+                    Type playerListType = new TypeToken<List<Player>>() {
+                    }.getType();
                     List<Player> players = gson.fromJson(jsonObject.get("players"), playerListType);
-                    if(players.isEmpty()){
+                    if (players.isEmpty()) {
                         System.out.println("\nNo players found in game!\n");
-                    }
-                    else {
+                    } else {
                         System.out.println("\nPlayers: ");
-                        for (Player player : players){
+                        for (Player player : players) {
                             System.out.println(player.toString());
                         }
+
                         System.out.println("\n");
 
                     }
@@ -66,6 +79,7 @@ public class HTTPUtilities {
             System.out.println("Administration Server is unavailable " + e);
         }
     }
+
 
     public static void httpGetNMeasurementsByPlayerId(String endpointUrl, String playerId, String n) {
         try {
@@ -88,16 +102,17 @@ public class HTTPUtilities {
 
 
                 if (jsonObject.has("measurements")) {
-                    Type measurementListType = new TypeToken<List<Measurement>>() {}.getType();
+                    Type measurementListType = new TypeToken<List<Measurement>>() {
+                    }.getType();
                     List<Measurement> measurements = gson.fromJson(jsonObject.get("measurements"), measurementListType);
-                    if(measurements.isEmpty()){
+                    if (measurements.isEmpty()) {
                         System.out.println("\nNo measurements found for this playerId!\n");
-                    }
-                    else {
+                    } else {
                         System.out.println("\nMeasurements: ");
-                        for (Measurement measurement :measurements){
+                        for (Measurement measurement : measurements) {
                             System.out.println(measurement.toString());
                         }
+                        calculateAndPrintAverage(measurements);
                         System.out.println("\n");
 
                     }
@@ -114,6 +129,7 @@ public class HTTPUtilities {
             System.out.println("Administration Server is unavailable " + e);
         }
     }
+
     public static void httpGetNMeasurementsByTimestamps(String endpointUrl, String t1, String t2) {
         try {
 
@@ -135,17 +151,19 @@ public class HTTPUtilities {
 
 
                 if (jsonObject.has("measurements")) {
-                    Type measurementListType = new TypeToken<List<Measurement>>() {}.getType();
+                    Type measurementListType = new TypeToken<List<Measurement>>() {
+                    }.getType();
                     List<Measurement> measurements = gson.fromJson(jsonObject.get("measurements"), measurementListType);
-                    if(measurements.isEmpty()){
+                    if (measurements.isEmpty()) {
                         System.out.println("\nNo measurements found for this timestamp!\n");
-                    }
-                    else {
-                        System.out.println("\nPlayers: ");
-                        for (Measurement measurement :measurements){
+                    } else {
+                        System.out.println("\nMeasurements: ");
+                        for (Measurement measurement : measurements) {
                             System.out.println(measurement.toString());
                         }
                         System.out.println("\n");
+                        calculateAndPrintAverage(measurements);
+
 
                     }
 
@@ -161,8 +179,9 @@ public class HTTPUtilities {
             System.out.println("Administration Server is unavailable " + e);
         }
     }
-    public static void broadcastMqttMessage( String messageType, String messageValue, boolean isRetained ) throws MqttException {
-        Message message = new Message(messageType,messageValue);
+
+    public static void broadcastMqttMessage(String messageType, String messageValue, boolean isRetained) throws MqttException {
+        Message message = new Message(messageType, messageValue);
         String topic = "/broadcast";
         String broker = "tcp://localhost:1883";
         String clientId = MqttClient.generateClientId();
@@ -179,8 +198,8 @@ public class HTTPUtilities {
         try {
 
             Gson gson = new GsonBuilder()
-                .serializeNulls()
-                .create();
+                    .serializeNulls()
+                    .create();
 
             String jsonedMessage = gson.toJson(message);
 
@@ -196,7 +215,7 @@ public class HTTPUtilities {
             System.out.println(clientId + " Publisher: Message published");
 
 
-        } catch (MqttException me ) {
+        } catch (MqttException me) {
             System.out.println("reason " + me.getReasonCode());
             System.out.println("msg " + me.getMessage());
             System.out.println("loc " + me.getLocalizedMessage());

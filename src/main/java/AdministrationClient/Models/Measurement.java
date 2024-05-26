@@ -1,15 +1,19 @@
 package AdministrationClient.Models;
+
 public class Measurement {
     private String id;
     private String type;
     private double value;
     private String timestamp;
-    public Measurement(){}
-    public Measurement(String id, String type, double value, String  timestamp) {
+
+    public Measurement() {
+    }
+
+    public Measurement(String id, String type, double value, String timestamp) {
         this.value = value;
         this.timestamp = timestamp;
-        this.id=id;
-        this.type=type;
+        this.id = id;
+        this.type = type;
     }
 
     public double getValue() {
@@ -46,7 +50,7 @@ public class Measurement {
 
     @Override
     public String toString() {
-        return "Measurement{id:'" + id + "', type:'" + type + "', timestamp:'" + timestamp +"', value:'"+value+ '}';
+        return "Measurement{id:'" + id + "', type:'" + type + "', timestamp:'" + timestamp + "', value:'" + value + "'" + '}';
     }
 
 }
