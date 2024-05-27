@@ -9,6 +9,16 @@ import java.util.Random;
 
 
 public class PlayerService {
+
+    private static PlayerService instance;
+
+    public synchronized static PlayerService getInstance() {
+        if (instance == null) {
+            instance = new PlayerService();
+        }
+        return instance;
+    }
+
     public Integer[] getRandomCoordinates() {
         BAR bar = getRandomBar();
 
@@ -114,7 +124,6 @@ public class PlayerService {
     public PlayersGetResponse getPlayers() {
         List<Player> players = PlayerRepository.getInstance().getPlayers();
         return new PlayersGetResponse(players);
-
     }
 
     public PlayerDeleteResponse deletePlayer(PlayerDeleteRequest request) {

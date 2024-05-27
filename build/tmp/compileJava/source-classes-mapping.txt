@@ -10,8 +10,11 @@ AdministrationServer/Models/Player.java
  AdministrationServer.Models.Player
 Game/GameClasses/Role.java
  Game.GameClasses.Role
-AdministrationServer/Controllers/PlayerController.java
- AdministrationServer.Controllers.PlayerController
+AdministrationClient/Utilities/HTTPUtilities.java
+ AdministrationClient.Utilities.HTTPUtilities
+ AdministrationClient.Utilities.HTTPUtilities$1
+ AdministrationClient.Utilities.HTTPUtilities$2
+ AdministrationClient.Utilities.HTTPUtilities$3
 AdministrationServer/Models/Measurement.java
  AdministrationServer.Models.Measurement
 AdministrationClient/Models/Message.java
@@ -32,10 +35,8 @@ AdministrationServer/Schemas/PlayerDeleteRequest.java
  AdministrationServer.Schemas.PlayerDeleteRequest
 Game/Main.java
  Game.Main
-AdministrationServer/Services/PlayerService.java
- AdministrationServer.Services.PlayerService
- AdministrationServer.Services.PlayerService$1
- AdministrationServer.Services.PlayerService$BAR
+AdministrationClient/Main.java
+ AdministrationClient.Main
 Game/Utilities/HTTPUtilities.java
  Game.Utilities.HTTPUtilities
  Game.Utilities.HTTPUtilities$1
@@ -83,8 +84,8 @@ AdministrationServer/Schemas/PlayerAddRequest.java
  AdministrationServer.Schemas.PlayerAddRequest
 Game/Services/PlayerServiceImpl.java
  Game.Services.PlayerServiceImpl
-AdministrationServer/Services/MeasurementService.java
- AdministrationServer.Services.MeasurementService
+AdministrationClient/Models/Measurement.java
+ AdministrationClient.Models.Measurement
 proto/Player.java
  proto.Player
  proto.Player$1
@@ -105,12 +106,11 @@ Game/HeartRate/SimulatorsImplementation/SharedMeasurementBuffer.java
  Game.HeartRate.SimulatorsImplementation.SharedMeasurementBuffer
 AdministrationServer/Main.java
  AdministrationServer.Main
-AdministrationClient/Models/Measurement.java
- AdministrationClient.Models.Measurement
-AdministrationClient/Main.java
- AdministrationClient.Main
-AdministrationClient/Utilities/HTTPUtilities.java
- AdministrationClient.Utilities.HTTPUtilities
- AdministrationClient.Utilities.HTTPUtilities$1
- AdministrationClient.Utilities.HTTPUtilities$2
- AdministrationClient.Utilities.HTTPUtilities$3
+AdministrationServer/Services/MeasurementService.java
+ AdministrationServer.Services.MeasurementService
+AdministrationServer/Controllers/PlayerController.java
+ AdministrationServer.Controllers.PlayerController
+AdministrationServer/Services/PlayerService.java
+ AdministrationServer.Services.PlayerService
+ AdministrationServer.Services.PlayerService$1
+ AdministrationServer.Services.PlayerService$BAR

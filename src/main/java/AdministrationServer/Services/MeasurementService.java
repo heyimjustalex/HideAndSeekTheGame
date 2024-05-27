@@ -13,6 +13,15 @@ import java.util.Locale;
 
 public class MeasurementService {
 
+    private static MeasurementService instance;
+
+    public synchronized static MeasurementService getInstance() {
+        if (instance == null) {
+            instance = new MeasurementService();
+        }
+        return instance;
+    }
+
     public MeasurementAddResponse addMeasurements(MeasurementAddRequest request) {
         List<MeasurementConverted> allMeasurements = MeasurementRepository.getInstance().addMeasurements(request.getMeasurements());
         return new MeasurementAddResponse(allMeasurements);
@@ -26,7 +35,6 @@ public class MeasurementService {
     }
 
     public MeasurementGetResponse getMeasurementsByTimestamp(String t1, String t2) {
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy:MM:dd:HH:mm:ss:SSS", Locale.ITALY);
 
         LocalDateTime t1Converted = LocalDateTime.parse(t1, formatter);

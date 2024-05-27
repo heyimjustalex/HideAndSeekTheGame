@@ -3,17 +3,16 @@ package AdministrationServer.Controllers;
 import AdministrationServer.Schemas.*;
 import AdministrationServer.Services.MeasurementService;
 import AdministrationServer.Services.PlayerService;
-import com.sun.jersey.api.core.InjectParam;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 @Path("players")
 public class PlayerController {
-    @InjectParam
-    private PlayerService playerService;
-    @InjectParam
-    private MeasurementService measurementService;
+
+    private final PlayerService playerService = PlayerService.getInstance();
+
+    private final MeasurementService measurementService = MeasurementService.getInstance();
 
     @GET
     @Consumes({"application/json", "application/xml"})
