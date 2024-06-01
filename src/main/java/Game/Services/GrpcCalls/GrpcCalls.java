@@ -26,10 +26,10 @@ public class GrpcCalls {
                 .setPlayerState(myPlayer.getPlayerState().name())
                 .setGameState(GlobalState.getStateObject().getGameState().name())
                 .build();
-        stub.greeting(request, new StreamObserver<Player.PlayerMessageResponse>() {
+        stub.election(request, new StreamObserver<Player.PlayerMessageResponse>() {
             @Override
             public void onNext(Player.PlayerMessageResponse res) {
-                System.out.println("greetingCallAsync: Response code: " + res.getResponseCode());
+                System.out.println("greetingCallAsync " + res);
             }
 
             @Override

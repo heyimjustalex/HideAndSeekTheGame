@@ -1,10 +1,11 @@
 package Game.GameClasses;
 
 
+public enum GameState {
 
-public enum GameState{
-   BEFORE_ELECTION,
+    BEFORE_ELECTION,
     ELECTION_STARTED,
-     ELECTION_ENDED,
-   GAME_ENDED
+    ELECTION_MESSAGES_SENT,
+    ELECTION_ENDED,
+    GAME_ENDED
 }

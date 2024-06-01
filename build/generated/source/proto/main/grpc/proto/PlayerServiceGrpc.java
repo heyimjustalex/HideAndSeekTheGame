@@ -28,34 +28,34 @@ public final class PlayerServiceGrpc {
 
   // Static method descriptors that strictly reflect the proto.
   private static volatile io.grpc.MethodDescriptor<proto.Player.PlayerMessageRequest,
-      proto.Player.PlayerMessageResponse> getGreetingMethod;
+      proto.Player.PlayerMessageResponse> getElectionMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "greeting",
+      fullMethodName = SERVICE_NAME + '/' + "election",
       requestType = proto.Player.PlayerMessageRequest.class,
       responseType = proto.Player.PlayerMessageResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<proto.Player.PlayerMessageRequest,
-      proto.Player.PlayerMessageResponse> getGreetingMethod() {
-    io.grpc.MethodDescriptor<proto.Player.PlayerMessageRequest, proto.Player.PlayerMessageResponse> getGreetingMethod;
-    if ((getGreetingMethod = PlayerServiceGrpc.getGreetingMethod) == null) {
+      proto.Player.PlayerMessageResponse> getElectionMethod() {
+    io.grpc.MethodDescriptor<proto.Player.PlayerMessageRequest, proto.Player.PlayerMessageResponse> getElectionMethod;
+    if ((getElectionMethod = PlayerServiceGrpc.getElectionMethod) == null) {
       synchronized (PlayerServiceGrpc.class) {
-        if ((getGreetingMethod = PlayerServiceGrpc.getGreetingMethod) == null) {
-          PlayerServiceGrpc.getGreetingMethod = getGreetingMethod =
+        if ((getElectionMethod = PlayerServiceGrpc.getElectionMethod) == null) {
+          PlayerServiceGrpc.getElectionMethod = getElectionMethod =
               io.grpc.MethodDescriptor.<proto.Player.PlayerMessageRequest, proto.Player.PlayerMessageResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "greeting"))
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "election"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   proto.Player.PlayerMessageRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   proto.Player.PlayerMessageResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new PlayerServiceMethodDescriptorSupplier("greeting"))
+              .setSchemaDescriptor(new PlayerServiceMethodDescriptorSupplier("election"))
               .build();
         }
       }
     }
-    return getGreetingMethod;
+    return getElectionMethod;
   }
 
   /**
@@ -87,20 +87,20 @@ public final class PlayerServiceGrpc {
 
     /**
      */
-    public void greeting(proto.Player.PlayerMessageRequest request,
+    public void election(proto.Player.PlayerMessageRequest request,
         io.grpc.stub.StreamObserver<proto.Player.PlayerMessageResponse> responseObserver) {
-      asyncUnimplementedUnaryCall(getGreetingMethod(), responseObserver);
+      asyncUnimplementedUnaryCall(getElectionMethod(), responseObserver);
     }
 
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
-            getGreetingMethod(),
+            getElectionMethod(),
             asyncUnaryCall(
               new MethodHandlers<
                 proto.Player.PlayerMessageRequest,
                 proto.Player.PlayerMessageResponse>(
-                  this, METHODID_GREETING)))
+                  this, METHODID_ELECTION)))
           .build();
     }
   }
@@ -125,10 +125,10 @@ public final class PlayerServiceGrpc {
 
     /**
      */
-    public void greeting(proto.Player.PlayerMessageRequest request,
+    public void election(proto.Player.PlayerMessageRequest request,
         io.grpc.stub.StreamObserver<proto.Player.PlayerMessageResponse> responseObserver) {
       asyncUnaryCall(
-          getChannel().newCall(getGreetingMethod(), getCallOptions()), request, responseObserver);
+          getChannel().newCall(getElectionMethod(), getCallOptions()), request, responseObserver);
     }
   }
 
@@ -152,9 +152,9 @@ public final class PlayerServiceGrpc {
 
     /**
      */
-    public proto.Player.PlayerMessageResponse greeting(proto.Player.PlayerMessageRequest request) {
+    public proto.Player.PlayerMessageResponse election(proto.Player.PlayerMessageRequest request) {
       return blockingUnaryCall(
-          getChannel(), getGreetingMethod(), getCallOptions(), request);
+          getChannel(), getElectionMethod(), getCallOptions(), request);
     }
   }
 
@@ -178,14 +178,14 @@ public final class PlayerServiceGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<proto.Player.PlayerMessageResponse> greeting(
+    public com.google.common.util.concurrent.ListenableFuture<proto.Player.PlayerMessageResponse> election(
         proto.Player.PlayerMessageRequest request) {
       return futureUnaryCall(
-          getChannel().newCall(getGreetingMethod(), getCallOptions()), request);
+          getChannel().newCall(getElectionMethod(), getCallOptions()), request);
     }
   }
 
-  private static final int METHODID_GREETING = 0;
+  private static final int METHODID_ELECTION = 0;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -204,8 +204,8 @@ public final class PlayerServiceGrpc {
     @java.lang.SuppressWarnings("unchecked")
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
-        case METHODID_GREETING:
-          serviceImpl.greeting((proto.Player.PlayerMessageRequest) request,
+        case METHODID_ELECTION:
+          serviceImpl.election((proto.Player.PlayerMessageRequest) request,
               (io.grpc.stub.StreamObserver<proto.Player.PlayerMessageResponse>) responseObserver);
           break;
         default:
@@ -269,7 +269,7 @@ public final class PlayerServiceGrpc {
         if (result == null) {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new PlayerServiceFileDescriptorSupplier())
-              .addMethod(getGreetingMethod())
+              .addMethod(getElectionMethod())
               .build();
         }
       }

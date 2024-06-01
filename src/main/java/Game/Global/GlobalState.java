@@ -1,8 +1,9 @@
 package Game.Global;
 
 import Game.GameClasses.GameState;
-import Game.Models.Message;
 import Game.GameClasses.PlayerExtended;
+import Game.GameClasses.Role;
+import Game.Models.Message;
 import Game.Models.Player;
 
 import java.util.ArrayList;
@@ -13,18 +14,24 @@ import static Game.GameClasses.GameState.BEFORE_ELECTION;
 import static Game.GameClasses.GameState.ELECTION_STARTED;
 
 public class GlobalState {
+    private static GlobalState instance;
     GameState gameState;
     String playerId;
+
+    double myDistance;
     List<Message> mqttMessagesSent;
     List<PlayerExtended> players;
-    private static GlobalState instance;
+
+    Role myRole = Role.HIDER;
 
     private GlobalState() {
         // Available GAME states
         // BEFORE_ELECTION
         // ELECTION_STARTED
         // ELECTION_ENDED
+        // ELECTION_MESSAGES_SENT
         // GAME_ENDED
+
         gameState = BEFORE_ELECTION;
         mqttMessagesSent = new ArrayList<>();
         players = new ArrayList<>();
@@ -35,6 +42,14 @@ public class GlobalState {
         if (instance == null)
             instance = new GlobalState();
         return instance;
+    }
+
+    synchronized public void setMyPlayerRole(Role role) {
+        for (PlayerExtended player : this.players) {
+            if (player.getId().equals(this.playerId)) {
+                player.setRole(role);
+            }
+        }
     }
 
     public GameState getGameState() {
@@ -51,6 +66,18 @@ public class GlobalState {
 
     public void setMyPlayerId(String playerId) {
         this.playerId = playerId;
+    }
+
+    private synchronized void calculateMyDistance() {
+        for (PlayerExtended player : this.players) {
+            if (player.getId().equals(this.playerId)) {
+                this.myDistance = player.getDistance();
+            }
+        }
+    }
+
+    public synchronized double getMyDistance() {
+        return myDistance;
     }
 
     public synchronized List<Message> getMqttMessagesSent() {

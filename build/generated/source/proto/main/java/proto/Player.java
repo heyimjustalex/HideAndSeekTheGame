@@ -120,7 +120,7 @@ public final class Player {
 
     /**
      * <pre>
-     * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_ENDED, GAME_ENDED
+     * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_MESSAGES_SENT, ELECTION_ENDED, GAME_ENDED
      * </pre>
      *
      * <code>string gameState = 8;</code>
@@ -129,7 +129,7 @@ public final class Player {
     java.lang.String getGameState();
     /**
      * <pre>
-     * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_ENDED, GAME_ENDED
+     * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_MESSAGES_SENT, ELECTION_ENDED, GAME_ENDED
      * </pre>
      *
      * <code>string gameState = 8;</code>
@@ -137,6 +137,26 @@ public final class Player {
      */
     com.google.protobuf.ByteString
         getGameStateBytes();
+
+    /**
+     * <pre>
+     * GREETING, ELECTION, OK, COORDINATOR
+     * </pre>
+     *
+     * <code>string messageType = 9;</code>
+     * @return The messageType.
+     */
+    java.lang.String getMessageType();
+    /**
+     * <pre>
+     * GREETING, ELECTION, OK, COORDINATOR
+     * </pre>
+     *
+     * <code>string messageType = 9;</code>
+     * @return The bytes for messageType.
+     */
+    com.google.protobuf.ByteString
+        getMessageTypeBytes();
   }
   /**
    * Protobuf type {@code proto.PlayerMessageRequest}
@@ -159,6 +179,7 @@ public final class Player {
       role_ = "";
       playerState_ = "";
       gameState_ = "";
+      messageType_ = "";
     }
 
     @java.lang.Override
@@ -237,6 +258,12 @@ public final class Player {
               java.lang.String s = input.readStringRequireUtf8();
 
               gameState_ = s;
+              break;
+            }
+            case 74: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              messageType_ = s;
               break;
             }
             default: {
@@ -557,7 +584,7 @@ public final class Player {
     private volatile java.lang.Object gameState_;
     /**
      * <pre>
-     * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_ENDED, GAME_ENDED
+     * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_MESSAGES_SENT, ELECTION_ENDED, GAME_ENDED
      * </pre>
      *
      * <code>string gameState = 8;</code>
@@ -578,7 +605,7 @@ public final class Player {
     }
     /**
      * <pre>
-     * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_ENDED, GAME_ENDED
+     * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_MESSAGES_SENT, ELECTION_ENDED, GAME_ENDED
      * </pre>
      *
      * <code>string gameState = 8;</code>
@@ -593,6 +620,52 @@ public final class Player {
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         gameState_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int MESSAGETYPE_FIELD_NUMBER = 9;
+    private volatile java.lang.Object messageType_;
+    /**
+     * <pre>
+     * GREETING, ELECTION, OK, COORDINATOR
+     * </pre>
+     *
+     * <code>string messageType = 9;</code>
+     * @return The messageType.
+     */
+    @java.lang.Override
+    public java.lang.String getMessageType() {
+      java.lang.Object ref = messageType_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        messageType_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * GREETING, ELECTION, OK, COORDINATOR
+     * </pre>
+     *
+     * <code>string messageType = 9;</code>
+     * @return The bytes for messageType.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getMessageTypeBytes() {
+      java.lang.Object ref = messageType_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        messageType_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -637,6 +710,9 @@ public final class Player {
       if (!getGameStateBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 8, gameState_);
       }
+      if (!getMessageTypeBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 9, messageType_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -670,6 +746,9 @@ public final class Player {
       if (!getGameStateBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, gameState_);
       }
+      if (!getMessageTypeBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, messageType_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -701,6 +780,8 @@ public final class Player {
           .equals(other.getPlayerState())) return false;
       if (!getGameState()
           .equals(other.getGameState())) return false;
+      if (!getMessageType()
+          .equals(other.getMessageType())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -728,6 +809,8 @@ public final class Player {
       hash = (53 * hash) + getPlayerState().hashCode();
       hash = (37 * hash) + GAMESTATE_FIELD_NUMBER;
       hash = (53 * hash) + getGameState().hashCode();
+      hash = (37 * hash) + MESSAGETYPE_FIELD_NUMBER;
+      hash = (53 * hash) + getMessageType().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -877,6 +960,8 @@ public final class Player {
 
         gameState_ = "";
 
+        messageType_ = "";
+
         return this;
       }
 
@@ -911,6 +996,7 @@ public final class Player {
         result.role_ = role_;
         result.playerState_ = playerState_;
         result.gameState_ = gameState_;
+        result.messageType_ = messageType_;
         onBuilt();
         return result;
       }
@@ -989,6 +1075,10 @@ public final class Player {
         }
         if (!other.getGameState().isEmpty()) {
           gameState_ = other.gameState_;
+          onChanged();
+        }
+        if (!other.getMessageType().isEmpty()) {
+          messageType_ = other.messageType_;
           onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -1595,7 +1685,7 @@ public final class Player {
       private java.lang.Object gameState_ = "";
       /**
        * <pre>
-       * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_ENDED, GAME_ENDED
+       * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_MESSAGES_SENT, ELECTION_ENDED, GAME_ENDED
        * </pre>
        *
        * <code>string gameState = 8;</code>
@@ -1615,7 +1705,7 @@ public final class Player {
       }
       /**
        * <pre>
-       * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_ENDED, GAME_ENDED
+       * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_MESSAGES_SENT, ELECTION_ENDED, GAME_ENDED
        * </pre>
        *
        * <code>string gameState = 8;</code>
@@ -1636,7 +1726,7 @@ public final class Player {
       }
       /**
        * <pre>
-       * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_ENDED, GAME_ENDED
+       * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_MESSAGES_SENT, ELECTION_ENDED, GAME_ENDED
        * </pre>
        *
        * <code>string gameState = 8;</code>
@@ -1655,7 +1745,7 @@ public final class Player {
       }
       /**
        * <pre>
-       * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_ENDED, GAME_ENDED
+       * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_MESSAGES_SENT, ELECTION_ENDED, GAME_ENDED
        * </pre>
        *
        * <code>string gameState = 8;</code>
@@ -1669,7 +1759,7 @@ public final class Player {
       }
       /**
        * <pre>
-       * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_ENDED, GAME_ENDED
+       * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_MESSAGES_SENT, ELECTION_ENDED, GAME_ENDED
        * </pre>
        *
        * <code>string gameState = 8;</code>
@@ -1684,6 +1774,102 @@ public final class Player {
   checkByteStringIsUtf8(value);
         
         gameState_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object messageType_ = "";
+      /**
+       * <pre>
+       * GREETING, ELECTION, OK, COORDINATOR
+       * </pre>
+       *
+       * <code>string messageType = 9;</code>
+       * @return The messageType.
+       */
+      public java.lang.String getMessageType() {
+        java.lang.Object ref = messageType_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          messageType_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * GREETING, ELECTION, OK, COORDINATOR
+       * </pre>
+       *
+       * <code>string messageType = 9;</code>
+       * @return The bytes for messageType.
+       */
+      public com.google.protobuf.ByteString
+          getMessageTypeBytes() {
+        java.lang.Object ref = messageType_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          messageType_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * GREETING, ELECTION, OK, COORDINATOR
+       * </pre>
+       *
+       * <code>string messageType = 9;</code>
+       * @param value The messageType to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMessageType(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        messageType_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * GREETING, ELECTION, OK, COORDINATOR
+       * </pre>
+       *
+       * <code>string messageType = 9;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearMessageType() {
+        
+        messageType_ = getDefaultInstance().getMessageType();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * GREETING, ELECTION, OK, COORDINATOR
+       * </pre>
+       *
+       * <code>string messageType = 9;</code>
+       * @param value The bytes for messageType to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMessageTypeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        messageType_ = value;
         onChanged();
         return this;
       }
@@ -1745,16 +1931,144 @@ public final class Player {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>string response_code = 1;</code>
-     * @return The responseCode.
+     * <code>string id = 1;</code>
+     * @return The id.
      */
-    java.lang.String getResponseCode();
+    java.lang.String getId();
     /**
-     * <code>string response_code = 1;</code>
-     * @return The bytes for responseCode.
+     * <code>string id = 1;</code>
+     * @return The bytes for id.
      */
     com.google.protobuf.ByteString
-        getResponseCodeBytes();
+        getIdBytes();
+
+    /**
+     * <code>string port = 2;</code>
+     * @return The port.
+     */
+    java.lang.String getPort();
+    /**
+     * <code>string port = 2;</code>
+     * @return The bytes for port.
+     */
+    com.google.protobuf.ByteString
+        getPortBytes();
+
+    /**
+     * <code>string address = 3;</code>
+     * @return The address.
+     */
+    java.lang.String getAddress();
+    /**
+     * <code>string address = 3;</code>
+     * @return The bytes for address.
+     */
+    com.google.protobuf.ByteString
+        getAddressBytes();
+
+    /**
+     * <code>string pos_x = 4;</code>
+     * @return The posX.
+     */
+    java.lang.String getPosX();
+    /**
+     * <code>string pos_x = 4;</code>
+     * @return The bytes for posX.
+     */
+    com.google.protobuf.ByteString
+        getPosXBytes();
+
+    /**
+     * <code>string pos_y = 5;</code>
+     * @return The posY.
+     */
+    java.lang.String getPosY();
+    /**
+     * <code>string pos_y = 5;</code>
+     * @return The bytes for posY.
+     */
+    com.google.protobuf.ByteString
+        getPosYBytes();
+
+    /**
+     * <pre>
+     * HIDER, SEEKER
+     * </pre>
+     *
+     * <code>string role = 6;</code>
+     * @return The role.
+     */
+    java.lang.String getRole();
+    /**
+     * <pre>
+     * HIDER, SEEKER
+     * </pre>
+     *
+     * <code>string role = 6;</code>
+     * @return The bytes for role.
+     */
+    com.google.protobuf.ByteString
+        getRoleBytes();
+
+    /**
+     * <pre>
+     * UNTAGGED, TAGGED, WINNER
+     * </pre>
+     *
+     * <code>string playerState = 7;</code>
+     * @return The playerState.
+     */
+    java.lang.String getPlayerState();
+    /**
+     * <pre>
+     * UNTAGGED, TAGGED, WINNER
+     * </pre>
+     *
+     * <code>string playerState = 7;</code>
+     * @return The bytes for playerState.
+     */
+    com.google.protobuf.ByteString
+        getPlayerStateBytes();
+
+    /**
+     * <pre>
+     * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_MESSAGES_SENT, ELECTION_ENDED, GAME_ENDED
+     * </pre>
+     *
+     * <code>string gameState = 8;</code>
+     * @return The gameState.
+     */
+    java.lang.String getGameState();
+    /**
+     * <pre>
+     * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_MESSAGES_SENT, ELECTION_ENDED, GAME_ENDED
+     * </pre>
+     *
+     * <code>string gameState = 8;</code>
+     * @return The bytes for gameState.
+     */
+    com.google.protobuf.ByteString
+        getGameStateBytes();
+
+    /**
+     * <pre>
+     * GREETING, ELECTION, OK, COORDINATOR
+     * </pre>
+     *
+     * <code>string messageType = 9;</code>
+     * @return The messageType.
+     */
+    java.lang.String getMessageType();
+    /**
+     * <pre>
+     * GREETING, ELECTION, OK, COORDINATOR
+     * </pre>
+     *
+     * <code>string messageType = 9;</code>
+     * @return The bytes for messageType.
+     */
+    com.google.protobuf.ByteString
+        getMessageTypeBytes();
   }
   /**
    * Protobuf type {@code proto.PlayerMessageResponse}
@@ -1769,7 +2083,15 @@ public final class Player {
       super(builder);
     }
     private PlayerMessageResponse() {
-      responseCode_ = "";
+      id_ = "";
+      port_ = "";
+      address_ = "";
+      posX_ = "";
+      posY_ = "";
+      role_ = "";
+      playerState_ = "";
+      gameState_ = "";
+      messageType_ = "";
     }
 
     @java.lang.Override
@@ -1805,7 +2127,55 @@ public final class Player {
             case 10: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              responseCode_ = s;
+              id_ = s;
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              port_ = s;
+              break;
+            }
+            case 26: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              address_ = s;
+              break;
+            }
+            case 34: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              posX_ = s;
+              break;
+            }
+            case 42: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              posY_ = s;
+              break;
+            }
+            case 50: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              role_ = s;
+              break;
+            }
+            case 58: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              playerState_ = s;
+              break;
+            }
+            case 66: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              gameState_ = s;
+              break;
+            }
+            case 74: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              messageType_ = s;
               break;
             }
             default: {
@@ -1840,38 +2210,374 @@ public final class Player {
               proto.Player.PlayerMessageResponse.class, proto.Player.PlayerMessageResponse.Builder.class);
     }
 
-    public static final int RESPONSE_CODE_FIELD_NUMBER = 1;
-    private volatile java.lang.Object responseCode_;
+    public static final int ID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object id_;
     /**
-     * <code>string response_code = 1;</code>
-     * @return The responseCode.
+     * <code>string id = 1;</code>
+     * @return The id.
      */
     @java.lang.Override
-    public java.lang.String getResponseCode() {
-      java.lang.Object ref = responseCode_;
+    public java.lang.String getId() {
+      java.lang.Object ref = id_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        responseCode_ = s;
+        id_ = s;
         return s;
       }
     }
     /**
-     * <code>string response_code = 1;</code>
-     * @return The bytes for responseCode.
+     * <code>string id = 1;</code>
+     * @return The bytes for id.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString
-        getResponseCodeBytes() {
-      java.lang.Object ref = responseCode_;
+        getIdBytes() {
+      java.lang.Object ref = id_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        responseCode_ = b;
+        id_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int PORT_FIELD_NUMBER = 2;
+    private volatile java.lang.Object port_;
+    /**
+     * <code>string port = 2;</code>
+     * @return The port.
+     */
+    @java.lang.Override
+    public java.lang.String getPort() {
+      java.lang.Object ref = port_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        port_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string port = 2;</code>
+     * @return The bytes for port.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getPortBytes() {
+      java.lang.Object ref = port_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        port_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int ADDRESS_FIELD_NUMBER = 3;
+    private volatile java.lang.Object address_;
+    /**
+     * <code>string address = 3;</code>
+     * @return The address.
+     */
+    @java.lang.Override
+    public java.lang.String getAddress() {
+      java.lang.Object ref = address_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        address_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string address = 3;</code>
+     * @return The bytes for address.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getAddressBytes() {
+      java.lang.Object ref = address_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        address_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int POS_X_FIELD_NUMBER = 4;
+    private volatile java.lang.Object posX_;
+    /**
+     * <code>string pos_x = 4;</code>
+     * @return The posX.
+     */
+    @java.lang.Override
+    public java.lang.String getPosX() {
+      java.lang.Object ref = posX_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        posX_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string pos_x = 4;</code>
+     * @return The bytes for posX.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getPosXBytes() {
+      java.lang.Object ref = posX_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        posX_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int POS_Y_FIELD_NUMBER = 5;
+    private volatile java.lang.Object posY_;
+    /**
+     * <code>string pos_y = 5;</code>
+     * @return The posY.
+     */
+    @java.lang.Override
+    public java.lang.String getPosY() {
+      java.lang.Object ref = posY_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        posY_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string pos_y = 5;</code>
+     * @return The bytes for posY.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getPosYBytes() {
+      java.lang.Object ref = posY_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        posY_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int ROLE_FIELD_NUMBER = 6;
+    private volatile java.lang.Object role_;
+    /**
+     * <pre>
+     * HIDER, SEEKER
+     * </pre>
+     *
+     * <code>string role = 6;</code>
+     * @return The role.
+     */
+    @java.lang.Override
+    public java.lang.String getRole() {
+      java.lang.Object ref = role_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        role_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * HIDER, SEEKER
+     * </pre>
+     *
+     * <code>string role = 6;</code>
+     * @return The bytes for role.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getRoleBytes() {
+      java.lang.Object ref = role_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        role_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int PLAYERSTATE_FIELD_NUMBER = 7;
+    private volatile java.lang.Object playerState_;
+    /**
+     * <pre>
+     * UNTAGGED, TAGGED, WINNER
+     * </pre>
+     *
+     * <code>string playerState = 7;</code>
+     * @return The playerState.
+     */
+    @java.lang.Override
+    public java.lang.String getPlayerState() {
+      java.lang.Object ref = playerState_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        playerState_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * UNTAGGED, TAGGED, WINNER
+     * </pre>
+     *
+     * <code>string playerState = 7;</code>
+     * @return The bytes for playerState.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getPlayerStateBytes() {
+      java.lang.Object ref = playerState_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        playerState_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int GAMESTATE_FIELD_NUMBER = 8;
+    private volatile java.lang.Object gameState_;
+    /**
+     * <pre>
+     * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_MESSAGES_SENT, ELECTION_ENDED, GAME_ENDED
+     * </pre>
+     *
+     * <code>string gameState = 8;</code>
+     * @return The gameState.
+     */
+    @java.lang.Override
+    public java.lang.String getGameState() {
+      java.lang.Object ref = gameState_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        gameState_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_MESSAGES_SENT, ELECTION_ENDED, GAME_ENDED
+     * </pre>
+     *
+     * <code>string gameState = 8;</code>
+     * @return The bytes for gameState.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getGameStateBytes() {
+      java.lang.Object ref = gameState_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        gameState_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int MESSAGETYPE_FIELD_NUMBER = 9;
+    private volatile java.lang.Object messageType_;
+    /**
+     * <pre>
+     * GREETING, ELECTION, OK, COORDINATOR
+     * </pre>
+     *
+     * <code>string messageType = 9;</code>
+     * @return The messageType.
+     */
+    @java.lang.Override
+    public java.lang.String getMessageType() {
+      java.lang.Object ref = messageType_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        messageType_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * GREETING, ELECTION, OK, COORDINATOR
+     * </pre>
+     *
+     * <code>string messageType = 9;</code>
+     * @return The bytes for messageType.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getMessageTypeBytes() {
+      java.lang.Object ref = messageType_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        messageType_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -1892,8 +2598,32 @@ public final class Player {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!getResponseCodeBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, responseCode_);
+      if (!getIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, id_);
+      }
+      if (!getPortBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, port_);
+      }
+      if (!getAddressBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, address_);
+      }
+      if (!getPosXBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, posX_);
+      }
+      if (!getPosYBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, posY_);
+      }
+      if (!getRoleBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, role_);
+      }
+      if (!getPlayerStateBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, playerState_);
+      }
+      if (!getGameStateBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 8, gameState_);
+      }
+      if (!getMessageTypeBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 9, messageType_);
       }
       unknownFields.writeTo(output);
     }
@@ -1904,8 +2634,32 @@ public final class Player {
       if (size != -1) return size;
 
       size = 0;
-      if (!getResponseCodeBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, responseCode_);
+      if (!getIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, id_);
+      }
+      if (!getPortBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, port_);
+      }
+      if (!getAddressBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, address_);
+      }
+      if (!getPosXBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, posX_);
+      }
+      if (!getPosYBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, posY_);
+      }
+      if (!getRoleBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, role_);
+      }
+      if (!getPlayerStateBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, playerState_);
+      }
+      if (!getGameStateBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, gameState_);
+      }
+      if (!getMessageTypeBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, messageType_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1922,8 +2676,24 @@ public final class Player {
       }
       proto.Player.PlayerMessageResponse other = (proto.Player.PlayerMessageResponse) obj;
 
-      if (!getResponseCode()
-          .equals(other.getResponseCode())) return false;
+      if (!getId()
+          .equals(other.getId())) return false;
+      if (!getPort()
+          .equals(other.getPort())) return false;
+      if (!getAddress()
+          .equals(other.getAddress())) return false;
+      if (!getPosX()
+          .equals(other.getPosX())) return false;
+      if (!getPosY()
+          .equals(other.getPosY())) return false;
+      if (!getRole()
+          .equals(other.getRole())) return false;
+      if (!getPlayerState()
+          .equals(other.getPlayerState())) return false;
+      if (!getGameState()
+          .equals(other.getGameState())) return false;
+      if (!getMessageType()
+          .equals(other.getMessageType())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -1935,8 +2705,24 @@ public final class Player {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + RESPONSE_CODE_FIELD_NUMBER;
-      hash = (53 * hash) + getResponseCode().hashCode();
+      hash = (37 * hash) + ID_FIELD_NUMBER;
+      hash = (53 * hash) + getId().hashCode();
+      hash = (37 * hash) + PORT_FIELD_NUMBER;
+      hash = (53 * hash) + getPort().hashCode();
+      hash = (37 * hash) + ADDRESS_FIELD_NUMBER;
+      hash = (53 * hash) + getAddress().hashCode();
+      hash = (37 * hash) + POS_X_FIELD_NUMBER;
+      hash = (53 * hash) + getPosX().hashCode();
+      hash = (37 * hash) + POS_Y_FIELD_NUMBER;
+      hash = (53 * hash) + getPosY().hashCode();
+      hash = (37 * hash) + ROLE_FIELD_NUMBER;
+      hash = (53 * hash) + getRole().hashCode();
+      hash = (37 * hash) + PLAYERSTATE_FIELD_NUMBER;
+      hash = (53 * hash) + getPlayerState().hashCode();
+      hash = (37 * hash) + GAMESTATE_FIELD_NUMBER;
+      hash = (53 * hash) + getGameState().hashCode();
+      hash = (37 * hash) + MESSAGETYPE_FIELD_NUMBER;
+      hash = (53 * hash) + getMessageType().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -2070,7 +2856,23 @@ public final class Player {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        responseCode_ = "";
+        id_ = "";
+
+        port_ = "";
+
+        address_ = "";
+
+        posX_ = "";
+
+        posY_ = "";
+
+        role_ = "";
+
+        playerState_ = "";
+
+        gameState_ = "";
+
+        messageType_ = "";
 
         return this;
       }
@@ -2098,7 +2900,15 @@ public final class Player {
       @java.lang.Override
       public proto.Player.PlayerMessageResponse buildPartial() {
         proto.Player.PlayerMessageResponse result = new proto.Player.PlayerMessageResponse(this);
-        result.responseCode_ = responseCode_;
+        result.id_ = id_;
+        result.port_ = port_;
+        result.address_ = address_;
+        result.posX_ = posX_;
+        result.posY_ = posY_;
+        result.role_ = role_;
+        result.playerState_ = playerState_;
+        result.gameState_ = gameState_;
+        result.messageType_ = messageType_;
         onBuilt();
         return result;
       }
@@ -2147,8 +2957,40 @@ public final class Player {
 
       public Builder mergeFrom(proto.Player.PlayerMessageResponse other) {
         if (other == proto.Player.PlayerMessageResponse.getDefaultInstance()) return this;
-        if (!other.getResponseCode().isEmpty()) {
-          responseCode_ = other.responseCode_;
+        if (!other.getId().isEmpty()) {
+          id_ = other.id_;
+          onChanged();
+        }
+        if (!other.getPort().isEmpty()) {
+          port_ = other.port_;
+          onChanged();
+        }
+        if (!other.getAddress().isEmpty()) {
+          address_ = other.address_;
+          onChanged();
+        }
+        if (!other.getPosX().isEmpty()) {
+          posX_ = other.posX_;
+          onChanged();
+        }
+        if (!other.getPosY().isEmpty()) {
+          posY_ = other.posY_;
+          onChanged();
+        }
+        if (!other.getRole().isEmpty()) {
+          role_ = other.role_;
+          onChanged();
+        }
+        if (!other.getPlayerState().isEmpty()) {
+          playerState_ = other.playerState_;
+          onChanged();
+        }
+        if (!other.getGameState().isEmpty()) {
+          gameState_ = other.gameState_;
+          onChanged();
+        }
+        if (!other.getMessageType().isEmpty()) {
+          messageType_ = other.messageType_;
           onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -2180,78 +3022,766 @@ public final class Player {
         return this;
       }
 
-      private java.lang.Object responseCode_ = "";
+      private java.lang.Object id_ = "";
       /**
-       * <code>string response_code = 1;</code>
-       * @return The responseCode.
+       * <code>string id = 1;</code>
+       * @return The id.
        */
-      public java.lang.String getResponseCode() {
-        java.lang.Object ref = responseCode_;
+      public java.lang.String getId() {
+        java.lang.Object ref = id_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          responseCode_ = s;
+          id_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>string response_code = 1;</code>
-       * @return The bytes for responseCode.
+       * <code>string id = 1;</code>
+       * @return The bytes for id.
        */
       public com.google.protobuf.ByteString
-          getResponseCodeBytes() {
-        java.lang.Object ref = responseCode_;
+          getIdBytes() {
+        java.lang.Object ref = id_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          responseCode_ = b;
+          id_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>string response_code = 1;</code>
-       * @param value The responseCode to set.
+       * <code>string id = 1;</code>
+       * @param value The id to set.
        * @return This builder for chaining.
        */
-      public Builder setResponseCode(
+      public Builder setId(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        responseCode_ = value;
+        id_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string response_code = 1;</code>
+       * <code>string id = 1;</code>
        * @return This builder for chaining.
        */
-      public Builder clearResponseCode() {
+      public Builder clearId() {
         
-        responseCode_ = getDefaultInstance().getResponseCode();
+        id_ = getDefaultInstance().getId();
         onChanged();
         return this;
       }
       /**
-       * <code>string response_code = 1;</code>
-       * @param value The bytes for responseCode to set.
+       * <code>string id = 1;</code>
+       * @param value The bytes for id to set.
        * @return This builder for chaining.
        */
-      public Builder setResponseCodeBytes(
+      public Builder setIdBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        responseCode_ = value;
+        id_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object port_ = "";
+      /**
+       * <code>string port = 2;</code>
+       * @return The port.
+       */
+      public java.lang.String getPort() {
+        java.lang.Object ref = port_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          port_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string port = 2;</code>
+       * @return The bytes for port.
+       */
+      public com.google.protobuf.ByteString
+          getPortBytes() {
+        java.lang.Object ref = port_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          port_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string port = 2;</code>
+       * @param value The port to set.
+       * @return This builder for chaining.
+       */
+      public Builder setPort(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        port_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string port = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearPort() {
+        
+        port_ = getDefaultInstance().getPort();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string port = 2;</code>
+       * @param value The bytes for port to set.
+       * @return This builder for chaining.
+       */
+      public Builder setPortBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        port_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object address_ = "";
+      /**
+       * <code>string address = 3;</code>
+       * @return The address.
+       */
+      public java.lang.String getAddress() {
+        java.lang.Object ref = address_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          address_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string address = 3;</code>
+       * @return The bytes for address.
+       */
+      public com.google.protobuf.ByteString
+          getAddressBytes() {
+        java.lang.Object ref = address_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          address_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string address = 3;</code>
+       * @param value The address to set.
+       * @return This builder for chaining.
+       */
+      public Builder setAddress(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        address_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string address = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearAddress() {
+        
+        address_ = getDefaultInstance().getAddress();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string address = 3;</code>
+       * @param value The bytes for address to set.
+       * @return This builder for chaining.
+       */
+      public Builder setAddressBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        address_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object posX_ = "";
+      /**
+       * <code>string pos_x = 4;</code>
+       * @return The posX.
+       */
+      public java.lang.String getPosX() {
+        java.lang.Object ref = posX_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          posX_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string pos_x = 4;</code>
+       * @return The bytes for posX.
+       */
+      public com.google.protobuf.ByteString
+          getPosXBytes() {
+        java.lang.Object ref = posX_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          posX_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string pos_x = 4;</code>
+       * @param value The posX to set.
+       * @return This builder for chaining.
+       */
+      public Builder setPosX(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        posX_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string pos_x = 4;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearPosX() {
+        
+        posX_ = getDefaultInstance().getPosX();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string pos_x = 4;</code>
+       * @param value The bytes for posX to set.
+       * @return This builder for chaining.
+       */
+      public Builder setPosXBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        posX_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object posY_ = "";
+      /**
+       * <code>string pos_y = 5;</code>
+       * @return The posY.
+       */
+      public java.lang.String getPosY() {
+        java.lang.Object ref = posY_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          posY_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string pos_y = 5;</code>
+       * @return The bytes for posY.
+       */
+      public com.google.protobuf.ByteString
+          getPosYBytes() {
+        java.lang.Object ref = posY_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          posY_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string pos_y = 5;</code>
+       * @param value The posY to set.
+       * @return This builder for chaining.
+       */
+      public Builder setPosY(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        posY_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string pos_y = 5;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearPosY() {
+        
+        posY_ = getDefaultInstance().getPosY();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string pos_y = 5;</code>
+       * @param value The bytes for posY to set.
+       * @return This builder for chaining.
+       */
+      public Builder setPosYBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        posY_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object role_ = "";
+      /**
+       * <pre>
+       * HIDER, SEEKER
+       * </pre>
+       *
+       * <code>string role = 6;</code>
+       * @return The role.
+       */
+      public java.lang.String getRole() {
+        java.lang.Object ref = role_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          role_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * HIDER, SEEKER
+       * </pre>
+       *
+       * <code>string role = 6;</code>
+       * @return The bytes for role.
+       */
+      public com.google.protobuf.ByteString
+          getRoleBytes() {
+        java.lang.Object ref = role_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          role_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * HIDER, SEEKER
+       * </pre>
+       *
+       * <code>string role = 6;</code>
+       * @param value The role to set.
+       * @return This builder for chaining.
+       */
+      public Builder setRole(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        role_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * HIDER, SEEKER
+       * </pre>
+       *
+       * <code>string role = 6;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearRole() {
+        
+        role_ = getDefaultInstance().getRole();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * HIDER, SEEKER
+       * </pre>
+       *
+       * <code>string role = 6;</code>
+       * @param value The bytes for role to set.
+       * @return This builder for chaining.
+       */
+      public Builder setRoleBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        role_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object playerState_ = "";
+      /**
+       * <pre>
+       * UNTAGGED, TAGGED, WINNER
+       * </pre>
+       *
+       * <code>string playerState = 7;</code>
+       * @return The playerState.
+       */
+      public java.lang.String getPlayerState() {
+        java.lang.Object ref = playerState_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          playerState_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * UNTAGGED, TAGGED, WINNER
+       * </pre>
+       *
+       * <code>string playerState = 7;</code>
+       * @return The bytes for playerState.
+       */
+      public com.google.protobuf.ByteString
+          getPlayerStateBytes() {
+        java.lang.Object ref = playerState_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          playerState_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * UNTAGGED, TAGGED, WINNER
+       * </pre>
+       *
+       * <code>string playerState = 7;</code>
+       * @param value The playerState to set.
+       * @return This builder for chaining.
+       */
+      public Builder setPlayerState(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        playerState_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * UNTAGGED, TAGGED, WINNER
+       * </pre>
+       *
+       * <code>string playerState = 7;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearPlayerState() {
+        
+        playerState_ = getDefaultInstance().getPlayerState();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * UNTAGGED, TAGGED, WINNER
+       * </pre>
+       *
+       * <code>string playerState = 7;</code>
+       * @param value The bytes for playerState to set.
+       * @return This builder for chaining.
+       */
+      public Builder setPlayerStateBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        playerState_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object gameState_ = "";
+      /**
+       * <pre>
+       * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_MESSAGES_SENT, ELECTION_ENDED, GAME_ENDED
+       * </pre>
+       *
+       * <code>string gameState = 8;</code>
+       * @return The gameState.
+       */
+      public java.lang.String getGameState() {
+        java.lang.Object ref = gameState_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          gameState_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_MESSAGES_SENT, ELECTION_ENDED, GAME_ENDED
+       * </pre>
+       *
+       * <code>string gameState = 8;</code>
+       * @return The bytes for gameState.
+       */
+      public com.google.protobuf.ByteString
+          getGameStateBytes() {
+        java.lang.Object ref = gameState_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          gameState_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_MESSAGES_SENT, ELECTION_ENDED, GAME_ENDED
+       * </pre>
+       *
+       * <code>string gameState = 8;</code>
+       * @param value The gameState to set.
+       * @return This builder for chaining.
+       */
+      public Builder setGameState(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        gameState_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_MESSAGES_SENT, ELECTION_ENDED, GAME_ENDED
+       * </pre>
+       *
+       * <code>string gameState = 8;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearGameState() {
+        
+        gameState_ = getDefaultInstance().getGameState();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * BEFORE_ELECTION, ELECTION_STARTED, ELECTION_MESSAGES_SENT, ELECTION_ENDED, GAME_ENDED
+       * </pre>
+       *
+       * <code>string gameState = 8;</code>
+       * @param value The bytes for gameState to set.
+       * @return This builder for chaining.
+       */
+      public Builder setGameStateBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        gameState_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object messageType_ = "";
+      /**
+       * <pre>
+       * GREETING, ELECTION, OK, COORDINATOR
+       * </pre>
+       *
+       * <code>string messageType = 9;</code>
+       * @return The messageType.
+       */
+      public java.lang.String getMessageType() {
+        java.lang.Object ref = messageType_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          messageType_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * GREETING, ELECTION, OK, COORDINATOR
+       * </pre>
+       *
+       * <code>string messageType = 9;</code>
+       * @return The bytes for messageType.
+       */
+      public com.google.protobuf.ByteString
+          getMessageTypeBytes() {
+        java.lang.Object ref = messageType_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          messageType_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * GREETING, ELECTION, OK, COORDINATOR
+       * </pre>
+       *
+       * <code>string messageType = 9;</code>
+       * @param value The messageType to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMessageType(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        messageType_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * GREETING, ELECTION, OK, COORDINATOR
+       * </pre>
+       *
+       * <code>string messageType = 9;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearMessageType() {
+        
+        messageType_ = getDefaultInstance().getMessageType();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * GREETING, ELECTION, OK, COORDINATOR
+       * </pre>
+       *
+       * <code>string messageType = 9;</code>
+       * @param value The bytes for messageType to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMessageTypeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        messageType_ = value;
         onChanged();
         return this;
       }
@@ -2327,14 +3857,18 @@ public final class Player {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\014Player.proto\022\005proto\"\225\001\n\024PlayerMessageR" +
+      "\n\014Player.proto\022\005proto\"\252\001\n\024PlayerMessageR" +
       "equest\022\n\n\002id\030\001 \001(\t\022\014\n\004port\030\002 \001(\t\022\017\n\007addr" +
       "ess\030\003 \001(\t\022\r\n\005pos_x\030\004 \001(\t\022\r\n\005pos_y\030\005 \001(\t\022" +
       "\014\n\004role\030\006 \001(\t\022\023\n\013playerState\030\007 \001(\t\022\021\n\tga" +
-      "meState\030\010 \001(\t\".\n\025PlayerMessageResponse\022\025" +
-      "\n\rresponse_code\030\001 \001(\t2V\n\rPlayerService\022E" +
-      "\n\010greeting\022\033.proto.PlayerMessageRequest\032" +
-      "\034.proto.PlayerMessageResponseb\006proto3"
+      "meState\030\010 \001(\t\022\023\n\013messageType\030\t \001(\t\"\253\001\n\025P" +
+      "layerMessageResponse\022\n\n\002id\030\001 \001(\t\022\014\n\004port" +
+      "\030\002 \001(\t\022\017\n\007address\030\003 \001(\t\022\r\n\005pos_x\030\004 \001(\t\022\r" +
+      "\n\005pos_y\030\005 \001(\t\022\014\n\004role\030\006 \001(\t\022\023\n\013playerSta" +
+      "te\030\007 \001(\t\022\021\n\tgameState\030\010 \001(\t\022\023\n\013messageTy" +
+      "pe\030\t \001(\t2V\n\rPlayerService\022E\n\010election\022\033." +
+      "proto.PlayerMessageRequest\032\034.proto.Playe" +
+      "rMessageResponseb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -2345,13 +3879,13 @@ public final class Player {
     internal_static_proto_PlayerMessageRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_proto_PlayerMessageRequest_descriptor,
-        new java.lang.String[] { "Id", "Port", "Address", "PosX", "PosY", "Role", "PlayerState", "GameState", });
+        new java.lang.String[] { "Id", "Port", "Address", "PosX", "PosY", "Role", "PlayerState", "GameState", "MessageType", });
     internal_static_proto_PlayerMessageResponse_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_proto_PlayerMessageResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_proto_PlayerMessageResponse_descriptor,
-        new java.lang.String[] { "ResponseCode", });
+        new java.lang.String[] { "Id", "Port", "Address", "PosX", "PosY", "Role", "PlayerState", "GameState", "MessageType", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
