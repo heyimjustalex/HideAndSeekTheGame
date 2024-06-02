@@ -109,13 +109,15 @@ Game/Utilities/HTTPUtilities.java
  Game.Utilities.HTTPUtilities$1
 Game/Global/GlobalState.java
  Game.Global.GlobalState
+Game/Services/PlayerServiceImpl.java
+ Game.Services.PlayerServiceImpl
+ Game.Services.PlayerServiceImpl$1
 Game/Services/GrpcCalls/GrpcCalls.java
  Game.Services.GrpcCalls.GrpcCalls
  Game.Services.GrpcCalls.GrpcCalls$1
  Game.Services.GrpcCalls.GrpcCalls$2
  Game.Services.GrpcCalls.GrpcCalls$3
-Game/Services/PlayerServiceImpl.java
- Game.Services.PlayerServiceImpl
- Game.Services.PlayerServiceImpl$1
+Game/Utilities/Other.java
+ Game.Utilities.Other
 Game/Main.java
  Game.Main
