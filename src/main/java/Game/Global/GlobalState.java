@@ -9,19 +9,23 @@ import Game.Models.Player;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledFuture;
 
 import static Game.GameClasses.GameState.BEFORE_ELECTION;
 import static Game.GameClasses.GameState.ELECTION_STARTED;
 
 public class GlobalState {
     private static GlobalState instance;
+    ConcurrentHashMap<String, Boolean> greetingElectionFutureProcessed = new ConcurrentHashMap<>();
+    ConcurrentHashMap<String, Boolean> electionFutureProcessed = new ConcurrentHashMap<>();
+    ScheduledFuture<?>[] timeoutFutureHolderElection = new ScheduledFuture<?>[1];
+    ScheduledFuture<?>[] timeoutFutureHolderGreetingElection = new ScheduledFuture<?>[1];
     GameState gameState;
     String playerId;
-
     double myDistance;
     List<Message> mqttMessagesSent;
     List<PlayerExtended> players;
-
     Role myRole = Role.HIDER;
 
     private GlobalState() {
@@ -145,7 +149,7 @@ public class GlobalState {
     }
 
     public synchronized void messageAdd(Message message) {
-        System.out.println("BufferGameState: " + " consumed message " + message.getValue());
+        System.out.println("BufferGameState:" + " consumed message " + message.getType() + ": " + message.getValue());
         if (message.getType().equals("gameState") && message.getValue().equals("ELECTION_STARTED") && this.gameState.equals(BEFORE_ELECTION)) {
             this.gameState = ELECTION_STARTED;
         }
@@ -153,5 +157,20 @@ public class GlobalState {
         notifyAll();
     }
 
+    public synchronized ConcurrentHashMap<String, Boolean> getGreetingElectionFutureProcessed() {
+        return greetingElectionFutureProcessed;
+    }
+
+    public synchronized ConcurrentHashMap<String, Boolean> getElectionFutureProcessed() {
+        return electionFutureProcessed;
+    }
+
+    public synchronized ScheduledFuture<?>[] getTimeoutFutureHolderElection() {
+        return timeoutFutureHolderElection;
+    }
+
+    public synchronized ScheduledFuture<?>[] getTimeoutFutureHolderGreetingElection() {
+        return timeoutFutureHolderGreetingElection;
+    }
 
 }

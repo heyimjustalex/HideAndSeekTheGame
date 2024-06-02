@@ -2,21 +2,30 @@ syntax = "proto3";
 package proto;
 
 message PlayerMessageRequest{
-  string id =1;
-  string port =2;
+  string id = 1;
+  string port = 2;
   string address = 3;
-  string pos_x=4;
-  string pos_y=5;
-  string role=6; // HIDER, SEEKER
-  string playerState=7; // UNTAGGED, TAGGED, WINNER
-  string gameState =8;  // BEFORE_ELECTION, ELECTION_STARTED, ELECTION_ENDED, GAME_ENDED
+  string pos_x = 4;
+  string pos_y = 5;
+  string role = 6; // HIDER, SEEKER
+  string playerState = 7; // UNTAGGED, TAGGED, WINNER
+  string gameState = 8;  // BEFORE_ELECTION, ELECTION_STARTED, ELECTION_MESSAGES_SENT, ELECTION_ENDED, GAME_ENDED
+  string messageType = 9; // GREETING, ELECTION, OK, COORDINATOR
 }
 
 message PlayerMessageResponse{
-  string response_code=1;
+  string id = 1;
+  string port = 2;
+  string address = 3;
+  string pos_x = 4;
+  string pos_y = 5;
+  string role = 6; // HIDER, SEEKER
+  string playerState = 7; // UNTAGGED, TAGGED, WINNER
+  string gameState = 8;  // BEFORE_ELECTION, ELECTION_STARTED, ELECTION_MESSAGES_SENT, ELECTION_ENDED, GAME_ENDED
+  string messageType = 9; // GREETING, ELECTION, OK, COORDINATOR
 }
 
 service PlayerService{
-  rpc greeting(PlayerMessageRequest) returns (PlayerMessageResponse);
+  rpc election(PlayerMessageRequest) returns (PlayerMessageResponse);
 
 }

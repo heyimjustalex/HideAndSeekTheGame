@@ -7,7 +7,6 @@ import com.google.gson.GsonBuilder;
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.sql.Timestamp;
-import java.util.Scanner;
 
 public class SubscriberHandler {
     public static void handleSubscription() throws InterruptedException, MqttException {
@@ -37,16 +36,16 @@ public class SubscriberHandler {
 
                     String time = new Timestamp(System.currentTimeMillis()).toString();
                     String receivedMessage = new String(message.getPayload());
-//                    System.out.println(clientId + " Subscriber: Received a Message! - Callback - Thread PID: " + Thread.currentThread().getId() +
-//                            "\n\tTime:    " + time +
-//                            "\n\tTopic:   " + topic +
-//                            "\n\tMessage: " + receivedMessage +
-//                            "\n\tQoS:     " + message.getQos() + "\n");
+                    System.out.println(clientId + " SubscriberHandler: Received a Message! - Callback - Thread PID: " + Thread.currentThread().getId() +
+                            "\n\tTime:    " + time +
+                            "\n\tTopic:   " + topic +
+                            "\n\tMessage: " + receivedMessage +
+                            "\n\tQoS:     " + message.getQos() + "\n");
 
                     if (topic.equals("/broadcast")) {
                         Message retreviedMessage = gson.fromJson(receivedMessage, Message.class);
                         GlobalState.getStateObject().messageAdd(retreviedMessage);
-                        System.out.println("SubscriberHandler: " + retreviedMessage.getType() + " " + retreviedMessage.getValue());
+//                        System.out.println("SubscriberHandler: " + retreviedMessage.getType() + " " + retreviedMessage.getValue());
                     }
                 }
 
@@ -65,7 +64,7 @@ public class SubscriberHandler {
             System.out.println("SubscriberHandler: Subscriber: " + clientId + " Subscribing ... - Thread PID: " + Thread.currentThread().getId());
             client.subscribe(topic, qos);
             System.out.println("SubscriberHandler: Subscriber: " + clientId + " Subscribed to topics : " + topic);
-            client.disconnect();
+//            client.disconnect();
 
 
         } catch (MqttException me) {

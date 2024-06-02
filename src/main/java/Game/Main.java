@@ -30,21 +30,22 @@ public class Main {
         }
     }
 
-    public static void launchSubscriptionHandleThread() {
+    public static Thread launchSubscriptionHandleThread() {
         try {
 
             Thread subscriptionThread = new Thread(() -> {
                 try {
                     SubscriberHandler.handleSubscription();
                 } catch (Exception e) {
-                    System.out.println(e);
+                    System.out.println("LaunchSubscriptionHandleThread: " + e);
                 }
             });
-            subscriptionThread.start();
+
+            return subscriptionThread;
         } catch (Exception e) {
             System.out.println("subscriptionThread: Exception: " + e);
         }
-
+        return null;
     }
 
     public static void main(String[] args) throws InterruptedException, IOException {
@@ -82,9 +83,13 @@ public class Main {
         averageComputerThread.start();
         simulator.start();
 
+        Thread mqttHandlerThread = launchSubscriptionHandleThread();
+        if (mqttHandlerThread != null) {
+            mqttHandlerThread.start();
+
+        }
 
         // GRPC
-
         io.grpc.Server server = ServerBuilder.forPort(Integer.parseInt(port)).addService(new PlayerServiceImpl()).build();
         server.start();
         System.out.println("Main: PlayerServiceImpl - Grpc server started at port: " + port);
@@ -97,14 +102,14 @@ public class Main {
 
         // wait() until gameState changed to any except for BEFORE_ELECTION
         GlobalState.getStateObject().waitUntilElectionStarts();
-
+        System.out.println("Main: Election started");
 
         // Wait for threads to end
 
         averageComputerThread.join();
         simulator.join();
         server.awaitTermination();
-
+        mqttHandlerThread.join();
 
     }
 }
