@@ -26,6 +26,7 @@ message PlayerMessageResponse{
 }
 
 service PlayerService{
+  rpc greeting(PlayerMessageRequest) returns (PlayerMessageResponse);
   rpc election(PlayerMessageRequest) returns (PlayerMessageResponse);
-
+  rpc coordinator(PlayerMessageRequest) returns (PlayerMessageResponse);
 }

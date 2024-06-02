@@ -63,7 +63,7 @@ public class GlobalState {
 
     public void setGameState(GameState gameState) {
 
-        System.out.println("GlobalState, setMyPlayerRole: Player: " + this.playerId + ": OldGameState: " + this.gameState + " newGameState: " + gameState);
+        System.out.println("GlobalState, setMyGameState: Player: " + this.playerId + ": OldGameState: " + this.gameState + " newGameState: " + gameState);
 
         this.gameState = gameState;
     }

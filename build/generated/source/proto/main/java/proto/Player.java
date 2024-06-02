@@ -3866,9 +3866,13 @@ public final class Player {
       "\030\002 \001(\t\022\017\n\007address\030\003 \001(\t\022\r\n\005pos_x\030\004 \001(\t\022\r" +
       "\n\005pos_y\030\005 \001(\t\022\014\n\004role\030\006 \001(\t\022\023\n\013playerSta" +
       "te\030\007 \001(\t\022\021\n\tgameState\030\010 \001(\t\022\023\n\013messageTy" +
-      "pe\030\t \001(\t2V\n\rPlayerService\022E\n\010election\022\033." +
-      "proto.PlayerMessageRequest\032\034.proto.Playe" +
-      "rMessageResponseb\006proto3"
+      "pe\030\t \001(\t2\347\001\n\rPlayerService\022E\n\010greeting\022\033" +
+      ".proto.PlayerMessageRequest\032\034.proto.Play" +
+      "erMessageResponse\022E\n\010election\022\033.proto.Pl" +
+      "ayerMessageRequest\032\034.proto.PlayerMessage" +
+      "Response\022H\n\013coordinator\022\033.proto.PlayerMe" +
+      "ssageRequest\032\034.proto.PlayerMessageRespon" +
+      "seb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

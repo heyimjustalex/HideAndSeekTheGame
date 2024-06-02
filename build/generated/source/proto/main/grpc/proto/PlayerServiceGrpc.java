@@ -28,6 +28,37 @@ public final class PlayerServiceGrpc {
 
   // Static method descriptors that strictly reflect the proto.
   private static volatile io.grpc.MethodDescriptor<proto.Player.PlayerMessageRequest,
+      proto.Player.PlayerMessageResponse> getGreetingMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "greeting",
+      requestType = proto.Player.PlayerMessageRequest.class,
+      responseType = proto.Player.PlayerMessageResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<proto.Player.PlayerMessageRequest,
+      proto.Player.PlayerMessageResponse> getGreetingMethod() {
+    io.grpc.MethodDescriptor<proto.Player.PlayerMessageRequest, proto.Player.PlayerMessageResponse> getGreetingMethod;
+    if ((getGreetingMethod = PlayerServiceGrpc.getGreetingMethod) == null) {
+      synchronized (PlayerServiceGrpc.class) {
+        if ((getGreetingMethod = PlayerServiceGrpc.getGreetingMethod) == null) {
+          PlayerServiceGrpc.getGreetingMethod = getGreetingMethod =
+              io.grpc.MethodDescriptor.<proto.Player.PlayerMessageRequest, proto.Player.PlayerMessageResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "greeting"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  proto.Player.PlayerMessageRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  proto.Player.PlayerMessageResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new PlayerServiceMethodDescriptorSupplier("greeting"))
+              .build();
+        }
+      }
+    }
+    return getGreetingMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<proto.Player.PlayerMessageRequest,
       proto.Player.PlayerMessageResponse> getElectionMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
@@ -56,6 +87,37 @@ public final class PlayerServiceGrpc {
       }
     }
     return getElectionMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<proto.Player.PlayerMessageRequest,
+      proto.Player.PlayerMessageResponse> getCoordinatorMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "coordinator",
+      requestType = proto.Player.PlayerMessageRequest.class,
+      responseType = proto.Player.PlayerMessageResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<proto.Player.PlayerMessageRequest,
+      proto.Player.PlayerMessageResponse> getCoordinatorMethod() {
+    io.grpc.MethodDescriptor<proto.Player.PlayerMessageRequest, proto.Player.PlayerMessageResponse> getCoordinatorMethod;
+    if ((getCoordinatorMethod = PlayerServiceGrpc.getCoordinatorMethod) == null) {
+      synchronized (PlayerServiceGrpc.class) {
+        if ((getCoordinatorMethod = PlayerServiceGrpc.getCoordinatorMethod) == null) {
+          PlayerServiceGrpc.getCoordinatorMethod = getCoordinatorMethod =
+              io.grpc.MethodDescriptor.<proto.Player.PlayerMessageRequest, proto.Player.PlayerMessageResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "coordinator"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  proto.Player.PlayerMessageRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  proto.Player.PlayerMessageResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new PlayerServiceMethodDescriptorSupplier("coordinator"))
+              .build();
+        }
+      }
+    }
+    return getCoordinatorMethod;
   }
 
   /**
@@ -87,13 +149,34 @@ public final class PlayerServiceGrpc {
 
     /**
      */
+    public void greeting(proto.Player.PlayerMessageRequest request,
+        io.grpc.stub.StreamObserver<proto.Player.PlayerMessageResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getGreetingMethod(), responseObserver);
+    }
+
+    /**
+     */
     public void election(proto.Player.PlayerMessageRequest request,
         io.grpc.stub.StreamObserver<proto.Player.PlayerMessageResponse> responseObserver) {
       asyncUnimplementedUnaryCall(getElectionMethod(), responseObserver);
     }
 
+    /**
+     */
+    public void coordinator(proto.Player.PlayerMessageRequest request,
+        io.grpc.stub.StreamObserver<proto.Player.PlayerMessageResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getCoordinatorMethod(), responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
+          .addMethod(
+            getGreetingMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                proto.Player.PlayerMessageRequest,
+                proto.Player.PlayerMessageResponse>(
+                  this, METHODID_GREETING)))
           .addMethod(
             getElectionMethod(),
             asyncUnaryCall(
@@ -101,6 +184,13 @@ public final class PlayerServiceGrpc {
                 proto.Player.PlayerMessageRequest,
                 proto.Player.PlayerMessageResponse>(
                   this, METHODID_ELECTION)))
+          .addMethod(
+            getCoordinatorMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                proto.Player.PlayerMessageRequest,
+                proto.Player.PlayerMessageResponse>(
+                  this, METHODID_COORDINATOR)))
           .build();
     }
   }
@@ -125,10 +215,26 @@ public final class PlayerServiceGrpc {
 
     /**
      */
+    public void greeting(proto.Player.PlayerMessageRequest request,
+        io.grpc.stub.StreamObserver<proto.Player.PlayerMessageResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getGreetingMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
     public void election(proto.Player.PlayerMessageRequest request,
         io.grpc.stub.StreamObserver<proto.Player.PlayerMessageResponse> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getElectionMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void coordinator(proto.Player.PlayerMessageRequest request,
+        io.grpc.stub.StreamObserver<proto.Player.PlayerMessageResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getCoordinatorMethod(), getCallOptions()), request, responseObserver);
     }
   }
 
@@ -152,9 +258,23 @@ public final class PlayerServiceGrpc {
 
     /**
      */
+    public proto.Player.PlayerMessageResponse greeting(proto.Player.PlayerMessageRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getGreetingMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
     public proto.Player.PlayerMessageResponse election(proto.Player.PlayerMessageRequest request) {
       return blockingUnaryCall(
           getChannel(), getElectionMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public proto.Player.PlayerMessageResponse coordinator(proto.Player.PlayerMessageRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getCoordinatorMethod(), getCallOptions(), request);
     }
   }
 
@@ -178,14 +298,32 @@ public final class PlayerServiceGrpc {
 
     /**
      */
+    public com.google.common.util.concurrent.ListenableFuture<proto.Player.PlayerMessageResponse> greeting(
+        proto.Player.PlayerMessageRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getGreetingMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
     public com.google.common.util.concurrent.ListenableFuture<proto.Player.PlayerMessageResponse> election(
         proto.Player.PlayerMessageRequest request) {
       return futureUnaryCall(
           getChannel().newCall(getElectionMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<proto.Player.PlayerMessageResponse> coordinator(
+        proto.Player.PlayerMessageRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getCoordinatorMethod(), getCallOptions()), request);
+    }
   }
 
-  private static final int METHODID_ELECTION = 0;
+  private static final int METHODID_GREETING = 0;
+  private static final int METHODID_ELECTION = 1;
+  private static final int METHODID_COORDINATOR = 2;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -204,8 +342,16 @@ public final class PlayerServiceGrpc {
     @java.lang.SuppressWarnings("unchecked")
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
+        case METHODID_GREETING:
+          serviceImpl.greeting((proto.Player.PlayerMessageRequest) request,
+              (io.grpc.stub.StreamObserver<proto.Player.PlayerMessageResponse>) responseObserver);
+          break;
         case METHODID_ELECTION:
           serviceImpl.election((proto.Player.PlayerMessageRequest) request,
+              (io.grpc.stub.StreamObserver<proto.Player.PlayerMessageResponse>) responseObserver);
+          break;
+        case METHODID_COORDINATOR:
+          serviceImpl.coordinator((proto.Player.PlayerMessageRequest) request,
               (io.grpc.stub.StreamObserver<proto.Player.PlayerMessageResponse>) responseObserver);
           break;
         default:
@@ -269,7 +415,9 @@ public final class PlayerServiceGrpc {
         if (result == null) {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new PlayerServiceFileDescriptorSupplier())
+              .addMethod(getGreetingMethod())
               .addMethod(getElectionMethod())
+              .addMethod(getCoordinatorMethod())
               .build();
         }
       }
