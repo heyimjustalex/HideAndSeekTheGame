@@ -49,6 +49,7 @@ public class GlobalState {
     }
 
     synchronized public void setMyPlayerRole(Role role) {
+        System.out.println("GlobalState, setMyPlayerRole: Player: " + this.playerId + ": OldRole: " + this.myRole + " newRole: " + role);
         for (PlayerExtended player : this.players) {
             if (player.getId().equals(this.playerId)) {
                 player.setRole(role);
@@ -61,6 +62,9 @@ public class GlobalState {
     }
 
     public void setGameState(GameState gameState) {
+
+        System.out.println("GlobalState, setMyPlayerRole: Player: " + this.playerId + ": OldGameState: " + this.gameState + " newGameState: " + gameState);
+
         this.gameState = gameState;
     }
 

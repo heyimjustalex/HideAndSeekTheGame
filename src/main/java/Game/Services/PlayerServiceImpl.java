@@ -42,8 +42,7 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
 
     @Override
     public void election(PlayerMessageRequest request, StreamObserver<PlayerMessageResponse> responseObserver) {
-//        PlayerExtended playerExtended = new PlayerExtended(request.getId(), request.getPort(), request.getAddress(), request.getPosX(), request.getPosY(), request.getRole(), request.getPlayerState());
-//        GameState requestGameState = GameState.valueOf(request.getGameState());
+
         String myId = GlobalState.getStateObject().getMyPlayerId();
         final ConcurrentHashMap<String, Boolean> greetingElectionFutureProcessed = GlobalState.getStateObject().getGreetingElectionFutureProcessed();
         final ConcurrentHashMap<String, Boolean> electionFutureProcessed = GlobalState.getStateObject().getElectionFutureProcessed();
@@ -57,13 +56,10 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
 
             case GREETING:
                 // I got a greeting message
-                System.out.println("Player " + myId + ": Got a GREETING message from player " + request.getId());
+                System.out.println("PlayerServiceImpl: GREETING message from -> Player " + myId + ": Got a GREETING message from player " + request.getId());
                 // I'm adding the player I got
                 PlayerExtended playerExtended = new PlayerExtended(request.getId(), request.getPort(), request.getAddress(), request.getPosX(), request.getPosY(), request.getRole(), request.getPlayerState());
                 GlobalState.getStateObject().addPlayer(playerExtended);
-
-                // Getting relevant information
-
 
                 // Sending relevant information
                 responseObserver.onNext(PlayerMessageResponse.newBuilder()
@@ -77,8 +73,8 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
                 break;
 
             case ELECTION:
-                System.out.println("Player " + myId + ": Got an ELECTION message from player" + request.getId());
-                ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+                System.out.println("PlayerServiceImpl: ELECTION message from -> Player " + myId + ": Got an ELECTION message from player" + request.getId());
+                ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
                 GameState requestGameState = GameState.valueOf(request.getGameState());
 
@@ -91,26 +87,32 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
 
                 double myDistance = GlobalState.getStateObject().getMyDistance();
                 double otherPlayerDistance = calculateDistanceToNearestBasePoint(Double.parseDouble(request.getPosX()), Double.parseDouble(request.getPosY()));
-                System.out.println("Player " + myId + ": if I don't get OK messages in 3s I will change to leader");
+                System.out.println("PlayerServiceImpl: Player " + myId + ": if I don't get OK messages in 3s I will change to leader");
 
                 // Change my role to LEADER after 2 seconds
+
+                // Define the task to be scheduled
+                Runnable electionTask = () -> {
+                    System.out.println("PlayerServiceImpl: Player " + myId + " I have become the LEADER");
+                    GlobalState.getStateObject().setMyPlayerRole(Role.SEEKER);
+                    GlobalState.getStateObject().setGameState(GameState.ELECTION_ENDED);
+                    responseObserver.onNext(PlayerMessageResponse.newBuilder()
+                            .setMessageType(String.valueOf(MessageType.COORDINATOR))
+                            .setId(myId)
+                            .setGameState(GameState.ELECTION_ENDED.toString())
+                            .build());
+                    System.out.println("PlayerServiceImpl: Player " + myId + " timeout occurred. State set to LEADER and sending COORDINATOR message ");
+                };
+
+                // Schedule the task if not already processed
                 if (electionFutureProcessed.putIfAbsent("ELECTION", true) == null) {
-                    System.out.println("Player " + myId + " ELECTION message put to map, and I will become leader in 3 s");
-                    timeoutFutureHolderElection[0] = executor.schedule(() -> {
-                        GlobalState.getStateObject().setMyPlayerRole(Role.SEEKER);
-                        GlobalState.getStateObject().setGameState(GameState.ELECTION_ENDED);
-                        responseObserver.onNext(PlayerMessageResponse.newBuilder()
-                                .setMessageType(String.valueOf(MessageType.COORDINATOR))
-                                .setId(myId)
-                                .setGameState(GameState.ELECTION_ENDED.toString())
-                                .build());
-                        System.out.println("Player " + myId + " timeout occurred. State set to LEADER and sending COORDINATOR message ");
-                    }, 3, TimeUnit.SECONDS);
+                    System.out.println("PlayerServiceImpl: Player " + myId + " ELECTION message put to map, and I will become leader in 12s");
+                    timeoutFutureHolderElection[0] = executor.schedule(electionTask, 12, TimeUnit.SECONDS);
                 }
 
 
                 if (myDistance < otherPlayerDistance || (myDistance == otherPlayerDistance && myId.compareToIgnoreCase(request.getId()) > 0)) {
-                    System.out.println("Player " + myId + " I got ELECTION message with player distance lower than mine from " + request.getId() + " so I send him OK");
+                    System.out.println("PlayerServiceImpl: Player " + myId + " I got ELECTION message with player distance higher than mine from " + request.getId() + " so I send him OK");
                     responseObserver.onNext(PlayerMessageResponse.newBuilder()
                             .setMessageType(MessageType.ELECTION_OK.toString())
                             .build());
@@ -119,28 +121,15 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
 
                 break;
 
-            case ELECTION_OK:
-                System.out.println(myId + " timeout occurred. State set to HIDER because i got OK message from player " + request.getId());
-                if (timeoutFutureHolderElection[0] != null) {
-                    timeoutFutureHolderElection[0].cancel(true);
-                }
-                if (timeoutFutureHolderGreetingElection[0] != null) {
-                    timeoutFutureHolderGreetingElection[0].cancel(true);
-                }
-                GlobalState.getStateObject().setMyPlayerRole(Role.HIDER);
-                break;
             case COORDINATOR:
-                System.out.println(myId + " got COORDINATOR message from " + request.getId() + " setting: gameState: ELECTION_ENDED, playerState:HIDER");
+                System.out.println("PlayerServiceImpl: " + myId + " got COORDINATOR message from " + request.getId() + " setting: gameState: ELECTION_ENDED, playerState:HIDER");
                 GlobalState.getStateObject().setGameState(GameState.ELECTION_ENDED);
                 GlobalState.getStateObject().setMyPlayerRole(Role.HIDER);
                 break;
 
 
-//            if (myCurrentGameState.ordinal() > GameState.BEFORE_ELECTION.ordinal()) {}
         }
 
-//        System.out.println("PlayerServiceImpl greeting: " + GlobalState.getStateObject().getPlayers());
-//        responseObserver.onNext(PlayerMessageResponse.newBuilder().build());
         responseObserver.onCompleted();
     }
 

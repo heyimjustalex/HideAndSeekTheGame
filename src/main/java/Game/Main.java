@@ -30,6 +30,16 @@ public class Main {
         }
     }
 
+    public static void electLeader() throws InterruptedException {
+        for (PlayerExtended playerExtended : GlobalState.getStateObject().getPlayers()) {
+            if (GlobalState.getStateObject().getMyPlayerId().equals(playerExtended.getId())) {
+                continue;
+            }
+            String serverAddress = playerExtended.getAddress() + ":" + playerExtended.getPort();
+            GrpcCalls.electionCallAsync(serverAddress);
+        }
+    }
+
     public static Thread launchSubscriptionHandleThread() {
         try {
 
@@ -101,15 +111,24 @@ public class Main {
         }
 
         // wait() until gameState changed to any except for BEFORE_ELECTION
+
         GlobalState.getStateObject().waitUntilElectionStarts();
         System.out.println("Main: Election started");
+        try {
+            electLeader();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
 
         // Wait for threads to end
 
         averageComputerThread.join();
         simulator.join();
         server.awaitTermination();
-        mqttHandlerThread.join();
+        if (mqttHandlerThread != null) {
+            mqttHandlerThread.join();
+
+        }
 
     }
 }

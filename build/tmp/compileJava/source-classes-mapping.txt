@@ -32,8 +32,8 @@ Game/HeartRate/Simulators/HRSimulator.java
  Game.HeartRate.Simulators.HRSimulator
 AdministrationServer/Schemas/PlayerDeleteRequest.java
  AdministrationServer.Schemas.PlayerDeleteRequest
-AdministrationServer/Repositories/MeasurementRepository.java
- AdministrationServer.Repositories.MeasurementRepository
+Game/HeartRate/SimulatorsImplementation/AverageSender.java
+ Game.HeartRate.SimulatorsImplementation.AverageSender
 AdministrationServer/Services/PlayerService.java
  AdministrationServer.Services.PlayerService
  AdministrationServer.Services.PlayerService$1
@@ -84,8 +84,8 @@ AdministrationServer/Schemas/MeasurementAddResponse.java
  AdministrationServer.Schemas.MeasurementAddResponse
 AdministrationServer/Schemas/PlayerAddRequest.java
  AdministrationServer.Schemas.PlayerAddRequest
-Game/HeartRate/SimulatorsImplementation/AverageSender.java
- Game.HeartRate.SimulatorsImplementation.AverageSender
+Game/Models/Message.java
+ Game.Models.Message
 AdministrationServer/Services/MeasurementService.java
  AdministrationServer.Services.MeasurementService
 proto/Player.java
@@ -99,23 +99,23 @@ proto/Player.java
  proto.Player$PlayerMessageResponse$1
  proto.Player$PlayerMessageResponse$Builder
  proto.Player$PlayerMessageResponseOrBuilder
-Game/Models/Message.java
- Game.Models.Message
+AdministrationServer/Repositories/MeasurementRepository.java
+ AdministrationServer.Repositories.MeasurementRepository
 Game/Broker/SubscriberHandler.java
  Game.Broker.SubscriberHandler
  Game.Broker.SubscriberHandler$1
-Game/Services/PlayerServiceImpl.java
- Game.Services.PlayerServiceImpl
- Game.Services.PlayerServiceImpl$1
+Game/Utilities/HTTPUtilities.java
+ Game.Utilities.HTTPUtilities
+ Game.Utilities.HTTPUtilities$1
+Game/Global/GlobalState.java
+ Game.Global.GlobalState
 Game/Services/GrpcCalls/GrpcCalls.java
  Game.Services.GrpcCalls.GrpcCalls
  Game.Services.GrpcCalls.GrpcCalls$1
  Game.Services.GrpcCalls.GrpcCalls$2
  Game.Services.GrpcCalls.GrpcCalls$3
-Game/Global/GlobalState.java
- Game.Global.GlobalState
+Game/Services/PlayerServiceImpl.java
+ Game.Services.PlayerServiceImpl
+ Game.Services.PlayerServiceImpl$1
 Game/Main.java
  Game.Main
-Game/Utilities/HTTPUtilities.java
- Game.Utilities.HTTPUtilities
- Game.Utilities.HTTPUtilities$1
