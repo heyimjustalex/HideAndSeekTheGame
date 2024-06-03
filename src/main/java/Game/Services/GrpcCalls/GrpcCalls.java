@@ -69,67 +69,6 @@ public class GrpcCalls {
                 .build();
     }
 
-    public static void coordinatorCallAsync(String serverAddress) throws InterruptedException {
-        ManagedChannel channel = ManagedChannelBuilder.forTarget(serverAddress).usePlaintext().build();
-        PlayerServiceGrpc.PlayerServiceStub stub = PlayerServiceGrpc.newStub(channel);
-
-        // COORDINATOR message type sent when SEEKER is chosen
-        PlayerMessageRequest request = createCoordinatorRequest();
-        stub.coordinator(request, new StreamObserver<PlayerMessageResponse>() {
-            @Override
-            public void onNext(PlayerMessageResponse response) {
-                System.out.println("GRPCalls, coordinatorCallAsync: I got COORDINATOR message from " + response.getId());
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                System.out.println(t.getMessage());
-            }
-
-            @Override
-            public void onCompleted() {
-                channel.shutdown();
-            }
-        });
-    }
-
-    public static void electionCallAsync(String serverAddress) throws InterruptedException {
-        ManagedChannel channel = ManagedChannelBuilder.forTarget(serverAddress).usePlaintext().build();
-        PlayerServiceGrpc.PlayerServiceStub stub = PlayerServiceGrpc.newStub(channel);
-        String myId = GlobalState.getStateObject().getMyPlayerId();
-        final ScheduledFuture<?>[] timeoutFutureHolderElection = GlobalState.getStateObject().getTimeoutFutureHolderElection();
-        final ScheduledFuture<?>[] timeoutFutureHolderGreetingElection = GlobalState.getStateObject().getTimeoutFutureHolderElection();
-        PlayerMessageRequest request = createElectionRequest();
-        stub.election(request, new StreamObserver<PlayerMessageResponse>() {
-            @Override
-            public void onNext(PlayerMessageResponse response) {
-                // If you get ELECTION_OK messageType it means that somebody has lower distance and
-                // You can cancel becoming SEEKER and set your role as hider
-                if (MessageType.valueOf(response.getMessageType()) == MessageType.ELECTION_OK) {
-                    System.out.println("GRPCalls, electionCallAsync: Player " + myId + " State set to HIDER because i got OK message from player " + response.getId());
-                    if (timeoutFutureHolderElection[0] != null) {
-                        timeoutFutureHolderElection[0].cancel(true);
-                    }
-                    if (timeoutFutureHolderGreetingElection[0] != null) {
-                        timeoutFutureHolderGreetingElection[0].cancel(true);
-                    }
-                    GlobalState.getStateObject().setMyPlayerRole(Role.HIDER);
-                    GlobalState.getStateObject().setGameState(GameState.ELECTION_ENDED);
-                }
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                System.out.println(t.getMessage());
-            }
-
-            @Override
-            public void onCompleted() {
-                channel.shutdown();
-            }
-        });
-    }
-
     public static void greetingCallAsync(String serverAddress) {
 
         ManagedChannel channel = ManagedChannelBuilder.forTarget(serverAddress).usePlaintext().build();
@@ -210,5 +149,69 @@ public class GrpcCalls {
         });
 
 
+    }
+
+    public static void electionCallAsync(String serverAddress) throws InterruptedException {
+        ManagedChannel channel = ManagedChannelBuilder.forTarget(serverAddress).usePlaintext().build();
+        PlayerServiceGrpc.PlayerServiceStub stub = PlayerServiceGrpc.newStub(channel);
+        String myId = GlobalState.getStateObject().getMyPlayerId();
+        final ScheduledFuture<?>[] timeoutFutureHolderElection = GlobalState.getStateObject().getTimeoutFutureHolderElection();
+        final ScheduledFuture<?>[] timeoutFutureHolderGreetingElection = GlobalState.getStateObject().getTimeoutFutureHolderElection();
+        PlayerMessageRequest request = createElectionRequest();
+        stub.election(request, new StreamObserver<PlayerMessageResponse>() {
+            @Override
+            public void onNext(PlayerMessageResponse response) {
+
+                // If you get ELECTION_OK messageType it means that somebody has lower distance, and
+                // You can cancel becoming SEEKER and set your role as hider
+                if (MessageType.valueOf(response.getMessageType()) == MessageType.ELECTION_OK) {
+                    System.out.println("GRPCalls, electionCallAsync: Player " + myId + " State set to HIDER because i got OK message from player " + response.getId());
+                    if (timeoutFutureHolderElection[0] != null) {
+                        timeoutFutureHolderElection[0].cancel(true);
+                    }
+                    if (timeoutFutureHolderGreetingElection[0] != null) {
+                        timeoutFutureHolderGreetingElection[0].cancel(true);
+                    }
+                    GlobalState.getStateObject().setMyPlayerRole(Role.HIDER);
+                    GlobalState.getStateObject().setGameState(GameState.ELECTION_ENDED);
+                }
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                System.out.println(t.getMessage());
+            }
+
+            @Override
+            public void onCompleted() {
+                channel.shutdown();
+            }
+        });
+
+        GlobalState.getStateObject().setGameState(GameState.ELECTION_MESSAGES_SENT);
+    }
+
+    public static void coordinatorCallAsync(String serverAddress) throws InterruptedException {
+        ManagedChannel channel = ManagedChannelBuilder.forTarget(serverAddress).usePlaintext().build();
+        PlayerServiceGrpc.PlayerServiceStub stub = PlayerServiceGrpc.newStub(channel);
+
+        // COORDINATOR message type sent when SEEKER is chosen
+        PlayerMessageRequest request = createCoordinatorRequest();
+        stub.coordinator(request, new StreamObserver<PlayerMessageResponse>() {
+            @Override
+            public void onNext(PlayerMessageResponse response) {
+                System.out.println("GRPCalls, coordinatorCallAsync: I got COORDINATOR message from " + response.getId());
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                System.out.println(t.getMessage());
+            }
+
+            @Override
+            public void onCompleted() {
+                channel.shutdown();
+            }
+        });
     }
 }

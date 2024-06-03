@@ -1,19 +1,23 @@
 package Game.HeartRate.SimulatorsImplementation;
+
 import Game.HeartRate.Simulators.Buffer;
 import Game.HeartRate.Simulators.Measurement;
+
 import java.util.ArrayList;
 import java.util.List;
+
 public class SharedMeasurementBuffer implements Buffer {
-    private final List<Measurement> measurements = new ArrayList<>();
     private static final int BUFFER_SIZE = 8;
+    private final List<Measurement> measurements = new ArrayList<>();
+
     @Override
     public synchronized void addMeasurement(Measurement m) {
         measurements.add(m);
-        if (measurements.size() >= BUFFER_SIZE)
-        {
+        if (measurements.size() >= BUFFER_SIZE) {
             notifyAll(); // Notify waiting threads buffer is full
         }
     }
+
     @Override
     public synchronized List<Measurement> readAllAndClean() {
         while (measurements.size() < BUFFER_SIZE) {
@@ -21,9 +25,8 @@ public class SharedMeasurementBuffer implements Buffer {
 //                System.out.println("SharedMeasurementBuffer: Waiting for the accurate size of the collection: "+ BUFFER_SIZE);
                 // Wait releases the lock, so that's why addMeasurement can be invoked
                 wait();
-            }
-            catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
 //                    System.out.println("SharedMeasurementBuffer: Thread interrupted while awaiting");
             }
         }

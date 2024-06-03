@@ -1,3 +1,3 @@
-# Hide and seek - the game
+# Hide and seek - the Game
 
 Project for distributed systems course

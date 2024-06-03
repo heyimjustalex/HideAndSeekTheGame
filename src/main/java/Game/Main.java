@@ -59,6 +59,7 @@ public class Main {
     }
 
     public static void main(String[] args) throws InterruptedException, IOException {
+
         String playerId = "";
         String port = "";
         String endpointUrlAddPlayers = "http://localhost:1337/players/add";

@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
-Class-Path: HideAndSeek.main
 Main-Class: Game.Main
+Class-Path: HideAndSeek.main
 

@@ -8,19 +8,19 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
-
+import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.core.MediaType;
 
-
-public class AverageSender implements Runnable{
+public class AverageSender implements Runnable {
     private Buffer averageBuffer;
-    public AverageSender(Buffer averageBuffer){
+
+    public AverageSender(Buffer averageBuffer) {
         this.averageBuffer = averageBuffer;
     }
+
     @Override
     public void run() {
         while (true) {
@@ -50,25 +50,25 @@ public class AverageSender implements Runnable{
 
         String endpointUrl = "http://localhost:1337/players/measurements"; // Replace with your endpoint URL
 
-        try{
+        try {
 
 
-        Client client = Client.create();
-        WebResource webResource = client.resource(endpointUrl);
+            Client client = Client.create();
+            WebResource webResource = client.resource(endpointUrl);
 
-        ClientResponse response = webResource.type(MediaType.APPLICATION_JSON_TYPE)
-                .post(ClientResponse.class, json);
+            ClientResponse response = webResource.type(MediaType.APPLICATION_JSON_TYPE)
+                    .post(ClientResponse.class, json);
 
-        if (response.getStatus() == 201) {
+            if (response.getStatus() == 201) {
 //            System.out.println("Average sender: Averages sent successfully.");
-        } else {
+            } else {
 //            System.out.println("Average sender: Failed to send averages. Status code: " + response.getStatus());
-        }
+            }
 
-        response.close();}
-        catch (Exception e)
-        {
+            response.close();
+        } catch (Exception e) {
 //            System.out.println("Average sender: Administration Server is unavailable "+e);
         }
-    }}
+    }
+}
 

@@ -4,10 +4,17 @@ plugins {
     id "war" // for REST
 }
 
-group 'org.example'
+//group 'org.example'
 version '1.0-SNAPSHOT'
-
+war {
+    manifest {
+        attributes('Main-Class': 'Game.Main')
+        attributes('Class-Path': 'HideAndSeek.main')
+    }
+}
 repositories {
+    gradlePluginPortal()
+    google()
     mavenCentral()
 }
 
@@ -53,7 +60,6 @@ dependencies {
     compile group: 'com.sun.jersey', name: 'jersey-server', version: '1.2'
 
 
-
     // MQTT Dependencies
     // https://mvnrepository.com/artifact/org.eclipse.paho/org.eclipse.paho.client.mqttv3
     compile group: 'org.eclipse.paho', name: 'org.eclipse.paho.client.mqttv3', version: '1.2.5'
@@ -77,6 +83,7 @@ protobuf {
 
     plugins {
         grpc {
+//            artifact = 'io.grpc:protoc-gen-grpc-java:1.25.0'
             artifact = 'io.grpc:protoc-gen-grpc-java:1.25.0'
         }
     }
