@@ -74,9 +74,11 @@ public class GlobalState {
 
     public void setMyPlayerId(String playerId) {
         this.playerId = playerId;
+
+
     }
 
-    private synchronized void calculateMyDistance() {
+    public synchronized void calculateMyDistance() {
         for (PlayerExtended player : this.players) {
             if (player.getId().equals(this.playerId)) {
                 this.myDistance = player.getDistance();

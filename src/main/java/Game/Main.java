@@ -32,7 +32,15 @@ public class Main {
 
     public static void electLeader() throws InterruptedException {
         for (PlayerExtended playerExtended : GlobalState.getStateObject().getPlayers()) {
-            if (GlobalState.getStateObject().getMyPlayerId().equals(playerExtended.getId())) {
+            System.out.println("MY DISTANCE " + GlobalState.getStateObject().getMyDistance());
+            System.out.println("HIS DISTANCE " + playerExtended.getDistance());
+            boolean comparison = GlobalState.getStateObject().getMyPlayerId().compareToIgnoreCase(playerExtended.getId()) > 0;
+            System.out.println("COMPARISION " + comparison);
+            boolean myDistanceLowerThanHis = (GlobalState.getStateObject().getMyDistance() < playerExtended.getDistance()) ||
+                    (GlobalState.getStateObject().getMyDistance() == playerExtended.getDistance()
+                            && GlobalState.getStateObject().getMyPlayerId().compareToIgnoreCase(playerExtended.getId()) > 0);
+
+            if (GlobalState.getStateObject().getMyPlayerId().equals(playerExtended.getId()) || !myDistanceLowerThanHis) {
                 continue;
             }
             String serverAddress = playerExtended.getAddress() + ":" + playerExtended.getPort();
@@ -75,6 +83,8 @@ public class Main {
 
             // MUST HAVE FOR PROPER STATE WORKING AND SETTING PLAYERS
             GlobalState.getStateObject().setMyPlayerId(playerId);
+            GlobalState.getStateObject().calculateMyDistance();
+            System.out.println("I'm Player " + playerId + " Distance to Base: " + GlobalState.getStateObject().getMyDistance());
         }
 //        System.out.println(GlobalState.getStateObject().getPlayers());
 
@@ -104,6 +114,7 @@ public class Main {
         io.grpc.Server server = ServerBuilder.forPort(Integer.parseInt(port)).addService(new PlayerServiceImpl()).build();
         server.start();
         System.out.println("Main: PlayerServiceImpl - Grpc server started at port: " + port);
+
 
         try {
             greetPlayers();

@@ -40,6 +40,8 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
         if (MessageType.valueOf(request.getMessageType()) == MessageType.GREETING) {
             // I got a greeting message
             System.out.println("PlayerServiceImpl, greeting -> Player " + myId + ": GREETING message from player " + request.getId());
+
+            
             // Responding with built message
             responseObserver.onNext(createGreetingOkMessage());
             responseObserver.onCompleted();
@@ -54,7 +56,7 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
         final ScheduledFuture<?>[] timeoutFutureHolderElection = GlobalState.getStateObject().getTimeoutFutureHolderElection();
 
         if (MessageType.valueOf(request.getMessageType()) == MessageType.ELECTION) {
-            System.out.println("PlayerServiceImpl: ELECTION message from -> Player " + myId + ": Got an ELECTION message from player" + request.getId());
+            System.out.println("PlayerServiceImpl: Player: " + myId + ": Got an ELECTION message from Player: " + request.getId());
             ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
             GameState requestGameState = GameState.valueOf(request.getGameState());
@@ -68,9 +70,8 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
 
             double myDistance = GlobalState.getStateObject().getMyDistance();
             double otherPlayerDistance = Other.calculateDistanceToNearestBasePoint(Double.parseDouble(request.getPosX()), Double.parseDouble(request.getPosY()));
-            System.out.println("PlayerServiceImpl: Player " + myId + ": if I don't get OK messages in 3s I will change to SEEKER");
+//            System.out.println("PlayerServiceImpl: Player: " + myId + ": if I don't get OK messages in 12s I will change to SEEKER");
 
-            // Change my role to SEEKER after 2 seconds
 
             // Define the task to be scheduled
             Runnable electionTask = () -> {
@@ -82,21 +83,31 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
                         .setId(myId)
                         .setGameState(GameState.ELECTION_ENDED.toString())
                         .build());
-                System.out.println("PlayerServiceImpl: Player " + myId + " timeout occurred. State set to SEEKER and sending COORDINATOR message ");
+                System.out.println("PlayerServiceImpl: Player: " + myId + " timeout occurred. State set to SEEKER and sending COORDINATOR message ");
             };
 
             // Schedule the task if not already processed
             if (electionFutureProcessed.putIfAbsent("ELECTION", true) == null) {
-                System.out.println("PlayerServiceImpl: Player " + myId + " ELECTION message put to map, and I will become SEEKER in 12s");
+                System.out.println("PlayerServiceImpl: Player: " + myId + " ELECTION message put to map, and I will become SEEKER in 12s");
                 timeoutFutureHolderElection[0] = executor.schedule(electionTask, 12, TimeUnit.SECONDS);
             }
 
-            if (myDistance < otherPlayerDistance || (myDistance == otherPlayerDistance && myId.compareToIgnoreCase(request.getId()) > 0)) {
-                System.out.println("PlayerServiceImpl: Player " + myId + " I got ELECTION message with player distance higher than mine from " + request.getId() + " so I send him OK");
+            if (myDistance > otherPlayerDistance || (myDistance == otherPlayerDistance && request.getId().compareToIgnoreCase(myId) > 0)) {
+                System.out.println("PlayerServiceImpl: Player " + myId + " I got ELECTION message with player distance higher than mine from Player: " + request.getId() + " so I send him OK");
                 responseObserver.onNext(PlayerMessageResponse.newBuilder()
                         .setMessageType(MessageType.ELECTION_OK.toString())
+                        .setId(myId)
                         .build());
 
+            } else {
+                System.out.println("This is debug message for failure comparison");
+                System.out.println("mydistance impl " + myDistance);
+                System.out.println("his distance " + otherPlayerDistance);
+                System.out.println("COMPARISON " + (request.getId().compareToIgnoreCase(myId) > 0));
+//                responseObserver.onNext(PlayerMessageResponse.newBuilder()
+//                        .setMessageType(MessageType.ELECTION_NOT_OK.toString())
+//                        .setId(myId)
+//                        .build());
             }
         }
 

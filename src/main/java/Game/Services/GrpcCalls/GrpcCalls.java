@@ -37,7 +37,7 @@ public class GrpcCalls {
     private static PlayerMessageRequest createElectionRequest() {
         PlayerExtended myPlayer = GlobalState.getStateObject().getMyPlayer();
         GameState gameState = GlobalState.getStateObject().getGameState();
-        System.out.println("GRPCalls, electionCallAsync: Player " + myPlayer.getId() + ", gameState " + gameState);
+        System.out.println("GRPCalls, electionCallAsync: Player: " + myPlayer.getId() + " current gameState " + gameState);
         return PlayerMessageRequest
                 .newBuilder()
                 .setId(myPlayer.getId())
@@ -80,24 +80,25 @@ public class GrpcCalls {
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
         PlayerMessageRequest request = createGreetingRequest();
+        System.out.println("GRPCalls, greetingCallAsync: Player: " + request.getId() + " current GameState: " + request.getGameState());
         stub.greeting(request, new StreamObserver<PlayerMessageResponse>() {
             @Override
             public void onNext(PlayerMessageResponse response) {
 
                 if (MessageType.valueOf(response.getMessageType()) == MessageType.GREETING_OK) {
                     // Response to the GREETING_OK message
-                    System.out.println("GRPCalls, greetingCallAsync: Player " + myId + ": GREETING_OK message from Player: " + response.getId());
+                    System.out.println("GRPCalls, greetingCallAsync: Player: " + myId + ": GREETING_OK message from Player: " + response.getId());
                     GameState myCurrentGameState = GlobalState.getStateObject().getGameState();
-                    GameState requestGameState = GameState.valueOf(response.getGameState());
+                    GameState responseGameState = GameState.valueOf(response.getGameState());
 
                     // If my current state is lower than the player's I greeted (MQTT message latency)
-                    if (requestGameState.ordinal() > myCurrentGameState.ordinal()) {
-                        System.out.println("GRPCalls, greetingCallAsync: Player " + myId + ": GREETING_OK message from Player: " + response.getId() + " changed my state to " + requestGameState);
-                        GlobalState.getStateObject().setGameState(requestGameState);
+                    if (responseGameState.ordinal() > myCurrentGameState.ordinal()) {
+                        System.out.println("GRPCalls, greetingCallAsync: Player: " + myId + ": GREETING_OK message from Player: " + response.getId() + " changed my state to higher -> " + responseGameState);
+                        GlobalState.getStateObject().setGameState(responseGameState);
                     }
 
                     // If the election messages have already been sent by the Player I greeted
-                    if (requestGameState.equals(GameState.ELECTION_MESSAGES_SENT)) {
+                    if (responseGameState.equals(GameState.ELECTION_MESSAGES_SENT)) {
                         // This means that election messages have been sent, so you need to also send them to take part in election
 
                         double myDistance = GlobalState.getStateObject().getMyDistance();
@@ -129,7 +130,7 @@ public class GrpcCalls {
                         };
 
                         if (greetingElectionFutureProcessed.putIfAbsent("ELECTION", true) == null) {
-                            System.out.println("GRPCalls, greetingCallAsync: Player " + myId + ": ELECTION !FROM GREETING! message put to map, and I will become SEEKER in 3 s");
+                            System.out.println("GRPCalls, greetingCallAsync: Player " + myId + ": ELECTION !FROM GREETING! message put to map, and I will become SEEKER in 12 s");
                             timeoutFutureHolderGreetingElection[0] = executor.schedule(electionWonTask, 12, TimeUnit.SECONDS);
 
                         }
@@ -165,7 +166,7 @@ public class GrpcCalls {
                 // If you get ELECTION_OK messageType it means that somebody has lower distance, and
                 // You can cancel becoming SEEKER and set your role as hider
                 if (MessageType.valueOf(response.getMessageType()) == MessageType.ELECTION_OK) {
-                    System.out.println("GRPCalls, electionCallAsync: Player " + myId + " State set to HIDER because i got OK message from player " + response.getId());
+                    System.out.println("GRPCalls, electionCallAsync: Player: " + myId + " Role set to HIDER because i got OK message from Player: " + response.getId());
                     if (timeoutFutureHolderElection[0] != null) {
                         timeoutFutureHolderElection[0].cancel(true);
                     }
@@ -187,8 +188,9 @@ public class GrpcCalls {
                 channel.shutdown();
             }
         });
-
-        GlobalState.getStateObject().setGameState(GameState.ELECTION_MESSAGES_SENT);
+        if (GlobalState.getStateObject().getGameState().ordinal() < GameState.ELECTION_MESSAGES_SENT.ordinal()) {
+            GlobalState.getStateObject().setGameState(GameState.ELECTION_MESSAGES_SENT);
+        }
     }
 
     public static void coordinatorCallAsync(String serverAddress) throws InterruptedException {
@@ -200,7 +202,7 @@ public class GrpcCalls {
         stub.coordinator(request, new StreamObserver<PlayerMessageResponse>() {
             @Override
             public void onNext(PlayerMessageResponse response) {
-                System.out.println("GRPCalls, coordinatorCallAsync: I got COORDINATOR message from " + response.getId());
+                System.out.println("GRPCalls, coordinatorCallAsync: Player: " + request.getId() + " I got COORDINATOR message from " + response.getId());
             }
 
             @Override
