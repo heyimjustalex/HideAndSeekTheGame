@@ -5,7 +5,6 @@ import Game.GameClasses.MessageType;
 import Game.GameClasses.PlayerExtended;
 import Game.GameClasses.Role;
 import Game.Global.GlobalState;
-import Game.Utilities.Other;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
@@ -37,7 +36,6 @@ public class GrpcCalls {
     private static PlayerMessageRequest createElectionRequest() {
         PlayerExtended myPlayer = GlobalState.getStateObject().getMyPlayer();
         GameState gameState = GlobalState.getStateObject().getGameState();
-        System.out.println("GRPCalls, electionCallAsync: Player: " + myPlayer.getId() + " current gameState " + gameState);
         return PlayerMessageRequest
                 .newBuilder()
                 .setId(myPlayer.getId())
@@ -73,11 +71,7 @@ public class GrpcCalls {
 
         ManagedChannel channel = ManagedChannelBuilder.forTarget(serverAddress).usePlaintext().build();
         PlayerServiceGrpc.PlayerServiceStub stub = PlayerServiceGrpc.newStub(channel);
-
         String myId = GlobalState.getStateObject().getMyPlayerId();
-        final ConcurrentHashMap<String, Boolean> greetingElectionFutureProcessed = GlobalState.getStateObject().getGreetingElectionFutureProcessed();
-        final ScheduledFuture<?>[] timeoutFutureHolderGreetingElection = GlobalState.getStateObject().getTimeoutFutureHolderElection();
-        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
         PlayerMessageRequest request = createGreetingRequest();
         System.out.println("GRPCalls, greetingCallAsync: Player: " + request.getId() + " current GameState: " + request.getGameState());
@@ -95,45 +89,6 @@ public class GrpcCalls {
                     if (responseGameState.ordinal() > myCurrentGameState.ordinal()) {
                         System.out.println("GRPCalls, greetingCallAsync: Player: " + myId + ": GREETING_OK message from Player: " + response.getId() + " changed my state to higher -> " + responseGameState);
                         GlobalState.getStateObject().setGameState(responseGameState);
-                    }
-
-                    // If the election messages have already been sent by the Player I greeted
-                    if (responseGameState.equals(GameState.ELECTION_MESSAGES_SENT)) {
-                        // This means that election messages have been sent, so you need to also send them to take part in election
-
-                        double myDistance = GlobalState.getStateObject().getMyDistance();
-                        double otherPlayerDistance = Other.calculateDistanceToNearestBasePoint(Double.parseDouble(response.getPosX()), Double.parseDouble(response.getPosY()));
-                        System.out.println("GRPCalls, greetingCallAsync: Player " + myId + ": GREETING_OK election message, if I don't get OK messages in 3s I will change to SEEKER");
-
-
-                        if (myDistance < otherPlayerDistance || (myDistance == otherPlayerDistance && myId.compareToIgnoreCase(response.getId()) > 0)) {
-                            System.out.println("GRPCalls, greetingCallAsync: Player " + myId + ": I got ELECTION message with player distance lower than mine (" + myDistance + ") from " + response.getId() + " (" + otherPlayerDistance + ") " + " so I send him OK");
-                            try {
-                                electionCallAsync(serverAddress);
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-
-                        // Create election won - this player becomes the SEEKER
-                        Runnable electionWonTask = () -> {
-                            GlobalState.getStateObject().setMyPlayerRole(Role.SEEKER);
-                            GlobalState.getStateObject().setGameState(GameState.ELECTION_ENDED);
-                            try {
-
-                                coordinatorCallAsync(serverAddress);
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                            System.out.println("GRPCalls, greetingCallAsync: Player " + myId + ": timeout occurred. State set to SEEKER and sending COORDINATOR message ");
-
-                        };
-
-                        if (greetingElectionFutureProcessed.putIfAbsent("ELECTION", true) == null) {
-                            System.out.println("GRPCalls, greetingCallAsync: Player " + myId + ": ELECTION !FROM GREETING! message put to map, and I will become SEEKER in 12 s");
-                            timeoutFutureHolderGreetingElection[0] = executor.schedule(electionWonTask, 12, TimeUnit.SECONDS);
-
-                        }
                     }
                 }
             }
@@ -158,15 +113,35 @@ public class GrpcCalls {
         String myId = GlobalState.getStateObject().getMyPlayerId();
         final ScheduledFuture<?>[] timeoutFutureHolderElection = GlobalState.getStateObject().getTimeoutFutureHolderElection();
         final ScheduledFuture<?>[] timeoutFutureHolderGreetingElection = GlobalState.getStateObject().getTimeoutFutureHolderElection();
+        final ConcurrentHashMap<String, Boolean> electionFutureProcessed = GlobalState.getStateObject().getElectionFutureProcessed();
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+
+        GlobalState.getStateObject().setGameState(GameState.ELECTION_MESSAGES_SENT);
+
         PlayerMessageRequest request = createElectionRequest();
+        Runnable electionWonTask = () -> {
+            GlobalState.getStateObject().setMyPlayerRole(Role.SEEKER);
+
+            try {
+                coordinatorCallAsync(serverAddress);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("GRPCalls, electionCallAsync: Player " + myId + ": timeout occurred. State set to SEEKER and sending COORDINATOR message ");
+
+        };
+
+        if (electionFutureProcessed.putIfAbsent("ELECTION", true) == null) {
+            System.out.println("GRPCalls, electionCallAsync: Player " + myId + ": ELECTION message put to map, and I will become SEEKER in 12 s");
+            timeoutFutureHolderGreetingElection[0] = executor.schedule(electionWonTask, 12, TimeUnit.SECONDS);
+        }
         stub.election(request, new StreamObserver<PlayerMessageResponse>() {
             @Override
             public void onNext(PlayerMessageResponse response) {
-
                 // If you get ELECTION_OK messageType it means that somebody has lower distance, and
                 // You can cancel becoming SEEKER and set your role as hider
                 if (MessageType.valueOf(response.getMessageType()) == MessageType.ELECTION_OK) {
-                    System.out.println("GRPCalls, electionCallAsync: Player: " + myId + " Role set to HIDER because i got OK message from Player: " + response.getId());
+                    System.out.println("GRPCalls, electionCallAsync: Player: " + myId + " I CANCEL LEADER ELECTION, Role set to HIDER because i got OK message from Player: " + response.getId());
                     if (timeoutFutureHolderElection[0] != null) {
                         timeoutFutureHolderElection[0].cancel(true);
                     }
@@ -174,7 +149,7 @@ public class GrpcCalls {
                         timeoutFutureHolderGreetingElection[0].cancel(true);
                     }
                     GlobalState.getStateObject().setMyPlayerRole(Role.HIDER);
-                    GlobalState.getStateObject().setGameState(GameState.ELECTION_ENDED);
+//                    GlobalState.getStateObject().setGameState(GameState.ELECTION_ENDED);
                 }
             }
 
@@ -188,21 +163,21 @@ public class GrpcCalls {
                 channel.shutdown();
             }
         });
-        if (GlobalState.getStateObject().getGameState().ordinal() < GameState.ELECTION_MESSAGES_SENT.ordinal()) {
-            GlobalState.getStateObject().setGameState(GameState.ELECTION_MESSAGES_SENT);
-        }
+
     }
 
     public static void coordinatorCallAsync(String serverAddress) throws InterruptedException {
         ManagedChannel channel = ManagedChannelBuilder.forTarget(serverAddress).usePlaintext().build();
         PlayerServiceGrpc.PlayerServiceStub stub = PlayerServiceGrpc.newStub(channel);
+        GlobalState.getStateObject().setGameState(GameState.ELECTION_ENDED);
 
         // COORDINATOR message type sent when SEEKER is chosen
         PlayerMessageRequest request = createCoordinatorRequest();
+
         stub.coordinator(request, new StreamObserver<PlayerMessageResponse>() {
             @Override
             public void onNext(PlayerMessageResponse response) {
-                System.out.println("GRPCalls, coordinatorCallAsync: Player: " + request.getId() + " I got COORDINATOR message from " + response.getId());
+                System.out.println("GRPCalls, coordinatorCallAsync: Player: " + request.getId() + " Sent to Player: " + response.getId());
             }
 
             @Override

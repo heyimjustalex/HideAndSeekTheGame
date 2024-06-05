@@ -1,6 +1,7 @@
 package Game;
 
 import Game.Broker.SubscriberHandler;
+import Game.GameClasses.GameState;
 import Game.GameClasses.PlayerExtended;
 import Game.Global.GlobalState;
 import Game.HeartRate.Simulators.Buffer;
@@ -32,15 +33,15 @@ public class Main {
 
     public static void electLeader() throws InterruptedException {
         for (PlayerExtended playerExtended : GlobalState.getStateObject().getPlayers()) {
-            System.out.println("MY DISTANCE " + GlobalState.getStateObject().getMyDistance());
-            System.out.println("HIS DISTANCE " + playerExtended.getDistance());
-            boolean comparison = GlobalState.getStateObject().getMyPlayerId().compareToIgnoreCase(playerExtended.getId()) > 0;
-            System.out.println("COMPARISION " + comparison);
-            boolean myDistanceLowerThanHis = (GlobalState.getStateObject().getMyDistance() < playerExtended.getDistance()) ||
+//            System.out.println("MY DISTANCE " + GlobalState.getStateObject().getMyDistance());
+//            System.out.println("HIS DISTANCE " + playerExtended.getDistance());
+//            boolean comparison = GlobalState.getStateObject().getMyPlayerId().compareToIgnoreCase(playerExtended.getId()) > 0;
+//            System.out.println("COMPARISION " + comparison);
+            boolean myPriorityIsHigherThanHis = (GlobalState.getStateObject().getMyDistance() < playerExtended.getDistance()) ||
                     (GlobalState.getStateObject().getMyDistance() == playerExtended.getDistance()
                             && GlobalState.getStateObject().getMyPlayerId().compareToIgnoreCase(playerExtended.getId()) > 0);
 
-            if (GlobalState.getStateObject().getMyPlayerId().equals(playerExtended.getId()) || !myDistanceLowerThanHis) {
+            if (GlobalState.getStateObject().getMyPlayerId().equals(playerExtended.getId()) || myPriorityIsHigherThanHis) {
                 continue;
             }
             String serverAddress = playerExtended.getAddress() + ":" + playerExtended.getPort();
@@ -125,12 +126,20 @@ public class Main {
         // wait() until gameState changed to any except for BEFORE_ELECTION
 
         GlobalState.getStateObject().waitUntilElectionStarts();
-        System.out.println("Main: Election started");
-        try {
-            electLeader();
-        } catch (Exception e) {
-            System.out.println(e);
+        System.out.println("Main: I greeted and changed my state so I start election ");
+        GameState myCurrentGameState = GlobalState.getStateObject().getGameState();
+
+        if (myCurrentGameState.equals(GameState.ELECTION_STARTED) || myCurrentGameState.equals(GameState.ELECTION_MESSAGES_SENT)) {
+            System.out.println("Main: sending election messages");
+            try {
+                electLeader();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } else {
+            System.out.println("Main: election has ended, there is no need to take part I am a HIDER");
         }
+
 
         // Wait for threads to end
 

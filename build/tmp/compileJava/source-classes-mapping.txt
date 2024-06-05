@@ -34,8 +34,8 @@ Game/HeartRate/Simulators/HRSimulator.java
  Game.HeartRate.Simulators.HRSimulator
 AdministrationServer/Schemas/PlayerDeleteRequest.java
  AdministrationServer.Schemas.PlayerDeleteRequest
-Game/Models/Message.java
- Game.Models.Message
+AdministrationServer/Repositories/MeasurementRepository.java
+ AdministrationServer.Repositories.MeasurementRepository
 AdministrationServer/Services/PlayerService.java
  AdministrationServer.Services.PlayerService
  AdministrationServer.Services.PlayerService$1
@@ -103,20 +103,20 @@ proto/Player.java
  proto.Player$PlayerMessageResponse$1
  proto.Player$PlayerMessageResponse$Builder
  proto.Player$PlayerMessageResponseOrBuilder
-Game/Services/GrpcCalls/GrpcCalls.java
- Game.Services.GrpcCalls.GrpcCalls
- Game.Services.GrpcCalls.GrpcCalls$1
- Game.Services.GrpcCalls.GrpcCalls$2
- Game.Services.GrpcCalls.GrpcCalls$3
+Game/Models/Message.java
+ Game.Models.Message
 AdministrationClient/Models/Player.java
  AdministrationClient.Models.Player
 Game/HeartRate/SimulatorsImplementation/SharedMeasurementBuffer.java
  Game.HeartRate.SimulatorsImplementation.SharedMeasurementBuffer
 AdministrationServer/Main.java
  AdministrationServer.Main
-AdministrationServer/Repositories/MeasurementRepository.java
- AdministrationServer.Repositories.MeasurementRepository
 Game/Services/PlayerServiceImpl.java
  Game.Services.PlayerServiceImpl
+Game/Services/GrpcCalls/GrpcCalls.java
+ Game.Services.GrpcCalls.GrpcCalls
+ Game.Services.GrpcCalls.GrpcCalls$1
+ Game.Services.GrpcCalls.GrpcCalls$2
+ Game.Services.GrpcCalls.GrpcCalls$3
 Game/Main.java
  Game.Main

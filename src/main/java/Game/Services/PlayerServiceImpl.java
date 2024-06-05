@@ -12,6 +12,7 @@ import java.util.concurrent.*;
 
 import static Game.GameClasses.MessageType.COORDINATOR;
 import static Game.GameClasses.MessageType.GREETING_OK;
+import static Game.Services.GrpcCalls.GrpcCalls.coordinatorCallAsync;
 
 public class PlayerServiceImpl extends PlayerServiceImplBase {
     String myId = GlobalState.getStateObject().getMyPlayerId();
@@ -40,9 +41,26 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
         if (MessageType.valueOf(request.getMessageType()) == MessageType.GREETING) {
             // I got a greeting message
             System.out.println("PlayerServiceImpl, greeting -> Player " + myId + ": GREETING message from player " + request.getId());
+            GameState myCurrentGameState = GlobalState.getStateObject().getGameState();
 
-            
-            // Responding with built message
+            // If the messages have already been sent
+            if (myCurrentGameState == GameState.ELECTION_MESSAGES_SENT) {
+                double myDistance = GlobalState.getStateObject().getMyDistance();
+                double otherPlayerDistance = Other.calculateDistanceToNearestBasePoint(Double.parseDouble(request.getPosX()), Double.parseDouble(request.getPosY()));
+                // If the distance of the greeting player is lower, then cancel my SEEKER election
+                if (myDistance > otherPlayerDistance || (myDistance == otherPlayerDistance && request.getId().compareToIgnoreCase(myId) > 0)) {
+                    System.out.println("PlayerServiceImpl: Player " + myId + " I got GREETING and I'm in ELECTION_MESSAGES_SENT " + request.getId() + " so I cancel my LEADER");
+                    final ScheduledFuture<?>[] timeoutFutureHolderElection = GlobalState.getStateObject().getTimeoutFutureHolderElection();
+
+
+                    if (timeoutFutureHolderElection[0] != null) {
+                        timeoutFutureHolderElection[0].cancel(true);
+                    }
+
+                }
+            }
+
+
             responseObserver.onNext(createGreetingOkMessage());
             responseObserver.onCompleted();
         }
@@ -58,31 +76,31 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
         if (MessageType.valueOf(request.getMessageType()) == MessageType.ELECTION) {
             System.out.println("PlayerServiceImpl: Player: " + myId + ": Got an ELECTION message from Player: " + request.getId());
             ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-
             GameState requestGameState = GameState.valueOf(request.getGameState());
 
             // If I didn't set my state to election, I do that by getting the newest state from other players
 
             if (requestGameState.equals(GameState.ELECTION_STARTED) && (myCurrentGameState.equals(GameState.BEFORE_ELECTION))) {
                 GlobalState.getStateObject().setGameState(GameState.ELECTION_STARTED);
+            } else if (requestGameState.equals(GameState.ELECTION_MESSAGES_SENT) && (myCurrentGameState.equals(GameState.ELECTION_STARTED))) {
+                GlobalState.getStateObject().setGameState(GameState.ELECTION_MESSAGES_SENT);
             }
 
 
             double myDistance = GlobalState.getStateObject().getMyDistance();
             double otherPlayerDistance = Other.calculateDistanceToNearestBasePoint(Double.parseDouble(request.getPosX()), Double.parseDouble(request.getPosY()));
-//            System.out.println("PlayerServiceImpl: Player: " + myId + ": if I don't get OK messages in 12s I will change to SEEKER");
 
-
-            // Define the task to be scheduled
+//             Define the task to be scheduled - you have to because in case this has the highest, he wont send any election messages from grpccalls, so he has no chance to start seeker processs
             Runnable electionTask = () -> {
                 System.out.println("PlayerServiceImpl: Player " + myId + " I have become the SEEKER");
                 GlobalState.getStateObject().setMyPlayerRole(Role.SEEKER);
-                GlobalState.getStateObject().setGameState(GameState.ELECTION_ENDED);
-                responseObserver.onNext(PlayerMessageResponse.newBuilder()
-                        .setMessageType(String.valueOf(COORDINATOR))
-                        .setId(myId)
-                        .setGameState(GameState.ELECTION_ENDED.toString())
-                        .build());
+
+                try {
+                    coordinatorCallAsync(request.getAddress() + ":" + request.getPort());
+                } catch (InterruptedException e) {
+                    System.out.println("Couldnt send coordinator messages! " + e);
+                }
+
                 System.out.println("PlayerServiceImpl: Player: " + myId + " timeout occurred. State set to SEEKER and sending COORDINATOR message ");
             };
 
@@ -92,23 +110,20 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
                 timeoutFutureHolderElection[0] = executor.schedule(electionTask, 12, TimeUnit.SECONDS);
             }
 
-            if (myDistance > otherPlayerDistance || (myDistance == otherPlayerDistance && request.getId().compareToIgnoreCase(myId) > 0)) {
-                System.out.println("PlayerServiceImpl: Player " + myId + " I got ELECTION message with player distance higher than mine from Player: " + request.getId() + " so I send him OK");
+            if (myDistance < otherPlayerDistance || (myDistance == otherPlayerDistance && myId.compareToIgnoreCase(request.getId()) > 0)) {
+                System.out.println("PlayerServiceImpl: Player: " + myId + " I got ELECTION message with lower priority than mine from Player: " + request.getId() + " so I send him OK");
                 responseObserver.onNext(PlayerMessageResponse.newBuilder()
                         .setMessageType(MessageType.ELECTION_OK.toString())
                         .setId(myId)
                         .build());
 
-            } else {
-                System.out.println("This is debug message for failure comparison");
-                System.out.println("mydistance impl " + myDistance);
-                System.out.println("his distance " + otherPlayerDistance);
-                System.out.println("COMPARISON " + (request.getId().compareToIgnoreCase(myId) > 0));
-//                responseObserver.onNext(PlayerMessageResponse.newBuilder()
-//                        .setMessageType(MessageType.ELECTION_NOT_OK.toString())
-//                        .setId(myId)
-//                        .build());
             }
+//            else {
+//                System.out.println("This is debug message for failure comparison");
+//                System.out.println("mydistance impl " + myDistance);
+//                System.out.println("his distance " + otherPlayerDistance);
+//                System.out.println("COMPARISON " + (request.getId().compareToIgnoreCase(myId) > 0));
+//            }
         }
 
         responseObserver.onCompleted();
@@ -117,12 +132,13 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
     @Override
     public void coordinator(PlayerMessageRequest request, StreamObserver<PlayerMessageResponse> responseObserver) {
         if (MessageType.valueOf(request.getMessageType()) == COORDINATOR) {
-            System.out.println("PlayerServiceImpl: " + myId + " got COORDINATOR message from " + request.getId() + " setting: gameState: ELECTION_ENDED, playerState:HIDER");
+
+            System.out.println("PlayerServiceImpl: " + myId + " got COORDINATOR message from " + request.getId() + " setting: gameState: ELECTION_ENDED, playerState:HIDER ");
             GlobalState.getStateObject().setGameState(GameState.ELECTION_ENDED);
             GlobalState.getStateObject().setMyPlayerRole(Role.HIDER);
         }
+        responseObserver.onNext(PlayerMessageResponse.newBuilder().setId(myId).build());
         responseObserver.onCompleted();
-
     }
 
 }
