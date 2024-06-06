@@ -64,8 +64,9 @@ public class GlobalState {
         return gameState;
     }
 
+
     public void setGameState(GameState gameState) {
-        if (this.gameState != gameState) {
+        if (this.gameState != gameState && gameState.ordinal() > this.gameState.ordinal()) {
             System.out.println("GlobalState, setMyGameState: Player: " + this.playerId + ": OldGameState: " + this.gameState + " newGameState: " + gameState);
             this.gameState = gameState;
         }

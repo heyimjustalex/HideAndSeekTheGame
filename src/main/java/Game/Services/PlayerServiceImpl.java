@@ -11,8 +11,7 @@ import proto.PlayerServiceGrpc.PlayerServiceImplBase;
 import java.util.Objects;
 import java.util.concurrent.*;
 
-import static Game.GameClasses.MessageType.COORDINATOR;
-import static Game.GameClasses.MessageType.GREETING_OK;
+import static Game.GameClasses.MessageType.*;
 import static Game.Services.GrpcCalls.GrpcCalls.coordinatorCallAsync;
 
 public class PlayerServiceImpl extends PlayerServiceImplBase {
@@ -34,6 +33,22 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
                 .build();
     }
 
+    private PlayerMessageResponse createGreetingNotOkMessage() {
+        // I'm adding the player I got
+        PlayerState myCurrentPlayerState = GlobalState.getStateObject().getMyPlayer().getPlayerState();
+        PlayerExtended myPlayer = GlobalState.getStateObject().getMyPlayer();
+        GameState myCurrentGameState = GlobalState.getStateObject().getGameState();
+
+        return PlayerMessageResponse.newBuilder()
+                .setId(myId)
+                .setPosX(myPlayer.getPos_x().toString())
+                .setPosY(myPlayer.getPos_y().toString())
+                .setGameState(myCurrentGameState.toString())
+                .setPlayerState(myCurrentPlayerState.toString())
+                .setMessageType(GREETING.toString())
+                .build();
+    }
+
     @Override
     public void greeting(PlayerMessageRequest request, StreamObserver<PlayerMessageResponse> responseObserver) {
         PlayerExtended playerExtended = new PlayerExtended(request.getId(), request.getPort(), request.getAddress(), request.getPosX(), request.getPosY(), request.getRole(), request.getPlayerState());
@@ -45,21 +60,25 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
             GameState myCurrentGameState = GlobalState.getStateObject().getGameState();
 
             // If the messages have already been sent
-            if (myCurrentGameState == GameState.ELECTION_MESSAGES_SENT) {
+            if (myCurrentGameState == GameState.ELECTION_MESSAGES_SENT || myCurrentGameState == GameState.ELECTION_STARTED) {
                 double myDistance = GlobalState.getStateObject().getMyDistance();
                 double otherPlayerDistance = Other.calculateDistanceToNearestBasePoint(Double.parseDouble(request.getPosX()), Double.parseDouble(request.getPosY()));
                 // If the distance of the greeting player is lower, then cancel my SEEKER election
                 if (myDistance > otherPlayerDistance || (myDistance == otherPlayerDistance && request.getId().compareToIgnoreCase(myId) > 0)) {
                     System.out.println("PlayerServiceImpl: Player " + myId + " I got GREETING and I'm in ELECTION_MESSAGES_SENT " + request.getId() + " so I cancel my LEADER");
-                    final ScheduledFuture<?>[] timeoutFutureHolderElection = GlobalState.getStateObject().getTimeoutFutureHolderElection();
 
+                    final ScheduledFuture<?>[] timeoutFutureHolderElection = GlobalState.getStateObject().getTimeoutFutureHolderElection();
                     if (timeoutFutureHolderElection[0] != null) {
                         timeoutFutureHolderElection[0].cancel(true);
                     }
+                    responseObserver.onNext(createGreetingNotOkMessage());
+                    responseObserver.onCompleted();
                 }
+            } else {
+                responseObserver.onNext(createGreetingOkMessage());
+                responseObserver.onCompleted();
             }
-            responseObserver.onNext(createGreetingOkMessage());
-            responseObserver.onCompleted();
+
         }
     }
 

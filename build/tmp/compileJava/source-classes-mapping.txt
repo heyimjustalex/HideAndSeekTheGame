@@ -106,11 +106,11 @@ AdministrationServer/Controllers/PlayerController.java
 Game/Broker/SubscriberHandler.java
  Game.Broker.SubscriberHandler
  Game.Broker.SubscriberHandler$1
-Game/Global/GlobalState.java
- Game.Global.GlobalState
 Game/Utilities/HTTPUtilities.java
  Game.Utilities.HTTPUtilities
  Game.Utilities.HTTPUtilities$1
+Game/Global/GlobalState.java
+ Game.Global.GlobalState
 Game/Services/PlayerServiceImpl.java
  Game.Services.PlayerServiceImpl
 Game/Services/GrpcCalls/GrpcCalls.java
