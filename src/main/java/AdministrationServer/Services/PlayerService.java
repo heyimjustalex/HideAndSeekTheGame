@@ -5,6 +5,7 @@ import AdministrationServer.Repositories.PlayerRepository;
 import AdministrationServer.Schemas.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 
@@ -111,6 +112,12 @@ public class PlayerService {
         while (hasTheSameCoordinatesAsOtherPlayer) {
             coordinates = getRandomCoordinates();
             hasTheSameCoordinatesAsOtherPlayer = checkIfOtherPlayersHaveSameCoordinates(coordinates[0], coordinates[1]);
+        }
+
+        if (Objects.equals(playerAddRequest.id, "lowest")) {
+            System.out.println("Changed coords to lowest");
+            coordinates[0] = 4;
+            coordinates[1] = 4;
         }
 
         PlayerRepository.getInstance().addPlayer(new Player(playerAddRequest.id.toLowerCase(), playerAddRequest.port, playerAddRequest.address, coordinates[0], coordinates[1]));

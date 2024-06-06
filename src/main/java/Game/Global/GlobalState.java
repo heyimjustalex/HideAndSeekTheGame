@@ -9,6 +9,7 @@ import Game.Models.Player;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
@@ -17,10 +18,10 @@ import static Game.GameClasses.GameState.ELECTION_STARTED;
 
 public class GlobalState {
     private static GlobalState instance;
-    ConcurrentHashMap<String, Boolean> greetingElectionFutureProcessed = new ConcurrentHashMap<>();
+
     ConcurrentHashMap<String, Boolean> electionFutureProcessed = new ConcurrentHashMap<>();
     ScheduledFuture<?>[] timeoutFutureHolderElection = new ScheduledFuture<?>[1];
-    ScheduledFuture<?>[] timeoutFutureHolderGreetingElection = new ScheduledFuture<?>[1];
+
     GameState gameState;
     String playerId;
     double myDistance;
@@ -49,10 +50,12 @@ public class GlobalState {
     }
 
     synchronized public void setMyPlayerRole(Role role) {
-        System.out.println("GlobalState, setMyPlayerRole: Player: " + this.playerId + ": OldRole: " + this.myRole + " newRole: " + role);
-        for (PlayerExtended player : this.players) {
-            if (player.getId().equals(this.playerId)) {
-                player.setRole(role);
+        if (role != this.myRole) {
+            System.out.println("GlobalState, setMyPlayerRole: Player: " + this.playerId + ": OldRole: " + this.myRole + " newRole: " + role);
+            for (PlayerExtended player : this.players) {
+                if (player.getId().equals(this.playerId)) {
+                    player.setRole(role);
+                }
             }
         }
     }
@@ -62,10 +65,10 @@ public class GlobalState {
     }
 
     public void setGameState(GameState gameState) {
-
-        System.out.println("GlobalState, setMyGameState: Player: " + this.playerId + ": OldGameState: " + this.gameState + " newGameState: " + gameState);
-
-        this.gameState = gameState;
+        if (this.gameState != gameState) {
+            System.out.println("GlobalState, setMyGameState: Player: " + this.playerId + ": OldGameState: " + this.gameState + " newGameState: " + gameState);
+            this.gameState = gameState;
+        }
     }
 
     public String getMyPlayerId() {
@@ -74,8 +77,6 @@ public class GlobalState {
 
     public void setMyPlayerId(String playerId) {
         this.playerId = playerId;
-
-
     }
 
     public synchronized void calculateMyDistance() {
@@ -119,6 +120,14 @@ public class GlobalState {
         }
     }
 
+    public synchronized void setChosenPlayerToSeeker(String playerId) {
+        for (PlayerExtended player : players) {
+            if (Objects.equals(player.getId(), playerId)) {
+                player.setRole(Role.SEEKER);
+            }
+        }
+    }
+
     public synchronized PlayerExtended getMyPlayer() {
         for (PlayerExtended pe : this.players) {
             if (pe.getId().equals(this.playerId)) {
@@ -157,14 +166,10 @@ public class GlobalState {
     public synchronized void messageAdd(Message message) {
         System.out.println("BufferGameState:" + " consumed message " + message.getType() + ": " + message.getValue());
         if (message.getType().equals("gameState") && message.getValue().equals("ELECTION_STARTED") && this.gameState.equals(BEFORE_ELECTION)) {
-            this.gameState = ELECTION_STARTED;
+            setGameState(ELECTION_STARTED);
         }
         mqttMessagesSent.add(message);
         notifyAll();
-    }
-
-    public synchronized ConcurrentHashMap<String, Boolean> getGreetingElectionFutureProcessed() {
-        return greetingElectionFutureProcessed;
     }
 
     public synchronized ConcurrentHashMap<String, Boolean> getElectionFutureProcessed() {
@@ -175,8 +180,11 @@ public class GlobalState {
         return timeoutFutureHolderElection;
     }
 
-    public synchronized ScheduledFuture<?>[] getTimeoutFutureHolderGreetingElection() {
-        return timeoutFutureHolderGreetingElection;
+    public void printPlayersInformation() {
+        System.out.println("Players information: ");
+        for (PlayerExtended player : players) {
+            System.out.println(player.getId() + " -> " + player.getAddress() + ":" + player.getPort() + " | PlayerRole:" + player.getRole() + " | PlayerState: " + player.getPlayerState() + " | Distance: " + player.getDistance() + " | pos_x: " + player.getPos_x() + "| pos_y: " + player.getPos_y());
+        }
     }
 
 }

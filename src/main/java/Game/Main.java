@@ -32,11 +32,13 @@ public class Main {
     }
 
     public static void electLeader() throws InterruptedException {
+        boolean atLeastOnceCalledElection = false;
         for (PlayerExtended playerExtended : GlobalState.getStateObject().getPlayers()) {
 //            System.out.println("MY DISTANCE " + GlobalState.getStateObject().getMyDistance());
 //            System.out.println("HIS DISTANCE " + playerExtended.getDistance());
 //            boolean comparison = GlobalState.getStateObject().getMyPlayerId().compareToIgnoreCase(playerExtended.getId()) > 0;
 //            System.out.println("COMPARISION " + comparison);
+
             boolean myPriorityIsHigherThanHis = (GlobalState.getStateObject().getMyDistance() < playerExtended.getDistance()) ||
                     (GlobalState.getStateObject().getMyDistance() == playerExtended.getDistance()
                             && GlobalState.getStateObject().getMyPlayerId().compareToIgnoreCase(playerExtended.getId()) > 0);
@@ -45,7 +47,12 @@ public class Main {
                 continue;
             }
             String serverAddress = playerExtended.getAddress() + ":" + playerExtended.getPort();
+            atLeastOnceCalledElection = true;
             GrpcCalls.electionCallAsync(serverAddress);
+        }
+//         nobody is better than me and election messages have been sent by others so i have no chance to elect myself as a leader
+        if (!atLeastOnceCalledElection) {
+            GrpcCalls.electionSelfCall();
         }
     }
 

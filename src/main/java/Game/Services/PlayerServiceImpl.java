@@ -8,6 +8,7 @@ import proto.Player.PlayerMessageRequest;
 import proto.Player.PlayerMessageResponse;
 import proto.PlayerServiceGrpc.PlayerServiceImplBase;
 
+import java.util.Objects;
 import java.util.concurrent.*;
 
 import static Game.GameClasses.MessageType.COORDINATOR;
@@ -52,15 +53,11 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
                     System.out.println("PlayerServiceImpl: Player " + myId + " I got GREETING and I'm in ELECTION_MESSAGES_SENT " + request.getId() + " so I cancel my LEADER");
                     final ScheduledFuture<?>[] timeoutFutureHolderElection = GlobalState.getStateObject().getTimeoutFutureHolderElection();
 
-
                     if (timeoutFutureHolderElection[0] != null) {
                         timeoutFutureHolderElection[0].cancel(true);
                     }
-
                 }
             }
-
-
             responseObserver.onNext(createGreetingOkMessage());
             responseObserver.onCompleted();
         }
@@ -86,17 +83,20 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
                 GlobalState.getStateObject().setGameState(GameState.ELECTION_MESSAGES_SENT);
             }
 
-
             double myDistance = GlobalState.getStateObject().getMyDistance();
             double otherPlayerDistance = Other.calculateDistanceToNearestBasePoint(Double.parseDouble(request.getPosX()), Double.parseDouble(request.getPosY()));
 
-//             Define the task to be scheduled - you have to because in case this has the highest, he wont send any election messages from grpccalls, so he has no chance to start seeker processs
+// Define the task to be scheduled - you have to because in case this has the highest, he wont send any election messages from grpccalls, so he has no chance to start seeker processs
             Runnable electionTask = () -> {
                 System.out.println("PlayerServiceImpl: Player " + myId + " I have become the SEEKER");
                 GlobalState.getStateObject().setMyPlayerRole(Role.SEEKER);
 
                 try {
-                    coordinatorCallAsync(request.getAddress() + ":" + request.getPort());
+                    for (PlayerExtended player : GlobalState.getStateObject().getPlayers()) {
+                        if (!Objects.equals(player.getId(), myId)) {
+                            coordinatorCallAsync(player.getAddress() + ":" + player.getPort());
+                        }
+                    }
                 } catch (InterruptedException e) {
                     System.out.println("Couldnt send coordinator messages! " + e);
                 }
@@ -116,14 +116,7 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
                         .setMessageType(MessageType.ELECTION_OK.toString())
                         .setId(myId)
                         .build());
-
             }
-//            else {
-//                System.out.println("This is debug message for failure comparison");
-//                System.out.println("mydistance impl " + myDistance);
-//                System.out.println("his distance " + otherPlayerDistance);
-//                System.out.println("COMPARISON " + (request.getId().compareToIgnoreCase(myId) > 0));
-//            }
         }
 
         responseObserver.onCompleted();
@@ -132,10 +125,11 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
     @Override
     public void coordinator(PlayerMessageRequest request, StreamObserver<PlayerMessageResponse> responseObserver) {
         if (MessageType.valueOf(request.getMessageType()) == COORDINATOR) {
-
             System.out.println("PlayerServiceImpl: " + myId + " got COORDINATOR message from " + request.getId() + " setting: gameState: ELECTION_ENDED, playerState:HIDER ");
             GlobalState.getStateObject().setGameState(GameState.ELECTION_ENDED);
             GlobalState.getStateObject().setMyPlayerRole(Role.HIDER);
+            GlobalState.getStateObject().setChosenPlayerToSeeker(request.getId());
+            GlobalState.getStateObject().printPlayersInformation();
         }
         responseObserver.onNext(PlayerMessageResponse.newBuilder().setId(myId).build());
         responseObserver.onCompleted();
