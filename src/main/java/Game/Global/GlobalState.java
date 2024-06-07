@@ -13,8 +13,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
-import static Game.GameClasses.GameState.BEFORE_ELECTION;
-import static Game.GameClasses.GameState.ELECTION_STARTED;
+import static Game.GameClasses.GameState.*;
 
 public class GlobalState {
     private static GlobalState instance;
@@ -65,11 +64,13 @@ public class GlobalState {
     }
 
 
-    public void setGameState(GameState gameState) {
+    public synchronized void setGameState(GameState gameState) {
         if (this.gameState != gameState && gameState.ordinal() > this.gameState.ordinal()) {
             System.out.println("GlobalState, setMyGameState: Player: " + this.playerId + ": OldGameState: " + this.gameState + " newGameState: " + gameState);
             this.gameState = gameState;
+
         }
+        notifyAll();
     }
 
     public String getMyPlayerId() {
@@ -124,6 +125,7 @@ public class GlobalState {
     public synchronized void setChosenPlayerToSeeker(String playerId) {
         for (PlayerExtended player : players) {
             if (Objects.equals(player.getId(), playerId)) {
+                System.out.println("GlobalState, setChosenPlayerToSeeker: " + playerId + " has been set to SEEKER");
                 player.setRole(Role.SEEKER);
             }
         }
@@ -156,11 +158,22 @@ public class GlobalState {
     }
 
     public synchronized GameState waitUntilElectionStarts() throws InterruptedException {
-        System.out.println("GlobalState: waitUntilElectionStarts: gameState " + BEFORE_ELECTION);
+        System.out.println("GlobalState: waitUntilElectionStarts");
         while (this.gameState.equals(BEFORE_ELECTION)) {
             wait();
         }
         System.out.println("GlobalState: waitUntilElectionStarts: Changed game state to " + this.gameState);
+        return this.gameState;
+    }
+
+    public synchronized GameState waitUntilElectionEnds() throws InterruptedException {
+        System.out.println("GlobalState: waitUntilElectionEnds");
+        while (!this.gameState.equals(ELECTION_ENDED)) {
+            wait();
+        }
+        System.out.println("GlobalState: waitUntilElectionEnds: Changed game state to " + this.gameState);
+        // Print for no coordinator message edge case for 2 players
+        this.printPlayersInformation();
         return this.gameState;
     }
 

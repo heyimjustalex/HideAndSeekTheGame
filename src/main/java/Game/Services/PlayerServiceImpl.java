@@ -20,6 +20,7 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
     private PlayerMessageResponse createGreetingOkMessage() {
         // I'm adding the player I got
         PlayerState myCurrentPlayerState = GlobalState.getStateObject().getMyPlayer().getPlayerState();
+        Role myCurrentPlayerRole = GlobalState.getStateObject().getMyPlayer().getRole();
         PlayerExtended myPlayer = GlobalState.getStateObject().getMyPlayer();
         GameState myCurrentGameState = GlobalState.getStateObject().getGameState();
 
@@ -29,6 +30,7 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
                 .setPosY(myPlayer.getPos_y().toString())
                 .setGameState(myCurrentGameState.toString())
                 .setPlayerState(myCurrentPlayerState.toString())
+                .setRole(myCurrentPlayerRole.toString())
                 .setMessageType(GREETING_OK.toString())
                 .build();
     }
@@ -56,8 +58,9 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
 
         if (MessageType.valueOf(request.getMessageType()) == MessageType.GREETING) {
             // I got a greeting message
-            System.out.println("PlayerServiceImpl, greeting -> Player " + myId + ": GREETING message from player " + request.getId());
             GameState myCurrentGameState = GlobalState.getStateObject().getGameState();
+            System.out.println("PlayerServiceImpl, greeting -> Player " + myId + ": GREETING message from player " + request.getId() + " myCurrentGameState: " + myCurrentGameState.name());
+
 
             // If the messages have already been sent
             if (myCurrentGameState == GameState.ELECTION_MESSAGES_SENT || myCurrentGameState == GameState.ELECTION_STARTED) {

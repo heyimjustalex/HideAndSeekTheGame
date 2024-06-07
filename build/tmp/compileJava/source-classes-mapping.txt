@@ -10,8 +10,8 @@ AdministrationServer/Models/Player.java
  AdministrationServer.Models.Player
 Game/GameClasses/Role.java
  Game.GameClasses.Role
-Game/Models/Message.java
- Game.Models.Message
+AdministrationServer/Controllers/PlayerController.java
+ AdministrationServer.Controllers.PlayerController
 AdministrationServer/Models/Measurement.java
  AdministrationServer.Models.Measurement
 AdministrationClient/Models/Message.java
@@ -36,17 +36,10 @@ AdministrationServer/Schemas/PlayerDeleteRequest.java
  AdministrationServer.Schemas.PlayerDeleteRequest
 AdministrationServer/Repositories/MeasurementRepository.java
  AdministrationServer.Repositories.MeasurementRepository
-proto/Player.java
- proto.Player
- proto.Player$1
- proto.Player$PlayerMessageRequest
- proto.Player$PlayerMessageRequest$1
- proto.Player$PlayerMessageRequest$Builder
- proto.Player$PlayerMessageRequestOrBuilder
- proto.Player$PlayerMessageResponse
- proto.Player$PlayerMessageResponse$1
- proto.Player$PlayerMessageResponse$Builder
- proto.Player$PlayerMessageResponseOrBuilder
+AdministrationServer/Services/PlayerService.java
+ AdministrationServer.Services.PlayerService
+ AdministrationServer.Services.PlayerService$1
+ AdministrationServer.Services.PlayerService$BAR
 AdministrationClient/Models/Player.java
  AdministrationClient.Models.Player
 Game/HeartRate/SimulatorsImplementation/SharedAverageBuffer.java
@@ -97,12 +90,19 @@ Game/HeartRate/SimulatorsImplementation/AverageSender.java
  Game.HeartRate.SimulatorsImplementation.AverageSender
 AdministrationServer/Services/MeasurementService.java
  AdministrationServer.Services.MeasurementService
-AdministrationServer/Services/PlayerService.java
- AdministrationServer.Services.PlayerService
- AdministrationServer.Services.PlayerService$1
- AdministrationServer.Services.PlayerService$BAR
-AdministrationServer/Controllers/PlayerController.java
- AdministrationServer.Controllers.PlayerController
+proto/Player.java
+ proto.Player
+ proto.Player$1
+ proto.Player$PlayerMessageRequest
+ proto.Player$PlayerMessageRequest$1
+ proto.Player$PlayerMessageRequest$Builder
+ proto.Player$PlayerMessageRequestOrBuilder
+ proto.Player$PlayerMessageResponse
+ proto.Player$PlayerMessageResponse$1
+ proto.Player$PlayerMessageResponse$Builder
+ proto.Player$PlayerMessageResponseOrBuilder
+Game/Models/Message.java
+ Game.Models.Message
 Game/Broker/SubscriberHandler.java
  Game.Broker.SubscriberHandler
  Game.Broker.SubscriberHandler$1

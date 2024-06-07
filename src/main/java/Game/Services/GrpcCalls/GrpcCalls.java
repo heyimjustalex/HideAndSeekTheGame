@@ -88,6 +88,11 @@ public class GrpcCalls {
                     GameState myCurrentGameState = GlobalState.getStateObject().getGameState();
                     GameState responseGameState = GameState.valueOf(response.getGameState());
 
+                    // Edge case for setting SEEKER after ELECTION ENDED
+                    if (responseGameState.equals(GameState.ELECTION_ENDED) && response.getRole().equals(Role.SEEKER.toString())) {
+                        System.out.println("GRPCalls, greetingCallAsync: Player: " + myId + "I set this Player " + "to SEEKER, bcs ELECTION_ENDED");
+                        GlobalState.getStateObject().setChosenPlayerToSeeker(response.getId());
+                    }
                     // If my current state is lower than the player's I greeted (MQTT message latency)
                     if (responseGameState.ordinal() > myCurrentGameState.ordinal()) {
                         System.out.println("GRPCalls, greetingCallAsync: Player: " + myId + ": GREETING_OK message from Player: " + response.getId() + " changed my state to higher -> " + responseGameState);
@@ -99,9 +104,11 @@ public class GrpcCalls {
                         System.out.println("GRPCalls, greetingCallAsync: Player: " + myId + " I CANCEL LEADER ELECTION, Role set to HIDER because i got OK message from Player: " + response.getId());
                         timeoutFutureHolderElection[0].cancel(true);
                     }
+
+
 //                    }
                 }
-                
+
             }
 
             @Override
@@ -143,7 +150,7 @@ public class GrpcCalls {
         };
 
         //This is needed for edge case when the person with lowest distance joins after election ended
-        System.out.println("electionCallAsync, gamestate ordinals " + GlobalState.getStateObject().getGameState().ordinal() + " " + GameState.ELECTION_MESSAGES_SENT.ordinal());
+//        System.out.println("electionCallAsync, gamestate ordinals " + GlobalState.getStateObject().getGameState().ordinal() + " " + GameState.ELECTION_MESSAGES_SENT.ordinal());
         if (GlobalState.getStateObject().getGameState().ordinal() < GameState.ELECTION_MESSAGES_SENT.ordinal()) {
             GlobalState.getStateObject().setGameState(GameState.ELECTION_MESSAGES_SENT);
 
@@ -152,7 +159,6 @@ public class GrpcCalls {
                 timeoutFutureHolderElection[0] = executor.schedule(electionWonTask, 12, TimeUnit.SECONDS);
             }
         }
-
         stub.election(request, new StreamObserver<PlayerMessageResponse>() {
             @Override
             public void onNext(PlayerMessageResponse response) {
@@ -164,9 +170,9 @@ public class GrpcCalls {
                         System.out.println("GRPCalls, electionCallAsync: Player: " + myId + " I CANCEL LEADER ELECTION, Role set to HIDER because i got OK message from Player: " + response.getId());
                         timeoutFutureHolderElection[0].cancel(true);
                     }
-
                     GlobalState.getStateObject().setMyPlayerRole(Role.HIDER);
 //                    GlobalState.getStateObject().setGameState(GameState.ELECTION_ENDED);
+
                 }
             }
 
@@ -195,6 +201,8 @@ public class GrpcCalls {
 
         Runnable electionWonTask = () -> {
             GlobalState.getStateObject().setMyPlayerRole(Role.SEEKER);
+            // Edge case for 1 player in the game who performs election
+            GlobalState.getStateObject().setGameState(GameState.ELECTION_ENDED);
 
             try {
                 for (PlayerExtended player : GlobalState.getStateObject().getPlayers()) {

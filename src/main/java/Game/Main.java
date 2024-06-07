@@ -147,8 +147,10 @@ public class Main {
             System.out.println("Main: election has ended, there is no need to take part I am a HIDER");
         }
 
-
+        GlobalState.getStateObject().waitUntilElectionEnds();
         // Wait for threads to end
+        Thread.sleep(20000);
+        GlobalState.getStateObject().printPlayersInformation();
 
         averageComputerThread.join();
         simulator.join();
