@@ -99,16 +99,11 @@ public class GrpcCalls {
                         GlobalState.getStateObject().setGameState(responseGameState);
                     }
 
-//                    if (responseGameState == GameState.ELECTION_ENDED) {
                     if (timeoutFutureHolderElection[0] != null) {
                         System.out.println("GRPCalls, greetingCallAsync: Player: " + myId + " I CANCEL LEADER ELECTION, Role set to HIDER because i got OK message from Player: " + response.getId());
                         timeoutFutureHolderElection[0].cancel(true);
                     }
-
-
-//                    }
                 }
-
             }
 
             @Override
@@ -135,7 +130,6 @@ public class GrpcCalls {
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
         PlayerMessageRequest request = createElectionRequest();
-
 
         Runnable electionWonTask = () -> {
             GlobalState.getStateObject().setMyPlayerRole(Role.SEEKER);
@@ -171,8 +165,6 @@ public class GrpcCalls {
                         timeoutFutureHolderElection[0].cancel(true);
                     }
                     GlobalState.getStateObject().setMyPlayerRole(Role.HIDER);
-//                    GlobalState.getStateObject().setGameState(GameState.ELECTION_ENDED);
-
                 }
             }
 
@@ -197,8 +189,6 @@ public class GrpcCalls {
         final ConcurrentHashMap<String, Boolean> electionFutureProcessed = GlobalState.getStateObject().getElectionFutureProcessed();
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
-//        GlobalState.getStateObject().setGameState(GameState.ELECTION_MESSAGES_SENT);
-
         Runnable electionWonTask = () -> {
             GlobalState.getStateObject().setMyPlayerRole(Role.SEEKER);
             // Edge case for 1 player in the game who performs election
@@ -214,7 +204,7 @@ public class GrpcCalls {
                 System.out.println("Couldnt send coordinator messages! " + e);
             }
         };
-        System.out.println("electionCallAsync, gamestate ordinals " + GlobalState.getStateObject().getGameState().ordinal() + " " + GameState.ELECTION_MESSAGES_SENT.ordinal());
+//        System.out.println("electionCallAsync, gamestate ordinals " + GlobalState.getStateObject().getGameState().ordinal() + " " + GameState.ELECTION_MESSAGES_SENT.ordinal());
         if (GlobalState.getStateObject().getGameState().ordinal() < GameState.ELECTION_MESSAGES_SENT.ordinal()) {
             if (electionFutureProcessed.putIfAbsent("ELECTION", true) == null) {
                 System.out.println("GRPCalls, electionSelfCallAsync: Player " + myId + ": ELECTION message put to map, and I will become SEEKER in 12 s");
@@ -231,8 +221,6 @@ public class GrpcCalls {
 
         // COORDINATOR message type sent when SEEKER is chosen
         PlayerMessageRequest request = createCoordinatorRequest();
-
-
         stub.coordinator(request, new StreamObserver<PlayerMessageResponse>() {
             @Override
             public void onNext(PlayerMessageResponse response) {
@@ -251,7 +239,6 @@ public class GrpcCalls {
         });
 
         if (!coordinatorHasBeenCalled) {
-
             GlobalState.getStateObject().printPlayersInformation();
             coordinatorHasBeenCalled = true;
         }
