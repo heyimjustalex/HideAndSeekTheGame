@@ -1,5 +1,5 @@
 package Game.GameClasses;
 
 public enum PlayerState {
-    UNTAGGED, TAGGED, WINNER
+    AFTER_ELECTION, WAITING_FOR_LOCK, GOING_TO_BASE, TAGGED, WINNER
 }

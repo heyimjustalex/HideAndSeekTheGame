@@ -47,7 +47,7 @@ public class PlayerExtended {
         this.pos_y = pos_y;
         this.distance = this.calculateDistanceToNearestBasePoint();
         this.role = Role.HIDER;
-        this.playerState = PlayerState.UNTAGGED;
+        this.playerState = PlayerState.AFTER_ELECTION;
     }
 
     public PlayerExtended(Player p) {
@@ -58,7 +58,7 @@ public class PlayerExtended {
         this.pos_y = p.getPos_y();
         this.distance = this.calculateDistanceToNearestBasePoint();
         this.role = Role.HIDER;
-        this.playerState = PlayerState.UNTAGGED;
+        this.playerState = PlayerState.AFTER_ELECTION;
     }
 
     private Double calculateDistanceToNearestBasePoint() {

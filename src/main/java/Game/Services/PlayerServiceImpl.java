@@ -8,6 +8,7 @@ import proto.Player.PlayerMessageRequest;
 import proto.Player.PlayerMessageResponse;
 import proto.PlayerServiceGrpc.PlayerServiceImplBase;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.*;
 
@@ -120,7 +121,7 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
                         }
                     }
                 } catch (InterruptedException e) {
-                    System.out.println("Couldnt send coordinator messages! " + e);
+                    System.out.println("Couldn't send coordinator messages! " + e);
                 }
 
                 System.out.println("PlayerServiceImpl: Player: " + myId + " timeout occurred. State set to SEEKER and sending COORDINATOR message ");
@@ -157,4 +158,67 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
         responseObserver.onCompleted();
     }
 
+    @Override
+    public void requestResource(PlayerMessageRequest request, StreamObserver<PlayerMessageResponse> responseObserver) {
+        if (MessageType.valueOf(request.getMessageType()) == REQUEST_RESOURCE) {
+
+            PlayerState myPlayerState = GlobalState.getStateObject().getMyPlayerState();
+            Long myTimestamp = GlobalState.getStateObject().getMyTimestampResourceRequestsSent();
+            System.out.println("PlayerServiceImpl, requestResource: MyTimestamp: " + myTimestamp + "Player: " + request.getId() + " timestamp: " + request.getTimestamp());
+
+            boolean myTimeStampIsLower = myPlayerState.equals(PlayerState.WAITING_FOR_LOCK) && myTimestamp < Long.parseLong(request.getTimestamp());
+            // If i dont care about accessing home base or or other party has lower timestamp, then grant access
+
+            if (myPlayerState.equals(PlayerState.AFTER_ELECTION)
+                    || myPlayerState.equals(PlayerState.TAGGED)
+                    || myPlayerState.equals(PlayerState.WINNER)
+                    || myTimeStampIsLower) {
+                System.out.println("PlayerServiceImpl, requestResource: Sending RESOURCE_GRANTED to " + request.getId());
+
+                responseObserver.onNext(
+                        PlayerMessageResponse
+                                .newBuilder()
+                                .setId(myId)
+                                .setMessageType(String.valueOf(RESOURCE_GRANTED))
+                                .build());
+            }
+            // I cannot grant access and I put it in the queue
+            else {
+                System.out.println("PlayerServiceImpl, requestResource: Sending RESOURCE_NOT_GRANTED to " + request.getId());
+                responseObserver.onNext(
+                        PlayerMessageResponse
+                                .newBuilder()
+                                .setId(myId)
+                                .setMessageType(String.valueOf(RESOURCE_NOT_GRANTED))
+                                .build());
+                // Add the request for the resource to the Queue
+                System.out.println("PlayerServiceImpl, requestResource: Putting REQUEST_NOT_GRANTED in queue  | of this Player:-> " + request.getId());
+                PlayerExtended playerRequestingResource = new PlayerExtended(request.getId(), request.getPort(), request.getAddress(), request.getPosX(), request.getPosY(), request.getRole(), request.getPlayerState());
+                GlobalState.getStateObject().addPlayerRequestingResourceToResourceQueue(playerRequestingResource);
+
+            }
+            responseObserver.onCompleted();
+
+        }
+    }
+
+    @Override
+    public void responseResource(PlayerMessageRequest request, StreamObserver<PlayerMessageResponse> responseObserver) {
+        if (MessageType.valueOf(request.getMessageType()) == RESOURCE_GRANTED) {
+
+            Integer howManyResponsesReceived = GlobalState.getStateObject().increaseHowManyResourceGrantedResponsesGot();
+            List<PlayerExtended> listOfPlayersISentResourceRequestTo = GlobalState.getStateObject().getCopyOfPlayersISendResourceRequestsTo();
+
+            // If I got all of the requests
+            if (listOfPlayersISentResourceRequestTo.size() == howManyResponsesReceived) {
+                GlobalState.getStateObject().setMyPlayerState(PlayerState.GOING_TO_BASE);
+            }
+            // Send ACK
+            responseObserver.onNext(PlayerMessageResponse.newBuilder()
+                    .setId(myId)
+                    .setMessageType(ACK.toString())
+                    .build());
+            responseObserver.onCompleted();
+        }
+    }
 }

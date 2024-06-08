@@ -8,9 +8,10 @@ message PlayerMessageRequest{
   string pos_x = 4;
   string pos_y = 5;
   string role = 6; // HIDER, SEEKER
-  string playerState = 7; // UNTAGGED, TAGGED, WINNER
+  string playerState = 7; // WAITING_FOR_LOCK, GOING_TO_BASE, WAITING_IN_BASE, TAGGED, WINNER
   string gameState = 8;  // BEFORE_ELECTION, ELECTION_STARTED, ELECTION_MESSAGES_SENT, ELECTION_ENDED, GAME_ENDED
-  string messageType = 9; // GREETING, ELECTION, OK, COORDINATOR
+  string messageType = 9; // GREETING, GREETING_OK, ELECTION, ELECTION_OK, COORDINATOR,REQUEST_RESOURCE, RESOURCE_GRANTED, ACK, SEEKER
+  string timestamp = 10;
 }
 
 message PlayerMessageResponse{
@@ -20,13 +21,17 @@ message PlayerMessageResponse{
   string pos_x = 4;
   string pos_y = 5;
   string role = 6; // HIDER, SEEKER
-  string playerState = 7; // UNTAGGED, TAGGED, WINNER
+  string playerState = 7; // WAITING_FOR_LOCK, GOING_TO_BASE, WAITING_IN_BASE, TAGGED, WINNER
   string gameState = 8;  // BEFORE_ELECTION, ELECTION_STARTED, ELECTION_MESSAGES_SENT, ELECTION_ENDED, GAME_ENDED
-  string messageType = 9; // GREETING, ELECTION, OK, COORDINATOR
+  string messageType = 9; //GREETING, GREETING_OK, ELECTION, ELECTION_OK, COORDINATOR,REQUEST_RESOURCE, RESOURCE_GRANTED, ACK, SEEKER
+
 }
 
 service PlayerService{
   rpc greeting(PlayerMessageRequest) returns (PlayerMessageResponse);
   rpc election(PlayerMessageRequest) returns (PlayerMessageResponse);
   rpc coordinator(PlayerMessageRequest) returns (PlayerMessageResponse);
+
+  rpc requestResource(PlayerMessageRequest) returns (PlayerMessageResponse);
+  rpc responseResource(PlayerMessageRequest) returns (PlayerMessageResponse);
 }

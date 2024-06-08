@@ -100,7 +100,7 @@ public final class Player {
 
     /**
      * <pre>
-     * UNTAGGED, TAGGED, WINNER
+     * WAITING_FOR_LOCK, GOING_TO_BASE, WAITING_IN_BASE, TAGGED, WINNER
      * </pre>
      *
      * <code>string playerState = 7;</code>
@@ -109,7 +109,7 @@ public final class Player {
     java.lang.String getPlayerState();
     /**
      * <pre>
-     * UNTAGGED, TAGGED, WINNER
+     * WAITING_FOR_LOCK, GOING_TO_BASE, WAITING_IN_BASE, TAGGED, WINNER
      * </pre>
      *
      * <code>string playerState = 7;</code>
@@ -140,7 +140,7 @@ public final class Player {
 
     /**
      * <pre>
-     * GREETING, ELECTION, OK, COORDINATOR
+     * GREETING, GREETING_OK, ELECTION, ELECTION_OK, COORDINATOR,REQUEST_RESOURCE, RESOURCE_GRANTED, ACK, SEEKER
      * </pre>
      *
      * <code>string messageType = 9;</code>
@@ -149,7 +149,7 @@ public final class Player {
     java.lang.String getMessageType();
     /**
      * <pre>
-     * GREETING, ELECTION, OK, COORDINATOR
+     * GREETING, GREETING_OK, ELECTION, ELECTION_OK, COORDINATOR,REQUEST_RESOURCE, RESOURCE_GRANTED, ACK, SEEKER
      * </pre>
      *
      * <code>string messageType = 9;</code>
@@ -157,6 +157,18 @@ public final class Player {
      */
     com.google.protobuf.ByteString
         getMessageTypeBytes();
+
+    /**
+     * <code>string timestamp = 10;</code>
+     * @return The timestamp.
+     */
+    java.lang.String getTimestamp();
+    /**
+     * <code>string timestamp = 10;</code>
+     * @return The bytes for timestamp.
+     */
+    com.google.protobuf.ByteString
+        getTimestampBytes();
   }
   /**
    * Protobuf type {@code proto.PlayerMessageRequest}
@@ -180,6 +192,7 @@ public final class Player {
       playerState_ = "";
       gameState_ = "";
       messageType_ = "";
+      timestamp_ = "";
     }
 
     @java.lang.Override
@@ -264,6 +277,12 @@ public final class Player {
               java.lang.String s = input.readStringRequireUtf8();
 
               messageType_ = s;
+              break;
+            }
+            case 82: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              timestamp_ = s;
               break;
             }
             default: {
@@ -538,7 +557,7 @@ public final class Player {
     private volatile java.lang.Object playerState_;
     /**
      * <pre>
-     * UNTAGGED, TAGGED, WINNER
+     * WAITING_FOR_LOCK, GOING_TO_BASE, WAITING_IN_BASE, TAGGED, WINNER
      * </pre>
      *
      * <code>string playerState = 7;</code>
@@ -559,7 +578,7 @@ public final class Player {
     }
     /**
      * <pre>
-     * UNTAGGED, TAGGED, WINNER
+     * WAITING_FOR_LOCK, GOING_TO_BASE, WAITING_IN_BASE, TAGGED, WINNER
      * </pre>
      *
      * <code>string playerState = 7;</code>
@@ -630,7 +649,7 @@ public final class Player {
     private volatile java.lang.Object messageType_;
     /**
      * <pre>
-     * GREETING, ELECTION, OK, COORDINATOR
+     * GREETING, GREETING_OK, ELECTION, ELECTION_OK, COORDINATOR,REQUEST_RESOURCE, RESOURCE_GRANTED, ACK, SEEKER
      * </pre>
      *
      * <code>string messageType = 9;</code>
@@ -651,7 +670,7 @@ public final class Player {
     }
     /**
      * <pre>
-     * GREETING, ELECTION, OK, COORDINATOR
+     * GREETING, GREETING_OK, ELECTION, ELECTION_OK, COORDINATOR,REQUEST_RESOURCE, RESOURCE_GRANTED, ACK, SEEKER
      * </pre>
      *
      * <code>string messageType = 9;</code>
@@ -666,6 +685,44 @@ public final class Player {
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         messageType_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int TIMESTAMP_FIELD_NUMBER = 10;
+    private volatile java.lang.Object timestamp_;
+    /**
+     * <code>string timestamp = 10;</code>
+     * @return The timestamp.
+     */
+    @java.lang.Override
+    public java.lang.String getTimestamp() {
+      java.lang.Object ref = timestamp_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        timestamp_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string timestamp = 10;</code>
+     * @return The bytes for timestamp.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getTimestampBytes() {
+      java.lang.Object ref = timestamp_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        timestamp_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -713,6 +770,9 @@ public final class Player {
       if (!getMessageTypeBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 9, messageType_);
       }
+      if (!getTimestampBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 10, timestamp_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -749,6 +809,9 @@ public final class Player {
       if (!getMessageTypeBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, messageType_);
       }
+      if (!getTimestampBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, timestamp_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -782,6 +845,8 @@ public final class Player {
           .equals(other.getGameState())) return false;
       if (!getMessageType()
           .equals(other.getMessageType())) return false;
+      if (!getTimestamp()
+          .equals(other.getTimestamp())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -811,6 +876,8 @@ public final class Player {
       hash = (53 * hash) + getGameState().hashCode();
       hash = (37 * hash) + MESSAGETYPE_FIELD_NUMBER;
       hash = (53 * hash) + getMessageType().hashCode();
+      hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
+      hash = (53 * hash) + getTimestamp().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -962,6 +1029,8 @@ public final class Player {
 
         messageType_ = "";
 
+        timestamp_ = "";
+
         return this;
       }
 
@@ -997,6 +1066,7 @@ public final class Player {
         result.playerState_ = playerState_;
         result.gameState_ = gameState_;
         result.messageType_ = messageType_;
+        result.timestamp_ = timestamp_;
         onBuilt();
         return result;
       }
@@ -1079,6 +1149,10 @@ public final class Player {
         }
         if (!other.getMessageType().isEmpty()) {
           messageType_ = other.messageType_;
+          onChanged();
+        }
+        if (!other.getTimestamp().isEmpty()) {
+          timestamp_ = other.timestamp_;
           onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -1589,7 +1663,7 @@ public final class Player {
       private java.lang.Object playerState_ = "";
       /**
        * <pre>
-       * UNTAGGED, TAGGED, WINNER
+       * WAITING_FOR_LOCK, GOING_TO_BASE, WAITING_IN_BASE, TAGGED, WINNER
        * </pre>
        *
        * <code>string playerState = 7;</code>
@@ -1609,7 +1683,7 @@ public final class Player {
       }
       /**
        * <pre>
-       * UNTAGGED, TAGGED, WINNER
+       * WAITING_FOR_LOCK, GOING_TO_BASE, WAITING_IN_BASE, TAGGED, WINNER
        * </pre>
        *
        * <code>string playerState = 7;</code>
@@ -1630,7 +1704,7 @@ public final class Player {
       }
       /**
        * <pre>
-       * UNTAGGED, TAGGED, WINNER
+       * WAITING_FOR_LOCK, GOING_TO_BASE, WAITING_IN_BASE, TAGGED, WINNER
        * </pre>
        *
        * <code>string playerState = 7;</code>
@@ -1649,7 +1723,7 @@ public final class Player {
       }
       /**
        * <pre>
-       * UNTAGGED, TAGGED, WINNER
+       * WAITING_FOR_LOCK, GOING_TO_BASE, WAITING_IN_BASE, TAGGED, WINNER
        * </pre>
        *
        * <code>string playerState = 7;</code>
@@ -1663,7 +1737,7 @@ public final class Player {
       }
       /**
        * <pre>
-       * UNTAGGED, TAGGED, WINNER
+       * WAITING_FOR_LOCK, GOING_TO_BASE, WAITING_IN_BASE, TAGGED, WINNER
        * </pre>
        *
        * <code>string playerState = 7;</code>
@@ -1781,7 +1855,7 @@ public final class Player {
       private java.lang.Object messageType_ = "";
       /**
        * <pre>
-       * GREETING, ELECTION, OK, COORDINATOR
+       * GREETING, GREETING_OK, ELECTION, ELECTION_OK, COORDINATOR,REQUEST_RESOURCE, RESOURCE_GRANTED, ACK, SEEKER
        * </pre>
        *
        * <code>string messageType = 9;</code>
@@ -1801,7 +1875,7 @@ public final class Player {
       }
       /**
        * <pre>
-       * GREETING, ELECTION, OK, COORDINATOR
+       * GREETING, GREETING_OK, ELECTION, ELECTION_OK, COORDINATOR,REQUEST_RESOURCE, RESOURCE_GRANTED, ACK, SEEKER
        * </pre>
        *
        * <code>string messageType = 9;</code>
@@ -1822,7 +1896,7 @@ public final class Player {
       }
       /**
        * <pre>
-       * GREETING, ELECTION, OK, COORDINATOR
+       * GREETING, GREETING_OK, ELECTION, ELECTION_OK, COORDINATOR,REQUEST_RESOURCE, RESOURCE_GRANTED, ACK, SEEKER
        * </pre>
        *
        * <code>string messageType = 9;</code>
@@ -1841,7 +1915,7 @@ public final class Player {
       }
       /**
        * <pre>
-       * GREETING, ELECTION, OK, COORDINATOR
+       * GREETING, GREETING_OK, ELECTION, ELECTION_OK, COORDINATOR,REQUEST_RESOURCE, RESOURCE_GRANTED, ACK, SEEKER
        * </pre>
        *
        * <code>string messageType = 9;</code>
@@ -1855,7 +1929,7 @@ public final class Player {
       }
       /**
        * <pre>
-       * GREETING, ELECTION, OK, COORDINATOR
+       * GREETING, GREETING_OK, ELECTION, ELECTION_OK, COORDINATOR,REQUEST_RESOURCE, RESOURCE_GRANTED, ACK, SEEKER
        * </pre>
        *
        * <code>string messageType = 9;</code>
@@ -1870,6 +1944,82 @@ public final class Player {
   checkByteStringIsUtf8(value);
         
         messageType_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object timestamp_ = "";
+      /**
+       * <code>string timestamp = 10;</code>
+       * @return The timestamp.
+       */
+      public java.lang.String getTimestamp() {
+        java.lang.Object ref = timestamp_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          timestamp_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string timestamp = 10;</code>
+       * @return The bytes for timestamp.
+       */
+      public com.google.protobuf.ByteString
+          getTimestampBytes() {
+        java.lang.Object ref = timestamp_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          timestamp_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string timestamp = 10;</code>
+       * @param value The timestamp to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTimestamp(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        timestamp_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string timestamp = 10;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearTimestamp() {
+        
+        timestamp_ = getDefaultInstance().getTimestamp();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string timestamp = 10;</code>
+       * @param value The bytes for timestamp to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTimestampBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        timestamp_ = value;
         onChanged();
         return this;
       }
@@ -2012,7 +2162,7 @@ public final class Player {
 
     /**
      * <pre>
-     * UNTAGGED, TAGGED, WINNER
+     * WAITING_FOR_LOCK, GOING_TO_BASE, WAITING_IN_BASE, TAGGED, WINNER
      * </pre>
      *
      * <code>string playerState = 7;</code>
@@ -2021,7 +2171,7 @@ public final class Player {
     java.lang.String getPlayerState();
     /**
      * <pre>
-     * UNTAGGED, TAGGED, WINNER
+     * WAITING_FOR_LOCK, GOING_TO_BASE, WAITING_IN_BASE, TAGGED, WINNER
      * </pre>
      *
      * <code>string playerState = 7;</code>
@@ -2052,7 +2202,7 @@ public final class Player {
 
     /**
      * <pre>
-     * GREETING, ELECTION, OK, COORDINATOR
+     *GREETING, GREETING_OK, ELECTION, ELECTION_OK, COORDINATOR,REQUEST_RESOURCE, RESOURCE_GRANTED, ACK, SEEKER
      * </pre>
      *
      * <code>string messageType = 9;</code>
@@ -2061,7 +2211,7 @@ public final class Player {
     java.lang.String getMessageType();
     /**
      * <pre>
-     * GREETING, ELECTION, OK, COORDINATOR
+     *GREETING, GREETING_OK, ELECTION, ELECTION_OK, COORDINATOR,REQUEST_RESOURCE, RESOURCE_GRANTED, ACK, SEEKER
      * </pre>
      *
      * <code>string messageType = 9;</code>
@@ -2450,7 +2600,7 @@ public final class Player {
     private volatile java.lang.Object playerState_;
     /**
      * <pre>
-     * UNTAGGED, TAGGED, WINNER
+     * WAITING_FOR_LOCK, GOING_TO_BASE, WAITING_IN_BASE, TAGGED, WINNER
      * </pre>
      *
      * <code>string playerState = 7;</code>
@@ -2471,7 +2621,7 @@ public final class Player {
     }
     /**
      * <pre>
-     * UNTAGGED, TAGGED, WINNER
+     * WAITING_FOR_LOCK, GOING_TO_BASE, WAITING_IN_BASE, TAGGED, WINNER
      * </pre>
      *
      * <code>string playerState = 7;</code>
@@ -2542,7 +2692,7 @@ public final class Player {
     private volatile java.lang.Object messageType_;
     /**
      * <pre>
-     * GREETING, ELECTION, OK, COORDINATOR
+     *GREETING, GREETING_OK, ELECTION, ELECTION_OK, COORDINATOR,REQUEST_RESOURCE, RESOURCE_GRANTED, ACK, SEEKER
      * </pre>
      *
      * <code>string messageType = 9;</code>
@@ -2563,7 +2713,7 @@ public final class Player {
     }
     /**
      * <pre>
-     * GREETING, ELECTION, OK, COORDINATOR
+     *GREETING, GREETING_OK, ELECTION, ELECTION_OK, COORDINATOR,REQUEST_RESOURCE, RESOURCE_GRANTED, ACK, SEEKER
      * </pre>
      *
      * <code>string messageType = 9;</code>
@@ -3501,7 +3651,7 @@ public final class Player {
       private java.lang.Object playerState_ = "";
       /**
        * <pre>
-       * UNTAGGED, TAGGED, WINNER
+       * WAITING_FOR_LOCK, GOING_TO_BASE, WAITING_IN_BASE, TAGGED, WINNER
        * </pre>
        *
        * <code>string playerState = 7;</code>
@@ -3521,7 +3671,7 @@ public final class Player {
       }
       /**
        * <pre>
-       * UNTAGGED, TAGGED, WINNER
+       * WAITING_FOR_LOCK, GOING_TO_BASE, WAITING_IN_BASE, TAGGED, WINNER
        * </pre>
        *
        * <code>string playerState = 7;</code>
@@ -3542,7 +3692,7 @@ public final class Player {
       }
       /**
        * <pre>
-       * UNTAGGED, TAGGED, WINNER
+       * WAITING_FOR_LOCK, GOING_TO_BASE, WAITING_IN_BASE, TAGGED, WINNER
        * </pre>
        *
        * <code>string playerState = 7;</code>
@@ -3561,7 +3711,7 @@ public final class Player {
       }
       /**
        * <pre>
-       * UNTAGGED, TAGGED, WINNER
+       * WAITING_FOR_LOCK, GOING_TO_BASE, WAITING_IN_BASE, TAGGED, WINNER
        * </pre>
        *
        * <code>string playerState = 7;</code>
@@ -3575,7 +3725,7 @@ public final class Player {
       }
       /**
        * <pre>
-       * UNTAGGED, TAGGED, WINNER
+       * WAITING_FOR_LOCK, GOING_TO_BASE, WAITING_IN_BASE, TAGGED, WINNER
        * </pre>
        *
        * <code>string playerState = 7;</code>
@@ -3693,7 +3843,7 @@ public final class Player {
       private java.lang.Object messageType_ = "";
       /**
        * <pre>
-       * GREETING, ELECTION, OK, COORDINATOR
+       *GREETING, GREETING_OK, ELECTION, ELECTION_OK, COORDINATOR,REQUEST_RESOURCE, RESOURCE_GRANTED, ACK, SEEKER
        * </pre>
        *
        * <code>string messageType = 9;</code>
@@ -3713,7 +3863,7 @@ public final class Player {
       }
       /**
        * <pre>
-       * GREETING, ELECTION, OK, COORDINATOR
+       *GREETING, GREETING_OK, ELECTION, ELECTION_OK, COORDINATOR,REQUEST_RESOURCE, RESOURCE_GRANTED, ACK, SEEKER
        * </pre>
        *
        * <code>string messageType = 9;</code>
@@ -3734,7 +3884,7 @@ public final class Player {
       }
       /**
        * <pre>
-       * GREETING, ELECTION, OK, COORDINATOR
+       *GREETING, GREETING_OK, ELECTION, ELECTION_OK, COORDINATOR,REQUEST_RESOURCE, RESOURCE_GRANTED, ACK, SEEKER
        * </pre>
        *
        * <code>string messageType = 9;</code>
@@ -3753,7 +3903,7 @@ public final class Player {
       }
       /**
        * <pre>
-       * GREETING, ELECTION, OK, COORDINATOR
+       *GREETING, GREETING_OK, ELECTION, ELECTION_OK, COORDINATOR,REQUEST_RESOURCE, RESOURCE_GRANTED, ACK, SEEKER
        * </pre>
        *
        * <code>string messageType = 9;</code>
@@ -3767,7 +3917,7 @@ public final class Player {
       }
       /**
        * <pre>
-       * GREETING, ELECTION, OK, COORDINATOR
+       *GREETING, GREETING_OK, ELECTION, ELECTION_OK, COORDINATOR,REQUEST_RESOURCE, RESOURCE_GRANTED, ACK, SEEKER
        * </pre>
        *
        * <code>string messageType = 9;</code>
@@ -3857,22 +4007,26 @@ public final class Player {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\014Player.proto\022\005proto\"\252\001\n\024PlayerMessageR" +
+      "\n\014Player.proto\022\005proto\"\275\001\n\024PlayerMessageR" +
       "equest\022\n\n\002id\030\001 \001(\t\022\014\n\004port\030\002 \001(\t\022\017\n\007addr" +
       "ess\030\003 \001(\t\022\r\n\005pos_x\030\004 \001(\t\022\r\n\005pos_y\030\005 \001(\t\022" +
       "\014\n\004role\030\006 \001(\t\022\023\n\013playerState\030\007 \001(\t\022\021\n\tga" +
-      "meState\030\010 \001(\t\022\023\n\013messageType\030\t \001(\t\"\253\001\n\025P" +
-      "layerMessageResponse\022\n\n\002id\030\001 \001(\t\022\014\n\004port" +
-      "\030\002 \001(\t\022\017\n\007address\030\003 \001(\t\022\r\n\005pos_x\030\004 \001(\t\022\r" +
-      "\n\005pos_y\030\005 \001(\t\022\014\n\004role\030\006 \001(\t\022\023\n\013playerSta" +
-      "te\030\007 \001(\t\022\021\n\tgameState\030\010 \001(\t\022\023\n\013messageTy" +
-      "pe\030\t \001(\t2\347\001\n\rPlayerService\022E\n\010greeting\022\033" +
-      ".proto.PlayerMessageRequest\032\034.proto.Play" +
-      "erMessageResponse\022E\n\010election\022\033.proto.Pl" +
-      "ayerMessageRequest\032\034.proto.PlayerMessage" +
-      "Response\022H\n\013coordinator\022\033.proto.PlayerMe" +
-      "ssageRequest\032\034.proto.PlayerMessageRespon" +
-      "seb\006proto3"
+      "meState\030\010 \001(\t\022\023\n\013messageType\030\t \001(\t\022\021\n\tti" +
+      "mestamp\030\n \001(\t\"\253\001\n\025PlayerMessageResponse\022" +
+      "\n\n\002id\030\001 \001(\t\022\014\n\004port\030\002 \001(\t\022\017\n\007address\030\003 \001" +
+      "(\t\022\r\n\005pos_x\030\004 \001(\t\022\r\n\005pos_y\030\005 \001(\t\022\014\n\004role" +
+      "\030\006 \001(\t\022\023\n\013playerState\030\007 \001(\t\022\021\n\tgameState" +
+      "\030\010 \001(\t\022\023\n\013messageType\030\t \001(\t2\204\003\n\rPlayerSe" +
+      "rvice\022E\n\010greeting\022\033.proto.PlayerMessageR" +
+      "equest\032\034.proto.PlayerMessageResponse\022E\n\010" +
+      "election\022\033.proto.PlayerMessageRequest\032\034." +
+      "proto.PlayerMessageResponse\022H\n\013coordinat" +
+      "or\022\033.proto.PlayerMessageRequest\032\034.proto." +
+      "PlayerMessageResponse\022L\n\017requestResource" +
+      "\022\033.proto.PlayerMessageRequest\032\034.proto.Pl" +
+      "ayerMessageResponse\022M\n\020responseResource\022" +
+      "\033.proto.PlayerMessageRequest\032\034.proto.Pla" +
+      "yerMessageResponseb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -3883,7 +4037,7 @@ public final class Player {
     internal_static_proto_PlayerMessageRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_proto_PlayerMessageRequest_descriptor,
-        new java.lang.String[] { "Id", "Port", "Address", "PosX", "PosY", "Role", "PlayerState", "GameState", "MessageType", });
+        new java.lang.String[] { "Id", "Port", "Address", "PosX", "PosY", "Role", "PlayerState", "GameState", "MessageType", "Timestamp", });
     internal_static_proto_PlayerMessageResponse_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_proto_PlayerMessageResponse_fieldAccessorTable = new

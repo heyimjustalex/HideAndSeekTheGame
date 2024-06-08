@@ -120,6 +120,68 @@ public final class PlayerServiceGrpc {
     return getCoordinatorMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<proto.Player.PlayerMessageRequest,
+      proto.Player.PlayerMessageResponse> getRequestResourceMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "requestResource",
+      requestType = proto.Player.PlayerMessageRequest.class,
+      responseType = proto.Player.PlayerMessageResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<proto.Player.PlayerMessageRequest,
+      proto.Player.PlayerMessageResponse> getRequestResourceMethod() {
+    io.grpc.MethodDescriptor<proto.Player.PlayerMessageRequest, proto.Player.PlayerMessageResponse> getRequestResourceMethod;
+    if ((getRequestResourceMethod = PlayerServiceGrpc.getRequestResourceMethod) == null) {
+      synchronized (PlayerServiceGrpc.class) {
+        if ((getRequestResourceMethod = PlayerServiceGrpc.getRequestResourceMethod) == null) {
+          PlayerServiceGrpc.getRequestResourceMethod = getRequestResourceMethod =
+              io.grpc.MethodDescriptor.<proto.Player.PlayerMessageRequest, proto.Player.PlayerMessageResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "requestResource"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  proto.Player.PlayerMessageRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  proto.Player.PlayerMessageResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new PlayerServiceMethodDescriptorSupplier("requestResource"))
+              .build();
+        }
+      }
+    }
+    return getRequestResourceMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<proto.Player.PlayerMessageRequest,
+      proto.Player.PlayerMessageResponse> getResponseResourceMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "responseResource",
+      requestType = proto.Player.PlayerMessageRequest.class,
+      responseType = proto.Player.PlayerMessageResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<proto.Player.PlayerMessageRequest,
+      proto.Player.PlayerMessageResponse> getResponseResourceMethod() {
+    io.grpc.MethodDescriptor<proto.Player.PlayerMessageRequest, proto.Player.PlayerMessageResponse> getResponseResourceMethod;
+    if ((getResponseResourceMethod = PlayerServiceGrpc.getResponseResourceMethod) == null) {
+      synchronized (PlayerServiceGrpc.class) {
+        if ((getResponseResourceMethod = PlayerServiceGrpc.getResponseResourceMethod) == null) {
+          PlayerServiceGrpc.getResponseResourceMethod = getResponseResourceMethod =
+              io.grpc.MethodDescriptor.<proto.Player.PlayerMessageRequest, proto.Player.PlayerMessageResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "responseResource"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  proto.Player.PlayerMessageRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  proto.Player.PlayerMessageResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new PlayerServiceMethodDescriptorSupplier("responseResource"))
+              .build();
+        }
+      }
+    }
+    return getResponseResourceMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -168,6 +230,20 @@ public final class PlayerServiceGrpc {
       asyncUnimplementedUnaryCall(getCoordinatorMethod(), responseObserver);
     }
 
+    /**
+     */
+    public void requestResource(proto.Player.PlayerMessageRequest request,
+        io.grpc.stub.StreamObserver<proto.Player.PlayerMessageResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getRequestResourceMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public void responseResource(proto.Player.PlayerMessageRequest request,
+        io.grpc.stub.StreamObserver<proto.Player.PlayerMessageResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getResponseResourceMethod(), responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -191,6 +267,20 @@ public final class PlayerServiceGrpc {
                 proto.Player.PlayerMessageRequest,
                 proto.Player.PlayerMessageResponse>(
                   this, METHODID_COORDINATOR)))
+          .addMethod(
+            getRequestResourceMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                proto.Player.PlayerMessageRequest,
+                proto.Player.PlayerMessageResponse>(
+                  this, METHODID_REQUEST_RESOURCE)))
+          .addMethod(
+            getResponseResourceMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                proto.Player.PlayerMessageRequest,
+                proto.Player.PlayerMessageResponse>(
+                  this, METHODID_RESPONSE_RESOURCE)))
           .build();
     }
   }
@@ -236,6 +326,22 @@ public final class PlayerServiceGrpc {
       asyncUnaryCall(
           getChannel().newCall(getCoordinatorMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void requestResource(proto.Player.PlayerMessageRequest request,
+        io.grpc.stub.StreamObserver<proto.Player.PlayerMessageResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getRequestResourceMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void responseResource(proto.Player.PlayerMessageRequest request,
+        io.grpc.stub.StreamObserver<proto.Player.PlayerMessageResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getResponseResourceMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -275,6 +381,20 @@ public final class PlayerServiceGrpc {
     public proto.Player.PlayerMessageResponse coordinator(proto.Player.PlayerMessageRequest request) {
       return blockingUnaryCall(
           getChannel(), getCoordinatorMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public proto.Player.PlayerMessageResponse requestResource(proto.Player.PlayerMessageRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getRequestResourceMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public proto.Player.PlayerMessageResponse responseResource(proto.Player.PlayerMessageRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getResponseResourceMethod(), getCallOptions(), request);
     }
   }
 
@@ -319,11 +439,29 @@ public final class PlayerServiceGrpc {
       return futureUnaryCall(
           getChannel().newCall(getCoordinatorMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<proto.Player.PlayerMessageResponse> requestResource(
+        proto.Player.PlayerMessageRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getRequestResourceMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<proto.Player.PlayerMessageResponse> responseResource(
+        proto.Player.PlayerMessageRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getResponseResourceMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_GREETING = 0;
   private static final int METHODID_ELECTION = 1;
   private static final int METHODID_COORDINATOR = 2;
+  private static final int METHODID_REQUEST_RESOURCE = 3;
+  private static final int METHODID_RESPONSE_RESOURCE = 4;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -352,6 +490,14 @@ public final class PlayerServiceGrpc {
           break;
         case METHODID_COORDINATOR:
           serviceImpl.coordinator((proto.Player.PlayerMessageRequest) request,
+              (io.grpc.stub.StreamObserver<proto.Player.PlayerMessageResponse>) responseObserver);
+          break;
+        case METHODID_REQUEST_RESOURCE:
+          serviceImpl.requestResource((proto.Player.PlayerMessageRequest) request,
+              (io.grpc.stub.StreamObserver<proto.Player.PlayerMessageResponse>) responseObserver);
+          break;
+        case METHODID_RESPONSE_RESOURCE:
+          serviceImpl.responseResource((proto.Player.PlayerMessageRequest) request,
               (io.grpc.stub.StreamObserver<proto.Player.PlayerMessageResponse>) responseObserver);
           break;
         default:
@@ -418,6 +564,8 @@ public final class PlayerServiceGrpc {
               .addMethod(getGreetingMethod())
               .addMethod(getElectionMethod())
               .addMethod(getCoordinatorMethod())
+              .addMethod(getRequestResourceMethod())
+              .addMethod(getResponseResourceMethod())
               .build();
         }
       }

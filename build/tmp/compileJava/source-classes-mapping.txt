@@ -16,8 +16,8 @@ AdministrationServer/Models/Measurement.java
  AdministrationServer.Models.Measurement
 AdministrationClient/Models/Message.java
  AdministrationClient.Models.Message
-Game/GameClasses/Players.java
- Game.GameClasses.Players
+AdministrationServer/Repositories/MeasurementRepository.java
+ AdministrationServer.Repositories.MeasurementRepository
 Game/GameClasses/GameState.java
  Game.GameClasses.GameState
 AdministrationServer/Repositories/PlayerRepository.java
@@ -26,22 +26,31 @@ AdministrationServer/Models/MeasurementConverted.java
  AdministrationServer.Models.MeasurementConverted
 AdministrationServer/Schemas/PlayerDeleteResponse.java
  AdministrationServer.Schemas.PlayerDeleteResponse
-Game/GameClasses/MessageType.java
- Game.GameClasses.MessageType
+AdministrationServer/Main.java
+ AdministrationServer.Main
 Game/Utilities/Other.java
  Game.Utilities.Other
 Game/HeartRate/Simulators/HRSimulator.java
  Game.HeartRate.Simulators.HRSimulator
 AdministrationServer/Schemas/PlayerDeleteRequest.java
  AdministrationServer.Schemas.PlayerDeleteRequest
-AdministrationServer/Repositories/MeasurementRepository.java
- AdministrationServer.Repositories.MeasurementRepository
+proto/Player.java
+ proto.Player
+ proto.Player$1
+ proto.Player$PlayerMessageRequest
+ proto.Player$PlayerMessageRequest$1
+ proto.Player$PlayerMessageRequest$Builder
+ proto.Player$PlayerMessageRequestOrBuilder
+ proto.Player$PlayerMessageResponse
+ proto.Player$PlayerMessageResponse$1
+ proto.Player$PlayerMessageResponse$Builder
+ proto.Player$PlayerMessageResponseOrBuilder
 AdministrationServer/Services/PlayerService.java
  AdministrationServer.Services.PlayerService
  AdministrationServer.Services.PlayerService$1
  AdministrationServer.Services.PlayerService$BAR
-AdministrationClient/Models/Player.java
- AdministrationClient.Models.Player
+AdministrationServer/Services/MeasurementService.java
+ AdministrationServer.Services.MeasurementService
 Game/HeartRate/SimulatorsImplementation/SharedAverageBuffer.java
  Game.HeartRate.SimulatorsImplementation.SharedAverageBuffer
 AdministrationClient/Utilities/HTTPUtilities.java
@@ -49,10 +58,10 @@ AdministrationClient/Utilities/HTTPUtilities.java
  AdministrationClient.Utilities.HTTPUtilities$1
  AdministrationClient.Utilities.HTTPUtilities$2
  AdministrationClient.Utilities.HTTPUtilities$3
+Game/Models/Message.java
+ Game.Models.Message
 Game/HeartRate/SimulatorsImplementation/SharedMeasurementBuffer.java
  Game.HeartRate.SimulatorsImplementation.SharedMeasurementBuffer
-Game/GameClasses/PlayerState.java
- Game.GameClasses.PlayerState
 AdministrationServer/Schemas/MeasurementAddRequest.java
  AdministrationServer.Schemas.MeasurementAddRequest
 AdministrationClient/Models/Measurement.java
@@ -72,51 +81,44 @@ Game/HeartRate/Simulators/Simulator.java
  Game.HeartRate.Simulators.Simulator
 Game/HeartRate/SimulatorsImplementation/AverageComputer.java
  Game.HeartRate.SimulatorsImplementation.AverageComputer
-AdministrationServer/Main.java
- AdministrationServer.Main
+AdministrationClient/Models/Player.java
+ AdministrationClient.Models.Player
 AdministrationServer/Schemas/PlayerAddResponse.java
  AdministrationServer.Schemas.PlayerAddResponse
 AdministrationClient/Main.java
  AdministrationClient.Main
-Game/GameClasses/PlayerExtended.java
- Game.GameClasses.PlayerExtended
+Game/HeartRate/SimulatorsImplementation/AverageSender.java
+ Game.HeartRate.SimulatorsImplementation.AverageSender
 Game/Models/Player.java
  Game.Models.Player
 AdministrationServer/Schemas/MeasurementAddResponse.java
  AdministrationServer.Schemas.MeasurementAddResponse
 AdministrationServer/Schemas/PlayerAddRequest.java
  AdministrationServer.Schemas.PlayerAddRequest
-Game/HeartRate/SimulatorsImplementation/AverageSender.java
- Game.HeartRate.SimulatorsImplementation.AverageSender
-AdministrationServer/Services/MeasurementService.java
- AdministrationServer.Services.MeasurementService
-proto/Player.java
- proto.Player
- proto.Player$1
- proto.Player$PlayerMessageRequest
- proto.Player$PlayerMessageRequest$1
- proto.Player$PlayerMessageRequest$Builder
- proto.Player$PlayerMessageRequestOrBuilder
- proto.Player$PlayerMessageResponse
- proto.Player$PlayerMessageResponse$1
- proto.Player$PlayerMessageResponse$Builder
- proto.Player$PlayerMessageResponseOrBuilder
-Game/Models/Message.java
- Game.Models.Message
+Game/GameClasses/PlayerExtended.java
+ Game.GameClasses.PlayerExtended
 Game/Broker/SubscriberHandler.java
  Game.Broker.SubscriberHandler
  Game.Broker.SubscriberHandler$1
-Game/Utilities/HTTPUtilities.java
- Game.Utilities.HTTPUtilities
- Game.Utilities.HTTPUtilities$1
-Game/Global/GlobalState.java
- Game.Global.GlobalState
 Game/Services/PlayerServiceImpl.java
  Game.Services.PlayerServiceImpl
+Game/GameClasses/MessageType.java
+ Game.GameClasses.MessageType
+Game/GameClasses/PlayerState.java
+ Game.GameClasses.PlayerState
 Game/Services/GrpcCalls/GrpcCalls.java
  Game.Services.GrpcCalls.GrpcCalls
  Game.Services.GrpcCalls.GrpcCalls$1
  Game.Services.GrpcCalls.GrpcCalls$2
  Game.Services.GrpcCalls.GrpcCalls$3
+ Game.Services.GrpcCalls.GrpcCalls$4
+ Game.Services.GrpcCalls.GrpcCalls$5
+Game/Global/GlobalState.java
+ Game.Global.GlobalState
 Game/Main.java
  Game.Main
+Game/Utilities/HTTPUtilities.java
+ Game.Utilities.HTTPUtilities
+ Game.Utilities.HTTPUtilities$1
+Game/GameClasses/Players.java
+ Game.GameClasses.Players

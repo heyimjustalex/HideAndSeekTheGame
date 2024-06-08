@@ -17,6 +17,7 @@ import Game.Utilities.HTTPUtilities;
 import io.grpc.ServerBuilder;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -31,13 +32,19 @@ public class Main {
         }
     }
 
+    public static void requestSharedResource() throws InterruptedException {
+        List<PlayerExtended> playersISendResourceRequestsTo = GlobalState.getStateObject().getCopyOfPlayersISendResourceRequestsTo();
+
+        for (PlayerExtended playerExtended : playersISendResourceRequestsTo) {
+            String serverAddress = playerExtended.getAddress() + ":" + playerExtended.getPort();
+            GrpcCalls.requestResourceCallAsync(serverAddress);
+        }
+    }
+
+
     public static void electLeader() throws InterruptedException {
         boolean atLeastOnceCalledElection = false;
         for (PlayerExtended playerExtended : GlobalState.getStateObject().getPlayers()) {
-//            System.out.println("MY DISTANCE " + GlobalState.getStateObject().getMyDistance());
-//            System.out.println("HIS DISTANCE " + playerExtended.getDistance());
-//            boolean comparison = GlobalState.getStateObject().getMyPlayerId().compareToIgnoreCase(playerExtended.getId()) > 0;
-//            System.out.println("COMPARISION " + comparison);
 
             boolean myPriorityIsHigherThanHis = (GlobalState.getStateObject().getMyDistance() < playerExtended.getDistance()) ||
                     (GlobalState.getStateObject().getMyDistance() == playerExtended.getDistance()
@@ -50,7 +57,7 @@ public class Main {
             atLeastOnceCalledElection = true;
             GrpcCalls.electionCallAsync(serverAddress);
         }
-//         nobody is better than me and election messages have been sent by others so i have no chance to elect myself as a leader
+//         nobody is better than me and election messages have been sent by others so I have no chance to elect myself as a leader
         if (!atLeastOnceCalledElection) {
             GrpcCalls.electionSelfCall();
         }
@@ -149,8 +156,18 @@ public class Main {
 
         GlobalState.getStateObject().waitUntilElectionEnds();
         // Wait for threads to end
-        Thread.sleep(20000);
+//        Thread.sleep(20000);
+        System.out.println("Main: Election has ended, printing players information ");
         GlobalState.getStateObject().printPlayersInformation();
+
+        try {
+            requestSharedResource();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        GlobalState.getStateObject().tryGoingToBase();
+
 
         averageComputerThread.join();
         simulator.join();

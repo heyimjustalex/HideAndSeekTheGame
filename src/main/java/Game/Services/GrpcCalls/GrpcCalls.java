@@ -1,9 +1,6 @@
 package Game.Services.GrpcCalls;
 
-import Game.GameClasses.GameState;
-import Game.GameClasses.MessageType;
-import Game.GameClasses.PlayerExtended;
-import Game.GameClasses.Role;
+import Game.GameClasses.*;
 import Game.Global.GlobalState;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -242,5 +239,96 @@ public class GrpcCalls {
             GlobalState.getStateObject().printPlayersInformation();
             coordinatorHasBeenCalled = true;
         }
+    }
+
+    private static PlayerMessageRequest createResourceRequest() {
+        PlayerExtended myPlayer = GlobalState.getStateObject().getMyPlayer();
+        GameState gameState = GlobalState.getStateObject().getGameState();
+        return PlayerMessageRequest
+                .newBuilder()
+                .setId(myPlayer.getId())
+                .setPort(myPlayer.getPort().toString())
+                .setAddress(myPlayer.getAddress())
+                .setPosX(myPlayer.getPos_x().toString())
+                .setPosY(myPlayer.getPos_y().toString())
+                .setRole(myPlayer.getRole().name())
+                .setPlayerState(myPlayer.getPlayerState().name())
+                .setGameState(gameState.toString())
+                .setMessageType(String.valueOf(MessageType.REQUEST_RESOURCE))
+                .setTimestamp(String.valueOf(GlobalState.getStateObject().getMyTimestampResourceRequestsSent()))
+                .build();
+    }
+
+    private static PlayerMessageRequest createResourceResponseRequest() {
+        PlayerExtended myPlayer = GlobalState.getStateObject().getMyPlayer();
+        GameState gameState = GlobalState.getStateObject().getGameState();
+        return PlayerMessageRequest
+                .newBuilder()
+                .setId(myPlayer.getId())
+                .setPort(myPlayer.getPort().toString())
+                .setAddress(myPlayer.getAddress())
+                .setPosX(myPlayer.getPos_x().toString())
+                .setPosY(myPlayer.getPos_y().toString())
+                .setRole(myPlayer.getRole().name())
+                .setPlayerState(myPlayer.getPlayerState().name())
+                .setGameState(gameState.toString())
+                .setMessageType(String.valueOf(MessageType.RESOURCE_GRANTED))
+                .build();
+    }
+
+
+    public static void requestResourceCallAsync(String serverAddress) throws InterruptedException {
+        ManagedChannel channel = ManagedChannelBuilder.forTarget(serverAddress).usePlaintext().build();
+        PlayerServiceGrpc.PlayerServiceStub stub = PlayerServiceGrpc.newStub(channel);
+
+
+        // REQUEST_RESOURCE type request
+        PlayerMessageRequest request = createResourceRequest();
+        GlobalState.getStateObject().setMyPlayerState(PlayerState.WAITING_FOR_LOCK);
+        System.out.println("GRPCalls, requestResourceCallAsync: Player: " + request.getId() + " set my PlayerState: WAITING_FOR_LOCK");
+        stub.requestResource(request, new StreamObserver<PlayerMessageResponse>() {
+            @Override
+            public void onNext(PlayerMessageResponse response) {
+                System.out.println("GRPCalls, requestResourceCallAsync: Player: " + request.getId() + " Response got from player: " + response.getId());
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                System.out.println(t.getMessage());
+            }
+
+            @Override
+            public void onCompleted() {
+                channel.shutdown();
+            }
+        });
+
+    }
+
+    public static void requestResourceResponseCallAsync(String serverAddress) throws InterruptedException {
+        ManagedChannel channel = ManagedChannelBuilder.forTarget(serverAddress).usePlaintext().build();
+        PlayerServiceGrpc.PlayerServiceStub stub = PlayerServiceGrpc.newStub(channel);
+
+        // REQUEST_RESOURCE type request
+        PlayerMessageRequest request = createResourceResponseRequest();
+
+        System.out.println("GRPCalls, requestResourceResponseCallAsync: Player: " + request.getId());
+        stub.requestResource(request, new StreamObserver<PlayerMessageResponse>() {
+            @Override
+            public void onNext(PlayerMessageResponse response) {
+                System.out.println("GRPCalls, requestResourceResponseCallAsync: Player: " + request.getId() + " Got ACK from Player " + response.getId());
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                System.out.println(t.getMessage());
+            }
+
+            @Override
+            public void onCompleted() {
+                channel.shutdown();
+            }
+        });
+
     }
 }
