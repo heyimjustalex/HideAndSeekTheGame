@@ -24,18 +24,18 @@ public class GlobalState {
     Long myTimestampResourceRequestsSent = null;
     ConcurrentHashMap<String, Boolean> electionFutureProcessed = new ConcurrentHashMap<>();
     ScheduledFuture<?>[] timeoutFutureHolderElection = new ScheduledFuture<?>[1];
-    BlockingQueue<PlayerExtended> playersThatRequireAccessToResource = new LinkedBlockingQueue<PlayerExtended>();
 
+    // This is for Ricart-Agrawala queue when I temporarily deny access to the resource
+    BlockingQueue<PlayerExtended> playersThatRequireAccessToResource = new LinkedBlockingQueue<PlayerExtended>();
     Integer howManyResourceGrantedResponsesGot = 0;
+    Integer howManyRequestResourceISent = 0;
     GameState gameState;
     PlayerState myPlayerState;
     String playerId;
     double myDistance;
     List<Message> mqttMessagesSent;
     List<PlayerExtended> players;
-    List<PlayerExtended> copyOfPlayersISendResourceRequestsTo;
     Role myRole = Role.HIDER;
-
     private GlobalState() {
         // Available GAME states
         // BEFORE_ELECTION,
@@ -47,7 +47,6 @@ public class GlobalState {
         gameState = BEFORE_ELECTION;
         mqttMessagesSent = new ArrayList<>();
         players = new ArrayList<>();
-        copyOfPlayersISendResourceRequestsTo = new ArrayList<>();
         myPlayerState = PlayerState.AFTER_ELECTION;
 
     }
@@ -58,19 +57,18 @@ public class GlobalState {
         return instance;
     }
 
-    public synchronized List<PlayerExtended> getCopyOfPlayersISendResourceRequestsTo() {
-        return new ArrayList<>(copyOfPlayersISendResourceRequestsTo);
+    public synchronized Integer getHowManyRequestResourceISent() {
+        return howManyRequestResourceISent;
     }
 
-    private synchronized void setCopyOfPlayersISendResourceRequestsTo() {
+    public synchronized void setHowManyRequestResourceISent(Integer howManyRequestResourceISent) {
+        this.howManyRequestResourceISent = howManyRequestResourceISent;
+    }
+
+    public synchronized List<PlayerExtended> getCopyOfPlayersISendResourceRequestsTo() {
         List<PlayerExtended> copiedPlayers = this.getPlayers();
-
         copiedPlayers.removeIf(player -> player.getId().equals(playerId) || player.getRole().equals(Role.SEEKER));
-        for (PlayerExtended playerExtended : copiedPlayers) {
-            System.out.println(playerExtended.getId() + playerExtended.getRole());
-        }
-        this.copyOfPlayersISendResourceRequestsTo = copiedPlayers;
-
+        return copiedPlayers;
     }
 
     public synchronized Integer getHowManyResourceGrantedResponsesGot() {
@@ -147,8 +145,34 @@ public class GlobalState {
 
             }
         }
+    }
 
 
+    synchronized public void tryCatchingHiders() throws InterruptedException {
+        while (this.myPlayerState.equals(PlayerState.AFTER_ELECTION)) {
+            System.out.println("GlobalState,  tryCatchingHiders: I wait for my state until it's not AFTER_ELECTION or WAITING_FOR_LOCK");
+            wait();
+        }
+
+//        while (!this.copyOfPlayersISendResourceRequestsTo.isEmpty()) {
+//            GrpcCalls.seekerAskingRequestCallAsync();
+//        }
+        if (myPlayerState == PlayerState.GOING_TO_BASE) {
+            double timeToReachBaseInSeconds = myDistance / 2;
+            long timeToReachBaseInMilliseconds = (long) (timeToReachBaseInSeconds * 1000) + 10000;
+            System.out.println("Player: " + playerId + " going to base. Needed time in seconds: " + timeToReachBaseInMilliseconds / 1000.0 + " Start time " + System.currentTimeMillis());
+            Thread.sleep(timeToReachBaseInMilliseconds);
+            setMyPlayerState(PlayerState.WINNER);
+            System.out.println("Player: " + playerId + " has just entered the base. End time " + System.currentTimeMillis());
+        }
+
+        if (myPlayerState == PlayerState.TAGGED || myPlayerState == PlayerState.WINNER) {
+            while (!playersThatRequireAccessToResource.isEmpty()) {
+                PlayerExtended playerWaitingForResource = playersThatRequireAccessToResource.poll();
+                GrpcCalls.requestResourceResponseCallAsync(playerWaitingForResource.getAddress() + ":" + playerWaitingForResource.getPort());
+
+            }
+        }
     }
 
 
@@ -246,6 +270,7 @@ public class GlobalState {
         }
     }
 
+
     public synchronized List<PlayerExtended> getPlayers() {
         return new ArrayList<>(this.players);
     }
@@ -267,7 +292,7 @@ public class GlobalState {
         System.out.println("GlobalState: waitUntilElectionEnds: Changed game state to " + this.gameState);
 
         // Copy the list of players I will send resource requests to
-        this.setCopyOfPlayersISendResourceRequestsTo();
+//        this.setCopyOfPlayersISendResourceRequestsTo();
 
         // Print for no coordinator message edge case for 2 players
         this.printPlayersInformation();

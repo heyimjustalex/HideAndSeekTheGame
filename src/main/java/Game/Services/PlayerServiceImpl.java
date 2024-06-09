@@ -8,7 +8,6 @@ import proto.Player.PlayerMessageRequest;
 import proto.Player.PlayerMessageResponse;
 import proto.PlayerServiceGrpc.PlayerServiceImplBase;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.*;
 
@@ -56,6 +55,10 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
     public void greeting(PlayerMessageRequest request, StreamObserver<PlayerMessageResponse> responseObserver) {
         PlayerExtended playerExtended = new PlayerExtended(request.getId(), request.getPort(), request.getAddress(), request.getPosX(), request.getPosY(), request.getRole(), request.getPlayerState());
         GlobalState.getStateObject().addPlayer(playerExtended);
+        // This is the list of players that will matter when somebody joins after election
+        // Right after election list is overwritten by copy of players list
+//        GlobalState.getStateObject().addPlayerToCopyOfPlayersISendResourceRequestsTo(playerExtended);
+
 
         if (MessageType.valueOf(request.getMessageType()) == MessageType.GREETING) {
             // I got a greeting message
@@ -168,7 +171,7 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
 //            myTimestamp = Long.parseLong(request.getTimestamp());
             System.out.println("PlayerServiceImpl, requestResource: MyTimestamp: " + myTimestamp + " Player: " + request.getId() + " timestamp: " + request.getTimestamp());
 
-            boolean myPriorityIsLower = myPlayerState.equals(PlayerState.WAITING_FOR_LOCK) && (myTimestamp < Long.parseLong(request.getTimestamp())
+            boolean myPriorityIsLower = myPlayerState.equals(PlayerState.WAITING_FOR_LOCK) && (myTimestamp > Long.parseLong(request.getTimestamp())
                     || (myTimestamp == Long.parseLong(request.getTimestamp()) && myId.compareToIgnoreCase(request.getId()) > 0));
 
             // If i dont care about accessing home base or or other party has lower timestamp, then grant access
@@ -210,10 +213,10 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
         if (MessageType.valueOf(request.getMessageType()) == RESOURCE_GRANTED) {
 
             Integer howManyResponsesReceived = GlobalState.getStateObject().increaseHowManyResourceGrantedResponsesGot();
-            List<PlayerExtended> listOfPlayersISentResourceRequestTo = GlobalState.getStateObject().getCopyOfPlayersISendResourceRequestsTo();
+            Integer howManyResponsesISent = GlobalState.getStateObject().getHowManyRequestResourceISent();
 
             // If I got all of the requests
-            if (listOfPlayersISentResourceRequestTo.size() == howManyResponsesReceived) {
+            if (Objects.equals(howManyResponsesISent, howManyResponsesReceived)) {
                 GlobalState.getStateObject().setMyPlayerState(PlayerState.GOING_TO_BASE);
             }
             // Send ACK
@@ -224,4 +227,33 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
             responseObserver.onCompleted();
         }
     }
+
+
+    @Override
+    public void seeker(PlayerMessageRequest request, StreamObserver<PlayerMessageResponse> responseObserver) {
+
+        MessageType requestMessageType = MessageType.valueOf(request.getMessageType());
+        if (requestMessageType == SEEKER_ASKING) {
+            responseObserver.onNext(PlayerMessageResponse.newBuilder()
+                    .setId(myId)
+                    .setPlayerState(GlobalState.getStateObject().getMyPlayerState().toString())
+                    .setMessageType(ACK.toString())
+                    .build());
+
+        } else if (requestMessageType == SEEKER_TAGGING) {
+            PlayerState myPlayerState = GlobalState.getStateObject().getMyPlayerState();
+            if (myPlayerState == PlayerState.AFTER_ELECTION || myPlayerState == PlayerState.WAITING_FOR_LOCK) {
+                GlobalState.getStateObject().setMyPlayerState(PlayerState.TAGGED);
+            }
+            responseObserver.onNext(PlayerMessageResponse.newBuilder()
+                    .setId(myId)
+                    .setPlayerState(GlobalState.getStateObject().getMyPlayerState().toString())
+                    .setMessageType(ACK.toString())
+                    .build());
+
+        }
+        responseObserver.onCompleted();
+    }
+
+
 }

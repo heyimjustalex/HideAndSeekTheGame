@@ -207,7 +207,7 @@ public class HTTPUtilities {
 
             //Set the QoS on the Message and Retained
             mqttMessage.setQos(qos);
-            mqttMessage.setRetained(isRetained);
+//            mqttMessage.setRetained(isRetained);
 
 
             System.out.println(clientId + " Publisher: Publishing message: " + mqttMessage + " ...");

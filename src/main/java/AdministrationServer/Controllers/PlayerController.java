@@ -61,8 +61,6 @@ public class PlayerController {
     @Produces({"application/json", "application/xml"})
     public Response addMeasurements(MeasurementAddRequest request) {
         MeasurementAddResponse measurementAddResponse = this.measurementService.addMeasurements(request);
-        System.out.println("REQUEST " + request);
-        System.out.println("RESPONSE " + measurementAddResponse);
         return Response.ok(measurementAddResponse).status(Response.Status.CREATED).build();
     }
 

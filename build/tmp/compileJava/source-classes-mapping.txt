@@ -34,8 +34,8 @@ Game/HeartRate/Simulators/HRSimulator.java
  Game.HeartRate.Simulators.HRSimulator
 AdministrationServer/Schemas/PlayerDeleteRequest.java
  AdministrationServer.Schemas.PlayerDeleteRequest
-AdministrationServer/Main.java
- AdministrationServer.Main
+Game/HeartRate/SimulatorsImplementation/SharedMeasurementBuffer.java
+ Game.HeartRate.SimulatorsImplementation.SharedMeasurementBuffer
 AdministrationServer/Services/PlayerService.java
  AdministrationServer.Services.PlayerService
  AdministrationServer.Services.PlayerService$1
@@ -49,8 +49,8 @@ AdministrationClient/Utilities/HTTPUtilities.java
  AdministrationClient.Utilities.HTTPUtilities$1
  AdministrationClient.Utilities.HTTPUtilities$2
  AdministrationClient.Utilities.HTTPUtilities$3
-Game/HeartRate/SimulatorsImplementation/SharedMeasurementBuffer.java
- Game.HeartRate.SimulatorsImplementation.SharedMeasurementBuffer
+Game/HeartRate/SimulatorsImplementation/AverageSender.java
+ Game.HeartRate.SimulatorsImplementation.AverageSender
 Game/GameClasses/PlayerState.java
  Game.GameClasses.PlayerState
 AdministrationServer/Schemas/MeasurementAddRequest.java
@@ -72,8 +72,8 @@ Game/HeartRate/Simulators/Simulator.java
  Game.HeartRate.Simulators.Simulator
 Game/HeartRate/SimulatorsImplementation/AverageComputer.java
  Game.HeartRate.SimulatorsImplementation.AverageComputer
-AdministrationServer/Repositories/MeasurementRepository.java
- AdministrationServer.Repositories.MeasurementRepository
+AdministrationServer/Main.java
+ AdministrationServer.Main
 AdministrationServer/Schemas/PlayerAddResponse.java
  AdministrationServer.Schemas.PlayerAddResponse
 AdministrationClient/Main.java
@@ -86,8 +86,8 @@ AdministrationServer/Schemas/MeasurementAddResponse.java
  AdministrationServer.Schemas.MeasurementAddResponse
 AdministrationServer/Schemas/PlayerAddRequest.java
  AdministrationServer.Schemas.PlayerAddRequest
-Game/HeartRate/SimulatorsImplementation/AverageSender.java
- Game.HeartRate.SimulatorsImplementation.AverageSender
+Game/Models/Message.java
+ Game.Models.Message
 AdministrationServer/Services/MeasurementService.java
  AdministrationServer.Services.MeasurementService
 proto/Player.java
@@ -101,8 +101,8 @@ proto/Player.java
  proto.Player$PlayerMessageResponse$1
  proto.Player$PlayerMessageResponse$Builder
  proto.Player$PlayerMessageResponseOrBuilder
-Game/Models/Message.java
- Game.Models.Message
+AdministrationServer/Repositories/MeasurementRepository.java
+ AdministrationServer.Repositories.MeasurementRepository
 Game/Broker/SubscriberHandler.java
  Game.Broker.SubscriberHandler
  Game.Broker.SubscriberHandler$1
@@ -115,6 +115,8 @@ Game/Services/GrpcCalls/GrpcCalls.java
  Game.Services.GrpcCalls.GrpcCalls$3
  Game.Services.GrpcCalls.GrpcCalls$4
  Game.Services.GrpcCalls.GrpcCalls$5
+ Game.Services.GrpcCalls.GrpcCalls$6
+ Game.Services.GrpcCalls.GrpcCalls$7
 Game/Global/GlobalState.java
  Game.Global.GlobalState
 Game/Main.java

@@ -20,6 +20,7 @@ import io.grpc.ServerBuilder;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Main {
@@ -35,11 +36,16 @@ public class Main {
     }
 
     public static void requestSharedResource() throws InterruptedException {
-        List<PlayerExtended> playersISendResourceRequestsTo = GlobalState.getStateObject().getCopyOfPlayersISendResourceRequestsTo();
-
+        List<PlayerExtended> playersISendResourceRequestsTo = GlobalState.getStateObject().getPlayers();
+        GlobalState.getStateObject().setHowManyRequestResourceISent(playersISendResourceRequestsTo.size() - 2);
+        String myPlayerId = GlobalState.getStateObject().getMyPlayerId();
         for (PlayerExtended playerExtended : playersISendResourceRequestsTo) {
-            String serverAddress = playerExtended.getAddress() + ":" + playerExtended.getPort();
-            GrpcCalls.requestResourceCallAsync(serverAddress);
+            // You need to check it because somebody might join after you constructed collection
+            if (!Objects.equals(playerExtended.getId(), myPlayerId) && playerExtended.getRole() != Role.SEEKER) {
+                String serverAddress = playerExtended.getAddress() + ":" + playerExtended.getPort();
+                GrpcCalls.requestResourceCallAsync(serverAddress);
+            }
+
         }
     }
 
@@ -173,6 +179,10 @@ public class Main {
 
             GlobalState.getStateObject().tryGoingToBase();
         }
+//        else {
+//            System.out.println("Main: I'm SEEKER, I'm trying to tag SEEKERS ");
+//            GlobalState.getStateObject().tryCatchingHiders();
+//        }
 
         averageComputerThread.join();
         simulator.join();

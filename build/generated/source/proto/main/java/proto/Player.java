@@ -4016,7 +4016,7 @@ public final class Player {
       "\n\n\002id\030\001 \001(\t\022\014\n\004port\030\002 \001(\t\022\017\n\007address\030\003 \001" +
       "(\t\022\r\n\005pos_x\030\004 \001(\t\022\r\n\005pos_y\030\005 \001(\t\022\014\n\004role" +
       "\030\006 \001(\t\022\023\n\013playerState\030\007 \001(\t\022\021\n\tgameState" +
-      "\030\010 \001(\t\022\023\n\013messageType\030\t \001(\t2\204\003\n\rPlayerSe" +
+      "\030\010 \001(\t\022\023\n\013messageType\030\t \001(\t2\311\003\n\rPlayerSe" +
       "rvice\022E\n\010greeting\022\033.proto.PlayerMessageR" +
       "equest\032\034.proto.PlayerMessageResponse\022E\n\010" +
       "election\022\033.proto.PlayerMessageRequest\032\034." +
@@ -4026,7 +4026,9 @@ public final class Player {
       "\022\033.proto.PlayerMessageRequest\032\034.proto.Pl" +
       "ayerMessageResponse\022M\n\020responseResource\022" +
       "\033.proto.PlayerMessageRequest\032\034.proto.Pla" +
-      "yerMessageResponseb\006proto3"
+      "yerMessageResponse\022C\n\006seeker\022\033.proto.Pla" +
+      "yerMessageRequest\032\034.proto.PlayerMessageR" +
+      "esponseb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

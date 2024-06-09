@@ -199,7 +199,7 @@ public class GrpcCalls {
                     }
                 }
             } catch (InterruptedException e) {
-                System.out.println("Couldnt send coordinator messages! " + e);
+                System.out.println("Couldn't send coordinator messages! " + e);
             }
         };
 //        System.out.println("electionCallAsync, gamestate ordinals " + GlobalState.getStateObject().getGameState().ordinal() + " " + GameState.ELECTION_MESSAGES_SENT.ordinal());
@@ -278,9 +278,42 @@ public class GrpcCalls {
                 .build();
     }
 
+    private static PlayerMessageRequest createSeekerTaggingRequest() {
+        PlayerExtended myPlayer = GlobalState.getStateObject().getMyPlayer();
+        GameState gameState = GlobalState.getStateObject().getGameState();
+        return PlayerMessageRequest
+                .newBuilder()
+                .setId(myPlayer.getId())
+                .setPort(myPlayer.getPort().toString())
+                .setAddress(myPlayer.getAddress())
+                .setPosX(myPlayer.getPos_x().toString())
+                .setPosY(myPlayer.getPos_y().toString())
+                .setRole(myPlayer.getRole().name())
+                .setPlayerState(myPlayer.getPlayerState().name())
+                .setGameState(gameState.toString())
+                .setMessageType(String.valueOf(MessageType.SEEKER_TAGGING))
+                .build();
+    }
+
+    private static PlayerMessageRequest createSeekerAskingRequest() {
+        PlayerExtended myPlayer = GlobalState.getStateObject().getMyPlayer();
+        GameState gameState = GlobalState.getStateObject().getGameState();
+        return PlayerMessageRequest
+                .newBuilder()
+                .setId(myPlayer.getId())
+                .setPort(myPlayer.getPort().toString())
+                .setAddress(myPlayer.getAddress())
+                .setPosX(myPlayer.getPos_x().toString())
+                .setPosY(myPlayer.getPos_y().toString())
+                .setRole(myPlayer.getRole().name())
+                .setPlayerState(myPlayer.getPlayerState().name())
+                .setGameState(gameState.toString())
+                .setMessageType(String.valueOf(MessageType.SEEKER_ASKING))
+                .build();
+    }
+
 
     public static void requestResourceCallAsync(String serverAddress) throws InterruptedException {
-
 
         ManagedChannel channel = ManagedChannelBuilder.forTarget(serverAddress).usePlaintext().build();
         PlayerServiceGrpc.PlayerServiceStub stub = PlayerServiceGrpc.newStub(channel);
@@ -305,8 +338,6 @@ public class GrpcCalls {
                 } else if (messageTypeFromResponse.equals(MessageType.RESOURCE_NOT_GRANTED)) {
                     System.out.println("GRPCalls, requestResourceCallAsync: Player: " + request.getId() + " RESOURCE_NOT_GRANTED response got from player: " + response.getId());
                 }
-
-
             }
 
             @Override
@@ -334,6 +365,60 @@ public class GrpcCalls {
             @Override
             public void onNext(PlayerMessageResponse response) {
                 System.out.println("GRPCalls, requestResourceResponseCallAsync: Player: " + request.getId() + " allowed to go Player " + response.getId());
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                System.out.println(t.getMessage());
+            }
+
+            @Override
+            public void onCompleted() {
+                channel.shutdown();
+            }
+        });
+
+    }
+
+    public static void seekerAskingRequestCallAsync(String serverAddress) throws InterruptedException {
+        ManagedChannel channel = ManagedChannelBuilder.forTarget(serverAddress).usePlaintext().build();
+        PlayerServiceGrpc.PlayerServiceStub stub = PlayerServiceGrpc.newStub(channel);
+
+        // REQUEST_RESOURCE type request
+        PlayerMessageRequest request = createSeekerAskingRequest();
+
+        System.out.println("GRPCalls, seekerAskingRequestCallAsync: Player: " + request.getId() + " sending ASKING_SEEKER to " + serverAddress);
+        stub.responseResource(request, new StreamObserver<PlayerMessageResponse>() {
+            @Override
+            public void onNext(PlayerMessageResponse response) {
+                System.out.println("GRPCalls, seekerAskingRequestCallAsync: Player: " + request.getId() + " to Player " + response.getId());
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                System.out.println(t.getMessage());
+            }
+
+            @Override
+            public void onCompleted() {
+                channel.shutdown();
+            }
+        });
+
+    }
+
+    public static void seekerTaggingRequestCallAsync(String serverAddress) throws InterruptedException {
+        ManagedChannel channel = ManagedChannelBuilder.forTarget(serverAddress).usePlaintext().build();
+        PlayerServiceGrpc.PlayerServiceStub stub = PlayerServiceGrpc.newStub(channel);
+
+        // REQUEST_RESOURCE type request
+        PlayerMessageRequest request = createSeekerTaggingRequest();
+
+        System.out.println("GRPCalls, seekerTaggingRequestCallAsync: Player: " + request.getId() + " sending SEEKER_TAGGING to " + serverAddress);
+        stub.responseResource(request, new StreamObserver<PlayerMessageResponse>() {
+            @Override
+            public void onNext(PlayerMessageResponse response) {
+                System.out.println("GRPCalls, seekerTaggingRequestCallAsync: Player: " + request.getId() + " to Player " + response.getId());
             }
 
             @Override

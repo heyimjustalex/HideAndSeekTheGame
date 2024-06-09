@@ -34,4 +34,5 @@ service PlayerService{
 
   rpc requestResource(PlayerMessageRequest) returns (PlayerMessageResponse);
   rpc responseResource(PlayerMessageRequest) returns (PlayerMessageResponse);
+  rpc seeker(PlayerMessageRequest) returns (PlayerMessageResponse);
 }
