@@ -148,7 +148,11 @@ public class PlayerExtended {
     }
 
     public void setPlayerState(PlayerState playerState) {
+//        if (this.playerState != playerState && playerState.ordinal() > this.playerState.ordinal()) {
+        System.out.println("PlayerExtended: Setting new playerState: " + playerState);
         this.playerState = playerState;
+
+//        }
     }
 
 }

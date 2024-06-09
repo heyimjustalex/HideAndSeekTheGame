@@ -244,6 +244,7 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
             PlayerState myPlayerState = GlobalState.getStateObject().getMyPlayerState();
             if (myPlayerState == PlayerState.AFTER_ELECTION || myPlayerState == PlayerState.WAITING_FOR_LOCK) {
                 GlobalState.getStateObject().setMyPlayerState(PlayerState.TAGGED);
+//                GlobalState.getStateObject().setGameState(GameState.GAME_ENDED);
             }
             responseObserver.onNext(PlayerMessageResponse.newBuilder()
                     .setId(myId)

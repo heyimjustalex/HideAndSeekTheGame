@@ -388,11 +388,17 @@ public class GrpcCalls {
         PlayerMessageRequest request = createSeekerAskingRequest();
 
         System.out.println("GRPCalls, seekerAskingRequestCallAsync: Player: " + request.getId() + " sending ASKING_SEEKER to " + serverAddress);
-        stub.responseResource(request, new StreamObserver<PlayerMessageResponse>() {
+        stub.seeker(request, new StreamObserver<PlayerMessageResponse>() {
             @Override
             public void onNext(PlayerMessageResponse response) {
-                System.out.println("GRPCalls, seekerAskingRequestCallAsync: Player: " + request.getId() + " to Player " + response.getId());
+                PlayerState responsePlayerState = PlayerState.valueOf(response.getPlayerState());
+                System.out.println("GRPCalls, seekerAskingRequestCallAsync: Player: " + request.getId() + " to Player " + response.getId() + " state " + responsePlayerState);
+
+                if (responsePlayerState == PlayerState.WINNER || responsePlayerState == PlayerState.TAGGED) {
+                    GlobalState.getStateObject().removePlayerFromTagListByPlayerId(response.getId());
+                }
             }
+
 
             @Override
             public void onError(Throwable t) {
@@ -415,10 +421,13 @@ public class GrpcCalls {
         PlayerMessageRequest request = createSeekerTaggingRequest();
 
         System.out.println("GRPCalls, seekerTaggingRequestCallAsync: Player: " + request.getId() + " sending SEEKER_TAGGING to " + serverAddress);
-        stub.responseResource(request, new StreamObserver<PlayerMessageResponse>() {
+        stub.seeker(request, new StreamObserver<PlayerMessageResponse>() {
             @Override
             public void onNext(PlayerMessageResponse response) {
                 System.out.println("GRPCalls, seekerTaggingRequestCallAsync: Player: " + request.getId() + " to Player " + response.getId());
+                PlayerState responsePlayerState = PlayerState.valueOf(response.getPlayerState());
+                System.out.println("GRPCalls, seekerTaggingRequestCallAsync: Player: " + request.getId() + " -> Player " + response.getId() + " state is: " + responsePlayerState);
+                GlobalState.getStateObject().removePlayerFromTagListByPlayerId(response.getId());
             }
 
             @Override

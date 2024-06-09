@@ -178,11 +178,10 @@ public class Main {
             }
 
             GlobalState.getStateObject().tryGoingToBase();
+        } else {
+            System.out.println("Main: I'm SEEKER, I'm trying to tag HIDERS ");
+            GlobalState.getStateObject().tryCatchingHiders();
         }
-//        else {
-//            System.out.println("Main: I'm SEEKER, I'm trying to tag SEEKERS ");
-//            GlobalState.getStateObject().tryCatchingHiders();
-//        }
 
         averageComputerThread.join();
         simulator.join();

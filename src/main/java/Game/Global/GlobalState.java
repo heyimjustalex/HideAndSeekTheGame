@@ -27,6 +27,8 @@ public class GlobalState {
 
     // This is for Ricart-Agrawala queue when I temporarily deny access to the resource
     BlockingQueue<PlayerExtended> playersThatRequireAccessToResource = new LinkedBlockingQueue<PlayerExtended>();
+
+
     Integer howManyResourceGrantedResponsesGot = 0;
     Integer howManyRequestResourceISent = 0;
     GameState gameState;
@@ -35,7 +37,9 @@ public class GlobalState {
     double myDistance;
     List<Message> mqttMessagesSent;
     List<PlayerExtended> players;
+    List<PlayerExtended> playersToTag;
     Role myRole = Role.HIDER;
+
     private GlobalState() {
         // Available GAME states
         // BEFORE_ELECTION,
@@ -47,6 +51,7 @@ public class GlobalState {
         gameState = BEFORE_ELECTION;
         mqttMessagesSent = new ArrayList<>();
         players = new ArrayList<>();
+        playersToTag = new ArrayList<>();
         myPlayerState = PlayerState.AFTER_ELECTION;
 
     }
@@ -55,6 +60,14 @@ public class GlobalState {
         if (instance == null)
             instance = new GlobalState();
         return instance;
+    }
+
+    public synchronized List<PlayerExtended> getPlayersToTag() {
+        return new ArrayList<>(playersToTag);
+    }
+
+    public synchronized void setPlayersToTag(List<PlayerExtended> playersToTag) {
+        this.playersToTag = playersToTag;
     }
 
     public synchronized Integer getHowManyRequestResourceISent() {
@@ -96,6 +109,7 @@ public class GlobalState {
             for (PlayerExtended player : this.players) {
                 if (player.getId().equals(this.playerId)) {
                     player.setRole(role);
+                    break;
                 }
             }
         }
@@ -136,6 +150,7 @@ public class GlobalState {
             Thread.sleep(timeToReachBaseInMilliseconds);
             setMyPlayerState(PlayerState.WINNER);
             System.out.println("Player: " + playerId + " has just entered the base. End time " + System.currentTimeMillis());
+//            setGameState(GAME_ENDED);
         }
 
         if (myPlayerState == PlayerState.TAGGED || myPlayerState == PlayerState.WINNER) {
@@ -147,32 +162,71 @@ public class GlobalState {
         }
     }
 
-
-    synchronized public void tryCatchingHiders() throws InterruptedException {
-        while (this.myPlayerState.equals(PlayerState.AFTER_ELECTION)) {
-            System.out.println("GlobalState,  tryCatchingHiders: I wait for my state until it's not AFTER_ELECTION or WAITING_FOR_LOCK");
-            wait();
-        }
-
-//        while (!this.copyOfPlayersISendResourceRequestsTo.isEmpty()) {
-//            GrpcCalls.seekerAskingRequestCallAsync();
-//        }
-        if (myPlayerState == PlayerState.GOING_TO_BASE) {
-            double timeToReachBaseInSeconds = myDistance / 2;
-            long timeToReachBaseInMilliseconds = (long) (timeToReachBaseInSeconds * 1000) + 10000;
-            System.out.println("Player: " + playerId + " going to base. Needed time in seconds: " + timeToReachBaseInMilliseconds / 1000.0 + " Start time " + System.currentTimeMillis());
-            Thread.sleep(timeToReachBaseInMilliseconds);
-            setMyPlayerState(PlayerState.WINNER);
-            System.out.println("Player: " + playerId + " has just entered the base. End time " + System.currentTimeMillis());
-        }
-
-        if (myPlayerState == PlayerState.TAGGED || myPlayerState == PlayerState.WINNER) {
-            while (!playersThatRequireAccessToResource.isEmpty()) {
-                PlayerExtended playerWaitingForResource = playersThatRequireAccessToResource.poll();
-                GrpcCalls.requestResourceResponseCallAsync(playerWaitingForResource.getAddress() + ":" + playerWaitingForResource.getPort());
-
+    private synchronized PlayerExtended findSeekerInList(List<PlayerExtended> players) {
+        for (PlayerExtended player : players) {
+            if (player.getRole() == Role.SEEKER) {
+                return player;
             }
         }
+        return null;
+    }
+
+
+    private PlayerExtended findClosestPlayer(List<PlayerExtended> players, PlayerExtended seeker) {
+        double minDistance = Double.MAX_VALUE;
+        PlayerExtended minPlayer = null;
+        for (PlayerExtended player : players) {
+            if (player.getRole() != Role.SEEKER) {
+
+                double calculatedDistance = Math.sqrt((Math.pow(player.getPos_x() - seeker.getPos_x(), 2) + Math.pow(player.getPos_y() - seeker.getPos_y(), 2)));
+                if (calculatedDistance < minDistance) {
+                    minPlayer = player;
+                }
+            }
+
+        }
+        return minPlayer;
+
+    }
+
+    public synchronized void removePlayerFromTagListByPlayerId(String playerId) {
+        this.playersToTag.removeIf(player -> player.getId().equals(playerId));
+        System.out.println("List after removal: " + this.playersToTag);
+    }
+
+
+    public void tryCatchingHiders() throws InterruptedException {
+
+        this.setPlayersToTag(getPlayers());
+
+        PlayerExtended seekerPlayer = findSeekerInList(playersToTag);
+        removePlayerFromTagListByPlayerId(seekerPlayer.getId());
+        Thread.sleep(10000);
+
+
+        while (!playersToTag.isEmpty()) {
+
+            for (PlayerExtended player : playersToTag) {
+                GrpcCalls.seekerAskingRequestCallAsync(player.getAddress() + ":" + player.getPort());
+            }
+            Thread.sleep(3000);
+
+            PlayerExtended playerClosestToSeeker = this.findClosestPlayer(playersToTag, seekerPlayer);
+            if (seekerPlayer != null && playerClosestToSeeker != null) {
+                double calculatedDistance = Math.sqrt((Math.pow(playerClosestToSeeker.getPos_x() - seekerPlayer.getPos_x(), 2) + Math.pow(playerClosestToSeeker.getPos_y() - seekerPlayer.getPos_y(), 2)));
+                double timeToReachOtherPlayer = calculatedDistance / 2;
+                long timeToReachOtherPlayerInMilliseconds = (long) (timeToReachOtherPlayer * 1000);
+                System.out.println("Seeker: " + playerId + " going to catch Player: " + playerClosestToSeeker.getId() + " Needed time in seconds: " + timeToReachOtherPlayerInMilliseconds / 1000.0 + " Start time " + System.currentTimeMillis());
+                Thread.sleep(timeToReachOtherPlayerInMilliseconds);
+                GrpcCalls.seekerTaggingRequestCallAsync(playerClosestToSeeker.getAddress() + ":" + playerClosestToSeeker.getPort());
+                System.out.println("Player: " + playerId + " has just reached closest Player spot " + System.currentTimeMillis());
+            }
+        }
+
+        System.out.println("GlobalState, tryCatchingHiders: No more players to catch, ending game! ");
+        this.setGameState(GAME_ENDED);
+
+
     }
 
 
@@ -225,6 +279,21 @@ public class GlobalState {
             }
             if (!exists) {
                 players.add(new PlayerExtended(p));
+            }
+        }
+    }
+
+    public synchronized void addPlayersToSeekerTagList(List<PlayerExtended> playersFromGreeting) {
+        for (PlayerExtended p : playersFromGreeting) {
+            boolean exists = false;
+            for (PlayerExtended pe : playersToTag) {
+                if (pe.getId().equals(p.getId())) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists) {
+                playersToTag.add(p);
             }
         }
     }
