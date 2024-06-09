@@ -9,6 +9,7 @@ import proto.Player.PlayerMessageRequest;
 import proto.Player.PlayerMessageResponse;
 import proto.PlayerServiceGrpc;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.*;
 
@@ -214,6 +215,7 @@ public class GrpcCalls {
     public static void coordinatorCallAsync(String serverAddress) throws InterruptedException {
         ManagedChannel channel = ManagedChannelBuilder.forTarget(serverAddress).usePlaintext().build();
         PlayerServiceGrpc.PlayerServiceStub stub = PlayerServiceGrpc.newStub(channel);
+        GlobalState.getStateObject().setMyPlayerRole(Role.SEEKER); // this one i added
         GlobalState.getStateObject().setGameState(GameState.ELECTION_ENDED);
 
         // COORDINATOR message type sent when SEEKER is chosen
@@ -278,23 +280,38 @@ public class GrpcCalls {
 
 
     public static void requestResourceCallAsync(String serverAddress) throws InterruptedException {
+
+
         ManagedChannel channel = ManagedChannelBuilder.forTarget(serverAddress).usePlaintext().build();
         PlayerServiceGrpc.PlayerServiceStub stub = PlayerServiceGrpc.newStub(channel);
 
-
         // REQUEST_RESOURCE type request
         PlayerMessageRequest request = createResourceRequest();
-        GlobalState.getStateObject().setMyPlayerState(PlayerState.WAITING_FOR_LOCK);
         System.out.println("GRPCalls, requestResourceCallAsync: Player: " + request.getId() + " set my PlayerState: WAITING_FOR_LOCK");
         stub.requestResource(request, new StreamObserver<PlayerMessageResponse>() {
             @Override
             public void onNext(PlayerMessageResponse response) {
-                System.out.println("GRPCalls, requestResourceCallAsync: Player: " + request.getId() + " Response got from player: " + response.getId());
+                MessageType messageTypeFromResponse = MessageType.valueOf(response.getMessageType());
+
+
+                if (messageTypeFromResponse.equals(MessageType.RESOURCE_GRANTED)) {
+                    System.out.println("GRPCalls, requestResourceCallAsync: Player: " + request.getId() + " response got from player: " + response.getId() + " with MESSAGE_TYPE RESOURCE_GRANTED");
+                    Integer howManyResponsesReceived = GlobalState.getStateObject().increaseHowManyResourceGrantedResponsesGot();
+                    List<PlayerExtended> listOfPlayersISentResourceRequestTo = GlobalState.getStateObject().getCopyOfPlayersISendResourceRequestsTo();
+                    // If I got all the requests
+                    if (listOfPlayersISentResourceRequestTo.size() == howManyResponsesReceived) {
+                        GlobalState.getStateObject().setMyPlayerState(PlayerState.GOING_TO_BASE);
+                    }
+                } else if (messageTypeFromResponse.equals(MessageType.RESOURCE_NOT_GRANTED)) {
+                    System.out.println("GRPCalls, requestResourceCallAsync: Player: " + request.getId() + " RESOURCE_NOT_GRANTED response got from player: " + response.getId());
+                }
+
+
             }
 
             @Override
             public void onError(Throwable t) {
-                System.out.println(t.getMessage());
+                System.out.println("requestResourceCallAsync" + t.getMessage());
             }
 
             @Override
@@ -312,11 +329,11 @@ public class GrpcCalls {
         // REQUEST_RESOURCE type request
         PlayerMessageRequest request = createResourceResponseRequest();
 
-        System.out.println("GRPCalls, requestResourceResponseCallAsync: Player: " + request.getId());
-        stub.requestResource(request, new StreamObserver<PlayerMessageResponse>() {
+        System.out.println("GRPCalls, requestResourceResponseCallAsync: Player: " + request.getId() + " sending to " + serverAddress);
+        stub.responseResource(request, new StreamObserver<PlayerMessageResponse>() {
             @Override
             public void onNext(PlayerMessageResponse response) {
-                System.out.println("GRPCalls, requestResourceResponseCallAsync: Player: " + request.getId() + " Got ACK from Player " + response.getId());
+                System.out.println("GRPCalls, requestResourceResponseCallAsync: Player: " + request.getId() + " allowed to go Player " + response.getId());
             }
 
             @Override

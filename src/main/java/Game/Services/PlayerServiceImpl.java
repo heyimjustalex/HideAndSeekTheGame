@@ -149,9 +149,9 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
     public void coordinator(PlayerMessageRequest request, StreamObserver<PlayerMessageResponse> responseObserver) {
         if (MessageType.valueOf(request.getMessageType()) == COORDINATOR) {
             System.out.println("PlayerServiceImpl: " + myId + " got COORDINATOR message from " + request.getId() + " setting: gameState: ELECTION_ENDED, playerState:HIDER ");
-            GlobalState.getStateObject().setGameState(GameState.ELECTION_ENDED);
             GlobalState.getStateObject().setMyPlayerRole(Role.HIDER);
             GlobalState.getStateObject().setChosenPlayerToSeeker(request.getId());
+            GlobalState.getStateObject().setGameState(GameState.ELECTION_ENDED);
             GlobalState.getStateObject().printPlayersInformation();
         }
         responseObserver.onNext(PlayerMessageResponse.newBuilder().setId(myId).build());
@@ -164,15 +164,18 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
 
             PlayerState myPlayerState = GlobalState.getStateObject().getMyPlayerState();
             Long myTimestamp = GlobalState.getStateObject().getMyTimestampResourceRequestsSent();
-            System.out.println("PlayerServiceImpl, requestResource: MyTimestamp: " + myTimestamp + "Player: " + request.getId() + " timestamp: " + request.getTimestamp());
+            // This line is to test case when timestamps are equal
+//            myTimestamp = Long.parseLong(request.getTimestamp());
+            System.out.println("PlayerServiceImpl, requestResource: MyTimestamp: " + myTimestamp + " Player: " + request.getId() + " timestamp: " + request.getTimestamp());
 
-            boolean myTimeStampIsLower = myPlayerState.equals(PlayerState.WAITING_FOR_LOCK) && myTimestamp < Long.parseLong(request.getTimestamp());
+            boolean myPriorityIsLower = myPlayerState.equals(PlayerState.WAITING_FOR_LOCK) && (myTimestamp < Long.parseLong(request.getTimestamp())
+                    || (myTimestamp == Long.parseLong(request.getTimestamp()) && myId.compareToIgnoreCase(request.getId()) > 0));
+
             // If i dont care about accessing home base or or other party has lower timestamp, then grant access
-
             if (myPlayerState.equals(PlayerState.AFTER_ELECTION)
                     || myPlayerState.equals(PlayerState.TAGGED)
                     || myPlayerState.equals(PlayerState.WINNER)
-                    || myTimeStampIsLower) {
+                    || myPriorityIsLower) {
                 System.out.println("PlayerServiceImpl, requestResource: Sending RESOURCE_GRANTED to " + request.getId());
 
                 responseObserver.onNext(

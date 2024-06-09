@@ -3,6 +3,8 @@ package Game;
 import Game.Broker.SubscriberHandler;
 import Game.GameClasses.GameState;
 import Game.GameClasses.PlayerExtended;
+import Game.GameClasses.PlayerState;
+import Game.GameClasses.Role;
 import Game.Global.GlobalState;
 import Game.HeartRate.Simulators.Buffer;
 import Game.HeartRate.Simulators.HRSimulator;
@@ -159,15 +161,18 @@ public class Main {
 //        Thread.sleep(20000);
         System.out.println("Main: Election has ended, printing players information ");
         GlobalState.getStateObject().printPlayersInformation();
+        if (!GlobalState.getStateObject().getMyPlayer().getRole().equals(Role.SEEKER)) {
+            System.out.println("Main: I'm not SEEKER, I'm requesting resource");
 
-        try {
-            requestSharedResource();
-        } catch (Exception e) {
-            System.out.println(e);
+            try {
+                GlobalState.getStateObject().setMyPlayerState(PlayerState.WAITING_FOR_LOCK);
+                requestSharedResource();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
+            GlobalState.getStateObject().tryGoingToBase();
         }
-
-        GlobalState.getStateObject().tryGoingToBase();
-
 
         averageComputerThread.join();
         simulator.join();

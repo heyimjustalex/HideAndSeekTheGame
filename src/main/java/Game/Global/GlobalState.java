@@ -48,6 +48,7 @@ public class GlobalState {
         mqttMessagesSent = new ArrayList<>();
         players = new ArrayList<>();
         copyOfPlayersISendResourceRequestsTo = new ArrayList<>();
+        myPlayerState = PlayerState.AFTER_ELECTION;
 
     }
 
@@ -65,7 +66,9 @@ public class GlobalState {
         List<PlayerExtended> copiedPlayers = this.getPlayers();
 
         copiedPlayers.removeIf(player -> player.getId().equals(playerId) || player.getRole().equals(Role.SEEKER));
-
+        for (PlayerExtended playerExtended : copiedPlayers) {
+            System.out.println(playerExtended.getId() + playerExtended.getRole());
+        }
         this.copyOfPlayersISendResourceRequestsTo = copiedPlayers;
 
     }
@@ -130,11 +133,11 @@ public class GlobalState {
 
         if (myPlayerState == PlayerState.GOING_TO_BASE) {
             double timeToReachBaseInSeconds = myDistance / 2;
-            long timeToReachBaseInMilliseconds = Long.parseLong(String.valueOf(timeToReachBaseInSeconds * 1000));
-            System.out.println("Player: " + playerId + " going to base. Needed time in seconds: " + timeToReachBaseInSeconds);
-            Thread.sleep(10000 + timeToReachBaseInMilliseconds);
+            long timeToReachBaseInMilliseconds = (long) (timeToReachBaseInSeconds * 1000) + 10000;
+            System.out.println("Player: " + playerId + " going to base. Needed time in seconds: " + timeToReachBaseInMilliseconds / 1000.0 + " Start time " + System.currentTimeMillis());
+            Thread.sleep(timeToReachBaseInMilliseconds);
             setMyPlayerState(PlayerState.WINNER);
-
+            System.out.println("Player: " + playerId + " has just entered the base. End time " + System.currentTimeMillis());
         }
 
         if (myPlayerState == PlayerState.TAGGED || myPlayerState == PlayerState.WINNER) {
@@ -262,10 +265,13 @@ public class GlobalState {
             wait();
         }
         System.out.println("GlobalState: waitUntilElectionEnds: Changed game state to " + this.gameState);
-        // Print for no coordinator message edge case for 2 players
-        this.printPlayersInformation();
+
         // Copy the list of players I will send resource requests to
         this.setCopyOfPlayersISendResourceRequestsTo();
+
+        // Print for no coordinator message edge case for 2 players
+        this.printPlayersInformation();
+
         return this.gameState;
     }
 
