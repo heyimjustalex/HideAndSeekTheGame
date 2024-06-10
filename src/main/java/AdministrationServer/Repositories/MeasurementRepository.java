@@ -46,25 +46,28 @@ public class MeasurementRepository {
         return measurements;
     }
 
-    public List<MeasurementConverted> getNMeasurementsByClientId(String clientId, Integer n) {
+    public synchronized List<MeasurementConverted> getNMeasurementsByClientId(String clientId, Integer n) {
         List<MeasurementConverted> measurementsCopy = getMeasurements();
         measurementsCopy = Lists.reverse(measurementsCopy);
         List<MeasurementConverted> outputCollection = new ArrayList<>();
 
         Integer iterator = 0;
+        System.out.println("Measurement copy " + measurementsCopy);
         for (MeasurementConverted measurement : measurementsCopy) {
             if (measurement.getId().equalsIgnoreCase(clientId)) {
+                System.out.println("Chosen measurement " + measurement.getId());
                 outputCollection.add(measurement);
+                if (iterator >= n - 1) {
+                    break;
+                }
+                iterator++;
             }
-            if (iterator >= n - 1) {
-                break;
-            }
-            iterator++;
+
         }
         return outputCollection;
     }
 
-    public List<MeasurementConverted> getMeasurementsByTimestamp(LocalDateTime timestampT1, LocalDateTime timestampT2) {
+    public synchronized List<MeasurementConverted> getMeasurementsByTimestamp(LocalDateTime timestampT1, LocalDateTime timestampT2) {
         List<MeasurementConverted> measurementsCopy = getMeasurements();
         List<MeasurementConverted> outputCollection = new ArrayList<>();
 
