@@ -243,8 +243,11 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
         } else if (requestMessageType == SEEKER_TAGGING) {
             PlayerState myPlayerState = GlobalState.getStateObject().getMyPlayerState();
             if (myPlayerState == PlayerState.AFTER_ELECTION || myPlayerState == PlayerState.WAITING_FOR_LOCK) {
+
                 GlobalState.getStateObject().setMyPlayerState(PlayerState.TAGGED);
-//                GlobalState.getStateObject().setGameState(GameState.GAME_ENDED);
+
+                GlobalState.getStateObject().addToFinalMapOfPlayers(myId, PlayerState.TAGGED);
+                GlobalState.getStateObject().setGameState(GameState.GAME_ENDED);
             }
             responseObserver.onNext(PlayerMessageResponse.newBuilder()
                     .setId(myId)

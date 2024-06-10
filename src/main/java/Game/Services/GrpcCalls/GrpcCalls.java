@@ -396,6 +396,7 @@ public class GrpcCalls {
 
                 if (responsePlayerState == PlayerState.WINNER || responsePlayerState == PlayerState.TAGGED) {
                     GlobalState.getStateObject().removePlayerFromTagListByPlayerId(response.getId());
+                    GlobalState.getStateObject().addToFinalMapOfPlayers(response.getId(), responsePlayerState);
                 }
             }
 
@@ -420,14 +421,15 @@ public class GrpcCalls {
         // REQUEST_RESOURCE type request
         PlayerMessageRequest request = createSeekerTaggingRequest();
 
-        System.out.println("GRPCalls, seekerTaggingRequestCallAsync: Player: " + request.getId() + " sending SEEKER_TAGGING to " + serverAddress);
+//        System.out.println("GRPCalls, seekerTaggingRequestCallAsync: Player: " + request.getId() + " sending SEEKER_TAGGING to " + serverAddress);
         stub.seeker(request, new StreamObserver<PlayerMessageResponse>() {
             @Override
             public void onNext(PlayerMessageResponse response) {
-                System.out.println("GRPCalls, seekerTaggingRequestCallAsync: Player: " + request.getId() + " to Player " + response.getId());
+
                 PlayerState responsePlayerState = PlayerState.valueOf(response.getPlayerState());
                 System.out.println("GRPCalls, seekerTaggingRequestCallAsync: Player: " + request.getId() + " -> Player " + response.getId() + " state is: " + responsePlayerState);
                 GlobalState.getStateObject().removePlayerFromTagListByPlayerId(response.getId());
+
             }
 
             @Override

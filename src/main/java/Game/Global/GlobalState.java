@@ -8,10 +8,7 @@ import Game.Models.Message;
 import Game.Models.Player;
 import Game.Services.GrpcCalls.GrpcCalls;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -38,6 +35,8 @@ public class GlobalState {
     List<Message> mqttMessagesSent;
     List<PlayerExtended> players;
     List<PlayerExtended> playersToTag;
+
+    Map<String, String> finalMapOfPlayers;
     Role myRole = Role.HIDER;
 
     private GlobalState() {
@@ -52,6 +51,7 @@ public class GlobalState {
         mqttMessagesSent = new ArrayList<>();
         players = new ArrayList<>();
         playersToTag = new ArrayList<>();
+        finalMapOfPlayers = new HashMap<>();
         myPlayerState = PlayerState.AFTER_ELECTION;
 
     }
@@ -62,8 +62,10 @@ public class GlobalState {
         return instance;
     }
 
-    public synchronized List<PlayerExtended> getPlayersToTag() {
-        return new ArrayList<>(playersToTag);
+    public synchronized void addToFinalMapOfPlayers(String playerId, PlayerState playerState) {
+
+        finalMapOfPlayers.put(playerId, String.valueOf(playerState));
+
     }
 
     public synchronized void setPlayersToTag(List<PlayerExtended> playersToTag) {
@@ -82,10 +84,6 @@ public class GlobalState {
         List<PlayerExtended> copiedPlayers = this.getPlayers();
         copiedPlayers.removeIf(player -> player.getId().equals(playerId) || player.getRole().equals(Role.SEEKER));
         return copiedPlayers;
-    }
-
-    public synchronized Integer getHowManyResourceGrantedResponsesGot() {
-        return howManyResourceGrantedResponsesGot;
     }
 
     public synchronized Integer increaseHowManyResourceGrantedResponsesGot() {
@@ -120,7 +118,7 @@ public class GlobalState {
     }
 
     synchronized public void setMyPlayerState(PlayerState playerState) {
-        if (this.myPlayerState != playerState) {
+        if (this.myPlayerState != playerState && playerState.ordinal() >= this.myPlayerState.ordinal()) {
             System.out.println("GlobalState, setMyPlayerState: Player: " + this.playerId + ": OldState: " + this.myPlayerState + " newState: " + playerState);
             for (PlayerExtended player : this.players) {
                 if (player.getId().equals(this.playerId)) {
@@ -149,8 +147,9 @@ public class GlobalState {
             System.out.println("Player: " + playerId + " going to base. Needed time in seconds: " + timeToReachBaseInMilliseconds / 1000.0 + " Start time " + System.currentTimeMillis());
             Thread.sleep(timeToReachBaseInMilliseconds);
             setMyPlayerState(PlayerState.WINNER);
+            addToFinalMapOfPlayers(playerId, PlayerState.WINNER);
             System.out.println("Player: " + playerId + " has just entered the base. End time " + System.currentTimeMillis());
-//            setGameState(GAME_ENDED);
+
         }
 
         if (myPlayerState == PlayerState.TAGGED || myPlayerState == PlayerState.WINNER) {
@@ -159,8 +158,11 @@ public class GlobalState {
                 GrpcCalls.requestResourceResponseCallAsync(playerWaitingForResource.getAddress() + ":" + playerWaitingForResource.getPort());
 
             }
+            setGameState(GAME_ENDED);
+            System.out.println(this.finalMapOfPlayers);
         }
     }
+
 
     private synchronized PlayerExtended findSeekerInList(List<PlayerExtended> players) {
         for (PlayerExtended player : players) {
@@ -190,8 +192,8 @@ public class GlobalState {
     }
 
     public synchronized void removePlayerFromTagListByPlayerId(String playerId) {
-        this.playersToTag.removeIf(player -> player.getId().equals(playerId));
-        System.out.println("List after removal: " + this.playersToTag);
+        this.playersToTag.removeIf(player -> player.getId().equals(playerId) || player.getRole() == Role.SEEKER);
+//        System.out.println("removePlayerFromTagListByPlayerId " + playerId + " List after removal: " + this.playersToTag);
     }
 
 
@@ -200,11 +202,17 @@ public class GlobalState {
         this.setPlayersToTag(getPlayers());
 
         PlayerExtended seekerPlayer = findSeekerInList(playersToTag);
-        removePlayerFromTagListByPlayerId(seekerPlayer.getId());
-        Thread.sleep(10000);
 
+        removePlayerFromTagListByPlayerId(playerId);
 
-        while (!playersToTag.isEmpty()) {
+        Thread.sleep(3000);
+
+        while (true) {
+            if (playersToTag.isEmpty()) {
+                break;
+            }
+            // In case someone greeted and added myPlayer
+            removePlayerFromTagListByPlayerId(playerId);
 
             for (PlayerExtended player : playersToTag) {
                 GrpcCalls.seekerAskingRequestCallAsync(player.getAddress() + ":" + player.getPort());
@@ -219,14 +227,12 @@ public class GlobalState {
                 System.out.println("Seeker: " + playerId + " going to catch Player: " + playerClosestToSeeker.getId() + " Needed time in seconds: " + timeToReachOtherPlayerInMilliseconds / 1000.0 + " Start time " + System.currentTimeMillis());
                 Thread.sleep(timeToReachOtherPlayerInMilliseconds);
                 GrpcCalls.seekerTaggingRequestCallAsync(playerClosestToSeeker.getAddress() + ":" + playerClosestToSeeker.getPort());
-                System.out.println("Player: " + playerId + " has just reached closest Player spot " + System.currentTimeMillis());
+                System.out.println("Player: " + playerId + " has just reached closest Player: " + playerClosestToSeeker.getId() + " spot " + System.currentTimeMillis());
             }
         }
-
         System.out.println("GlobalState, tryCatchingHiders: No more players to catch, ending game! ");
         this.setGameState(GAME_ENDED);
-
-
+        System.out.println(this.finalMapOfPlayers);
     }
 
 

@@ -34,8 +34,8 @@ Game/HeartRate/Simulators/HRSimulator.java
  Game.HeartRate.Simulators.HRSimulator
 AdministrationServer/Schemas/PlayerDeleteRequest.java
  AdministrationServer.Schemas.PlayerDeleteRequest
-Game/HeartRate/SimulatorsImplementation/SharedMeasurementBuffer.java
- Game.HeartRate.SimulatorsImplementation.SharedMeasurementBuffer
+Game/Models/Message.java
+ Game.Models.Message
 AdministrationServer/Services/PlayerService.java
  AdministrationServer.Services.PlayerService
  AdministrationServer.Services.PlayerService$1
@@ -49,8 +49,8 @@ AdministrationClient/Utilities/HTTPUtilities.java
  AdministrationClient.Utilities.HTTPUtilities$1
  AdministrationClient.Utilities.HTTPUtilities$2
  AdministrationClient.Utilities.HTTPUtilities$3
-Game/HeartRate/SimulatorsImplementation/AverageSender.java
- Game.HeartRate.SimulatorsImplementation.AverageSender
+Game/HeartRate/SimulatorsImplementation/SharedMeasurementBuffer.java
+ Game.HeartRate.SimulatorsImplementation.SharedMeasurementBuffer
 Game/GameClasses/PlayerState.java
  Game.GameClasses.PlayerState
 AdministrationServer/Schemas/MeasurementAddRequest.java
@@ -86,8 +86,8 @@ AdministrationServer/Schemas/MeasurementAddResponse.java
  AdministrationServer.Schemas.MeasurementAddResponse
 AdministrationServer/Schemas/PlayerAddRequest.java
  AdministrationServer.Schemas.PlayerAddRequest
-Game/Models/Message.java
- Game.Models.Message
+Game/HeartRate/SimulatorsImplementation/AverageSender.java
+ Game.HeartRate.SimulatorsImplementation.AverageSender
 AdministrationServer/Services/MeasurementService.java
  AdministrationServer.Services.MeasurementService
 proto/Player.java
