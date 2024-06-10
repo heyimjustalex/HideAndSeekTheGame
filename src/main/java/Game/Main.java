@@ -39,12 +39,20 @@ public class Main {
         List<PlayerExtended> playersISendResourceRequestsTo = GlobalState.getStateObject().getPlayers();
         GlobalState.getStateObject().setHowManyRequestResourceISent(playersISendResourceRequestsTo.size() - 2);
         String myPlayerId = GlobalState.getStateObject().getMyPlayerId();
+        boolean iAmTheOnlyHider = true;
         for (PlayerExtended playerExtended : playersISendResourceRequestsTo) {
+
             // You need to check it because somebody might join after you constructed collection
             if (!Objects.equals(playerExtended.getId(), myPlayerId) && playerExtended.getRole() != Role.SEEKER) {
+                iAmTheOnlyHider = false;
                 String serverAddress = playerExtended.getAddress() + ":" + playerExtended.getPort();
                 GrpcCalls.requestResourceCallAsync(serverAddress);
             }
+
+        }
+        // Edge case for 1 Hider in game
+        if (iAmTheOnlyHider) {
+            GlobalState.getStateObject().setMyPlayerState(PlayerState.GOING_TO_BASE);
 
         }
     }

@@ -24,8 +24,6 @@ public class GlobalState {
 
     // This is for Ricart-Agrawala queue when I temporarily deny access to the resource
     BlockingQueue<PlayerExtended> playersThatRequireAccessToResource = new LinkedBlockingQueue<PlayerExtended>();
-
-
     Integer howManyResourceGrantedResponsesGot = 0;
     Integer howManyRequestResourceISent = 0;
     GameState gameState;
@@ -205,8 +203,7 @@ public class GlobalState {
 
         removePlayerFromTagListByPlayerId(playerId);
 
-        Thread.sleep(3000);
-
+        Thread.sleep(4000);
         while (true) {
             if (playersToTag.isEmpty()) {
                 break;
@@ -216,6 +213,7 @@ public class GlobalState {
 
             for (PlayerExtended player : playersToTag) {
                 GrpcCalls.seekerAskingRequestCallAsync(player.getAddress() + ":" + player.getPort());
+                System.out.println("Seeker:  " + playerId + " seekerAskingRequestCallAsync: Trying to tag " + player.getId());
             }
             Thread.sleep(3000);
 
@@ -230,6 +228,7 @@ public class GlobalState {
                 System.out.println("Player: " + playerId + " has just reached closest Player: " + playerClosestToSeeker.getId() + " spot " + System.currentTimeMillis());
             }
         }
+        Thread.sleep(3000);
         System.out.println("GlobalState, tryCatchingHiders: No more players to catch, ending game! ");
         this.setGameState(GAME_ENDED);
         System.out.println(this.finalMapOfPlayers);
@@ -289,19 +288,18 @@ public class GlobalState {
         }
     }
 
-    public synchronized void addPlayersToSeekerTagList(List<PlayerExtended> playersFromGreeting) {
-        for (PlayerExtended p : playersFromGreeting) {
-            boolean exists = false;
-            for (PlayerExtended pe : playersToTag) {
-                if (pe.getId().equals(p.getId())) {
-                    exists = true;
-                    break;
-                }
-            }
-            if (!exists) {
-                playersToTag.add(p);
+    public synchronized void addPlayerToSeekerTagList(PlayerExtended playerFromGreeting) {
+        boolean exists = false;
+        for (PlayerExtended pe : playersToTag) {
+            if (pe.getId().equals(playerFromGreeting.getId())) {
+                exists = true;
+                break;
             }
         }
+        if (!exists) {
+            playersToTag.add(playerFromGreeting);
+        }
+
     }
 
     public synchronized void setPlayer(PlayerExtended playerOverwrite) {

@@ -54,10 +54,14 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
     @Override
     public void greeting(PlayerMessageRequest request, StreamObserver<PlayerMessageResponse> responseObserver) {
         PlayerExtended playerExtended = new PlayerExtended(request.getId(), request.getPort(), request.getAddress(), request.getPosX(), request.getPosY(), request.getRole(), request.getPlayerState());
+
+        // Edge case for greeting when players play the game
+        GlobalState.getStateObject().addPlayerToSeekerTagList(playerExtended);
+
         GlobalState.getStateObject().addPlayer(playerExtended);
         // This is the list of players that will matter when somebody joins after election
         // Right after election list is overwritten by copy of players list
-//        GlobalState.getStateObject().addPlayerToCopyOfPlayersISendResourceRequestsTo(playerExtended);
+//       GlobalState.getStateObject().addPlayerToCopyOfPlayersISendResourceRequestsTo(playerExtended);
 
 
         if (MessageType.valueOf(request.getMessageType()) == MessageType.GREETING) {

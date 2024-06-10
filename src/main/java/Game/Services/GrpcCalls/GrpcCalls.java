@@ -101,6 +101,14 @@ public class GrpcCalls {
                         System.out.println("GRPCalls, greetingCallAsync: Player: " + myId + " I CANCEL LEADER ELECTION, Role set to HIDER because i got OK message from Player: " + response.getId());
                         timeoutFutureHolderElection[0].cancel(true);
                     }
+                } else {
+                    // Late join for ELECTION edge case
+                    GameState myCurrentGameState = GlobalState.getStateObject().getGameState();
+                    GameState responseGameState = GameState.valueOf(response.getGameState());
+                    if (responseGameState.ordinal() > myCurrentGameState.ordinal()) {
+                        System.out.println("GRPCalls, greetingCallAsync: Player: " + myId + ": GREETING_NOT_OK message from Player: " + response.getId() + " changed my state to higher -> " + responseGameState);
+                        GlobalState.getStateObject().setGameState(GameState.ELECTION_STARTED);
+                    }
                 }
             }
 
@@ -387,7 +395,7 @@ public class GrpcCalls {
         // REQUEST_RESOURCE type request
         PlayerMessageRequest request = createSeekerAskingRequest();
 
-        System.out.println("GRPCalls, seekerAskingRequestCallAsync: Player: " + request.getId() + " sending ASKING_SEEKER to " + serverAddress);
+//        System.out.println("GRPCalls, seekerAskingRequestCallAsync: Player: " + request.getId() + " sending ASKING_SEEKER to " + serverAddress);
         stub.seeker(request, new StreamObserver<PlayerMessageResponse>() {
             @Override
             public void onNext(PlayerMessageResponse response) {
