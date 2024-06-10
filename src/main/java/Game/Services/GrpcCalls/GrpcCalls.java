@@ -1,5 +1,7 @@
 package Game.Services.GrpcCalls;
 
+import Game.ConcurrentCollections.CustomConcurrentHashMap;
+import Game.ConcurrentCollections.CustomScheduledFuture;
 import Game.GameClasses.*;
 import Game.Global.GlobalState;
 import io.grpc.ManagedChannel;
@@ -11,7 +13,6 @@ import proto.PlayerServiceGrpc;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.*;
 
 public class GrpcCalls {
     static boolean coordinatorHasBeenCalled = false;
@@ -73,12 +74,14 @@ public class GrpcCalls {
         ManagedChannel channel = ManagedChannelBuilder.forTarget(serverAddress).usePlaintext().build();
         PlayerServiceGrpc.PlayerServiceStub stub = PlayerServiceGrpc.newStub(channel);
         String myId = GlobalState.getStateObject().getMyPlayerId();
-        final ScheduledFuture<?>[] timeoutFutureHolderElection = GlobalState.getStateObject().getTimeoutFutureHolderElection();
+        CustomScheduledFuture timeoutFutureHolderElection = GlobalState.getStateObject().getTimeoutFutureHolderElection();
         PlayerMessageRequest request = createGreetingRequest();
         System.out.println("GRPCalls, greetingCallAsync: Player: " + request.getId() + " current GameState: " + request.getGameState());
+        final CustomConcurrentHashMap<String, Boolean> electionFutureProcessed = GlobalState.getStateObject().getElectionFutureProcessed();
         stub.greeting(request, new StreamObserver<PlayerMessageResponse>() {
             @Override
             public void onNext(PlayerMessageResponse response) {
+
 
                 if (MessageType.valueOf(response.getMessageType()) == MessageType.GREETING_OK) {
                     // Response to the GREETING_OK message
@@ -96,12 +99,14 @@ public class GrpcCalls {
                         System.out.println("GRPCalls, greetingCallAsync: Player: " + myId + ": GREETING_OK message from Player: " + response.getId() + " changed my state to higher -> " + responseGameState);
                         GlobalState.getStateObject().setGameState(responseGameState);
                     }
-
-                    if (timeoutFutureHolderElection[0] != null) {
-                        System.out.println("GRPCalls, greetingCallAsync: Player: " + myId + " I CANCEL LEADER ELECTION, Role set to HIDER because i got OK message from Player: " + response.getId());
-                        timeoutFutureHolderElection[0].cancel(true);
+                    if (electionFutureProcessed.get("ELECTION") != null) {
+                        if (timeoutFutureHolderElection != null) {
+                            System.out.println("GRPCalls, greetingCallAsync: Player: " + myId + " I CANCEL LEADER ELECTION, Role set to HIDER because i got OK message from Player: " + response.getId());
+                            timeoutFutureHolderElection.cancel(true);
+                        }
                     }
                 } else {
+
                     // Late join for ELECTION edge case
                     GameState myCurrentGameState = GlobalState.getStateObject().getGameState();
                     GameState responseGameState = GameState.valueOf(response.getGameState());
@@ -130,10 +135,10 @@ public class GrpcCalls {
         ManagedChannel channel = ManagedChannelBuilder.forTarget(serverAddress).usePlaintext().build();
         PlayerServiceGrpc.PlayerServiceStub stub = PlayerServiceGrpc.newStub(channel);
         String myId = GlobalState.getStateObject().getMyPlayerId();
-        final ScheduledFuture<?>[] timeoutFutureHolderElection = GlobalState.getStateObject().getTimeoutFutureHolderElection();
+        CustomScheduledFuture timeoutFutureHolderElection = GlobalState.getStateObject().getTimeoutFutureHolderElection();
 
-        final ConcurrentHashMap<String, Boolean> electionFutureProcessed = GlobalState.getStateObject().getElectionFutureProcessed();
-        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        final CustomConcurrentHashMap<String, Boolean> electionFutureProcessed = GlobalState.getStateObject().getElectionFutureProcessed();
+
 
         PlayerMessageRequest request = createElectionRequest();
 
@@ -156,7 +161,7 @@ public class GrpcCalls {
 
             if (electionFutureProcessed.putIfAbsent("ELECTION", true) == null) {
                 System.out.println("GRPCalls, electionCallAsync: Player " + myId + ": ELECTION message put to map, and I will become SEEKER in 12 s");
-                timeoutFutureHolderElection[0] = executor.schedule(electionWonTask, 12, TimeUnit.SECONDS);
+                timeoutFutureHolderElection.schedule(electionWonTask, 12000);
             }
         }
         stub.election(request, new StreamObserver<PlayerMessageResponse>() {
@@ -166,9 +171,9 @@ public class GrpcCalls {
                 // You can cancel becoming SEEKER and set your role as hider
                 if (MessageType.valueOf(response.getMessageType()) == MessageType.ELECTION_OK) {
 
-                    if (timeoutFutureHolderElection[0] != null) {
+                    if (timeoutFutureHolderElection != null) {
                         System.out.println("GRPCalls, electionCallAsync: Player: " + myId + " I CANCEL LEADER ELECTION, Role set to HIDER because i got OK message from Player: " + response.getId());
-                        timeoutFutureHolderElection[0].cancel(true);
+                        timeoutFutureHolderElection.cancel(true);
                     }
                     GlobalState.getStateObject().setMyPlayerRole(Role.HIDER);
                 }
@@ -190,10 +195,10 @@ public class GrpcCalls {
     public static void electionSelfCall() throws InterruptedException {
 
         String myId = GlobalState.getStateObject().getMyPlayerId();
-        final ScheduledFuture<?>[] timeoutFutureHolderElection = GlobalState.getStateObject().getTimeoutFutureHolderElection();
+        CustomScheduledFuture timeoutFutureHolderElection = GlobalState.getStateObject().getTimeoutFutureHolderElection();
 
-        final ConcurrentHashMap<String, Boolean> electionFutureProcessed = GlobalState.getStateObject().getElectionFutureProcessed();
-        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        final CustomConcurrentHashMap<String, Boolean> electionFutureProcessed = GlobalState.getStateObject().getElectionFutureProcessed();
+
 
         Runnable electionWonTask = () -> {
             GlobalState.getStateObject().setMyPlayerRole(Role.SEEKER);
@@ -214,7 +219,7 @@ public class GrpcCalls {
         if (GlobalState.getStateObject().getGameState().ordinal() < GameState.ELECTION_MESSAGES_SENT.ordinal()) {
             if (electionFutureProcessed.putIfAbsent("ELECTION", true) == null) {
                 System.out.println("GRPCalls, electionSelfCallAsync: Player " + myId + ": ELECTION message put to map, and I will become SEEKER in 12 s");
-                timeoutFutureHolderElection[0] = executor.schedule(electionWonTask, 12, TimeUnit.SECONDS);
+                timeoutFutureHolderElection.schedule(electionWonTask, 12000);
             }
         }
 

@@ -1,5 +1,8 @@
 package Game.Global;
 
+import Game.ConcurrentCollections.CustomConcurrentHashMap;
+import Game.ConcurrentCollections.CustomConcurrentQueue;
+import Game.ConcurrentCollections.CustomScheduledFuture;
 import Game.GameClasses.GameState;
 import Game.GameClasses.PlayerExtended;
 import Game.GameClasses.PlayerState;
@@ -9,21 +12,17 @@ import Game.Models.Player;
 import Game.Services.GrpcCalls.GrpcCalls;
 
 import java.util.*;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ScheduledFuture;
 
 import static Game.GameClasses.GameState.*;
 
 public class GlobalState {
     private static GlobalState instance;
     Long myTimestampResourceRequestsSent = null;
-    ConcurrentHashMap<String, Boolean> electionFutureProcessed = new ConcurrentHashMap<>();
-    ScheduledFuture<?>[] timeoutFutureHolderElection = new ScheduledFuture<?>[1];
+    CustomConcurrentHashMap<String, Boolean> electionFutureProcessed = new CustomConcurrentHashMap<>();
+    CustomScheduledFuture timeoutFutureHolderElection = new CustomScheduledFuture();
 
     // This is for Ricart-Agrawala queue when I temporarily deny access to the resource
-    BlockingQueue<PlayerExtended> playersThatRequireAccessToResource = new LinkedBlockingQueue<PlayerExtended>();
+    CustomConcurrentQueue<PlayerExtended> playersThatRequireAccessToResource = new CustomConcurrentQueue<>();
     Integer howManyResourceGrantedResponsesGot = 0;
     Integer howManyRequestResourceISent = 0;
     GameState gameState;
@@ -150,15 +149,18 @@ public class GlobalState {
 
         }
 
+
         if (myPlayerState == PlayerState.TAGGED || myPlayerState == PlayerState.WINNER) {
             while (!playersThatRequireAccessToResource.isEmpty()) {
                 PlayerExtended playerWaitingForResource = playersThatRequireAccessToResource.poll();
                 GrpcCalls.requestResourceResponseCallAsync(playerWaitingForResource.getAddress() + ":" + playerWaitingForResource.getPort());
 
             }
-            setGameState(GAME_ENDED);
+
             System.out.println(this.finalMapOfPlayers);
+            setGameState(GAME_ENDED);
         }
+
     }
 
 
@@ -191,7 +193,6 @@ public class GlobalState {
 
     public synchronized void removePlayerFromTagListByPlayerId(String playerId) {
         this.playersToTag.removeIf(player -> player.getId().equals(playerId) || player.getRole() == Role.SEEKER);
-//        System.out.println("removePlayerFromTagListByPlayerId " + playerId + " List after removal: " + this.playersToTag);
     }
 
 
@@ -348,29 +349,25 @@ public class GlobalState {
         return new ArrayList<>(this.players);
     }
 
-    public synchronized GameState waitUntilElectionStarts() throws InterruptedException {
+    public synchronized void waitUntilElectionStarts() throws InterruptedException {
         System.out.println("GlobalState: waitUntilElectionStarts");
         while (this.gameState.equals(BEFORE_ELECTION)) {
             wait();
         }
         System.out.println("GlobalState: waitUntilElectionStarts: Changed game state to " + this.gameState);
-        return this.gameState;
     }
 
-    public synchronized GameState waitUntilElectionEnds() throws InterruptedException {
+    public synchronized void waitUntilElectionEnds() throws InterruptedException {
         System.out.println("GlobalState: waitUntilElectionEnds");
         while (!this.gameState.equals(ELECTION_ENDED)) {
             wait();
         }
         System.out.println("GlobalState: waitUntilElectionEnds: Changed game state to " + this.gameState);
 
-        // Copy the list of players I will send resource requests to
-//        this.setCopyOfPlayersISendResourceRequestsTo();
 
         // Print for no coordinator message edge case for 2 players
         this.printPlayersInformation();
 
-        return this.gameState;
     }
 
     public synchronized void messageAdd(Message message) {
@@ -382,16 +379,17 @@ public class GlobalState {
         notifyAll();
     }
 
-    public synchronized ConcurrentHashMap<String, Boolean> getElectionFutureProcessed() {
+    public synchronized CustomConcurrentHashMap<String, Boolean> getElectionFutureProcessed() {
         return electionFutureProcessed;
     }
 
-    public synchronized ScheduledFuture<?>[] getTimeoutFutureHolderElection() {
+    public synchronized CustomScheduledFuture getTimeoutFutureHolderElection() {
         return timeoutFutureHolderElection;
     }
 
     public void printPlayersInformation() {
         System.out.println("Players information: ");
+        List<PlayerExtended> players = this.getPlayers();
         for (PlayerExtended player : players) {
             System.out.println(player.getId() + " -> " + player.getAddress() + ":" + player.getPort() + " | PlayerRole:" + player.getRole() + " | PlayerState: " + player.getPlayerState() + " | Distance: " + player.getDistance() + " | pos_x: " + player.getPos_x() + "| pos_y: " + player.getPos_y());
         }

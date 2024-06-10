@@ -1,5 +1,7 @@
 package Game.Services;
 
+import Game.ConcurrentCollections.CustomConcurrentHashMap;
+import Game.ConcurrentCollections.CustomScheduledFuture;
 import Game.GameClasses.*;
 import Game.Global.GlobalState;
 import Game.Utilities.Other;
@@ -9,7 +11,6 @@ import proto.Player.PlayerMessageResponse;
 import proto.PlayerServiceGrpc.PlayerServiceImplBase;
 
 import java.util.Objects;
-import java.util.concurrent.*;
 
 import static Game.GameClasses.MessageType.*;
 import static Game.Services.GrpcCalls.GrpcCalls.coordinatorCallAsync;
@@ -78,17 +79,24 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
                 if (myDistance > otherPlayerDistance || (myDistance == otherPlayerDistance && request.getId().compareToIgnoreCase(myId) > 0)) {
                     System.out.println("PlayerServiceImpl: Player " + myId + " I got GREETING and I'm in ELECTION_MESSAGES_SENT " + request.getId() + " so I cancel my LEADER");
 
-                    final ScheduledFuture<?>[] timeoutFutureHolderElection = GlobalState.getStateObject().getTimeoutFutureHolderElection();
-                    if (timeoutFutureHolderElection[0] != null) {
-                        timeoutFutureHolderElection[0].cancel(true);
+                    final CustomScheduledFuture timeoutFutureHolderElection = GlobalState.getStateObject().getTimeoutFutureHolderElection();
+                    if (timeoutFutureHolderElection != null) {
+//                        System.out.println("Player: "+myId +" cancelling LEADER election");
+                        timeoutFutureHolderElection.cancel(true);
                     }
+
                     responseObserver.onNext(createGreetingNotOkMessage());
                     responseObserver.onCompleted();
+                } else {
+                    responseObserver.onNext(createGreetingOkMessage());
+                    responseObserver.onCompleted();
                 }
+
             } else {
                 responseObserver.onNext(createGreetingOkMessage());
                 responseObserver.onCompleted();
             }
+
 
         }
     }
@@ -97,12 +105,12 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
     @Override
     public void election(PlayerMessageRequest request, StreamObserver<PlayerMessageResponse> responseObserver) {
         GameState myCurrentGameState = GlobalState.getStateObject().getGameState();
-        final ConcurrentHashMap<String, Boolean> electionFutureProcessed = GlobalState.getStateObject().getElectionFutureProcessed();
-        final ScheduledFuture<?>[] timeoutFutureHolderElection = GlobalState.getStateObject().getTimeoutFutureHolderElection();
+        final CustomConcurrentHashMap<String, Boolean> electionFutureProcessed = GlobalState.getStateObject().getElectionFutureProcessed();
+        CustomScheduledFuture timeoutFutureHolderElection = GlobalState.getStateObject().getTimeoutFutureHolderElection();
 
         if (MessageType.valueOf(request.getMessageType()) == MessageType.ELECTION) {
             System.out.println("PlayerServiceImpl: Player: " + myId + ": Got an ELECTION message from Player: " + request.getId());
-            ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+
             GameState requestGameState = GameState.valueOf(request.getGameState());
 
             // If I didn't set my state to election, I do that by getting the newest state from other players
@@ -137,7 +145,7 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
             // Schedule the task if not already processed
             if (electionFutureProcessed.putIfAbsent("ELECTION", true) == null) {
                 System.out.println("PlayerServiceImpl: Player: " + myId + " ELECTION message put to map, and I will become SEEKER in 12s");
-                timeoutFutureHolderElection[0] = executor.schedule(electionTask, 12, TimeUnit.SECONDS);
+                timeoutFutureHolderElection.schedule(electionTask, 12000);
             }
 
             if (myDistance < otherPlayerDistance || (myDistance == otherPlayerDistance && myId.compareToIgnoreCase(request.getId()) > 0)) {
