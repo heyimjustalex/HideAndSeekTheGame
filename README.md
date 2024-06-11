@@ -30,3 +30,6 @@
 - **Administration Server** - Centralized server for player management and health monitoring.
 - **Administration Client** - Interface for game management and health status monitoring.
 - **MQTT Broker** - For communication of game status and messages.
+
+
+![image](https://github.com/heyimjustalex/HideAndSeekTheGame/assets/21158649/90915b49-8172-44a4-a18e-b12d870f57bc)
