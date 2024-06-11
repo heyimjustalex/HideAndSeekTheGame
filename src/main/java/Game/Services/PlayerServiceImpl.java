@@ -58,12 +58,7 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
 
         // Edge case for greeting when players play the game
         GlobalState.getStateObject().addPlayerToSeekerTagList(playerExtended);
-
         GlobalState.getStateObject().addPlayer(playerExtended);
-        // This is the list of players that will matter when somebody joins after election
-        // Right after election list is overwritten by copy of players list
-//       GlobalState.getStateObject().addPlayerToCopyOfPlayersISendResourceRequestsTo(playerExtended);
-
 
         if (MessageType.valueOf(request.getMessageType()) == MessageType.GREETING) {
             // I got a greeting message
