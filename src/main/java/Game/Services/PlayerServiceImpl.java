@@ -37,7 +37,7 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
     }
 
     private PlayerMessageResponse createGreetingNotOkMessage() {
-        // I'm adding the player I got
+
         PlayerState myCurrentPlayerState = GlobalState.getStateObject().getMyPlayer().getPlayerState();
         PlayerExtended myPlayer = GlobalState.getStateObject().getMyPlayer();
         GameState myCurrentGameState = GlobalState.getStateObject().getGameState();
@@ -48,7 +48,8 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
                 .setPosY(myPlayer.getPos_y().toString())
                 .setGameState(myCurrentGameState.toString())
                 .setPlayerState(myCurrentPlayerState.toString())
-                .setMessageType(GREETING.toString())
+                //change
+                .setMessageType(ACK.toString())
                 .build();
     }
 
@@ -65,7 +66,6 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
             GameState myCurrentGameState = GlobalState.getStateObject().getGameState();
             System.out.println("PlayerServiceImpl, greeting -> Player " + myId + ": GREETING message from player " + request.getId() + " myCurrentGameState: " + myCurrentGameState.name());
 
-
             // If the messages have already been sent
             if (myCurrentGameState == GameState.ELECTION_MESSAGES_SENT || myCurrentGameState == GameState.ELECTION_STARTED) {
                 double myDistance = GlobalState.getStateObject().getMyDistance();
@@ -76,23 +76,22 @@ public class PlayerServiceImpl extends PlayerServiceImplBase {
 
                     final CustomScheduledFuture timeoutFutureHolderElection = GlobalState.getStateObject().getTimeoutFutureHolderElection();
                     if (timeoutFutureHolderElection != null) {
-//                        System.out.println("Player: "+myId +" cancelling LEADER election");
                         timeoutFutureHolderElection.cancel(true);
                     }
-
+                    // Just send ACK
                     responseObserver.onNext(createGreetingNotOkMessage());
-                    responseObserver.onCompleted();
+
                 } else {
                     responseObserver.onNext(createGreetingOkMessage());
-                    responseObserver.onCompleted();
+
                 }
 
             } else {
                 responseObserver.onNext(createGreetingOkMessage());
-                responseObserver.onCompleted();
+
             }
 
-
+            responseObserver.onCompleted();
         }
     }
 

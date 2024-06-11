@@ -23,8 +23,8 @@ proto/Player.java
  proto.Player$PlayerMessageResponse$1
  proto.Player$PlayerMessageResponse$Builder
  proto.Player$PlayerMessageResponseOrBuilder
-Game/Global/GlobalState.java
- Game.Global.GlobalState
+AdministrationServer/Services/MeasurementService.java
+ AdministrationServer.Services.MeasurementService
 Game/HeartRate/SimulatorsImplementation/SharedAverageBuffer.java
  Game.HeartRate.SimulatorsImplementation.SharedAverageBuffer
 Game/Models/Message.java
@@ -58,8 +58,8 @@ AdministrationServer/Schemas/MeasurementAddResponse.java
  AdministrationServer.Schemas.MeasurementAddResponse
 AdministrationServer/Schemas/PlayerAddRequest.java
  AdministrationServer.Schemas.PlayerAddRequest
-Game/Main.java
- Game.Main
+AdministrationServer/Repositories/MeasurementRepository.java
+ AdministrationServer.Repositories.MeasurementRepository
 Game/HeartRate/SimulatorsImplementation/SharedMeasurementBuffer.java
  Game.HeartRate.SimulatorsImplementation.SharedMeasurementBuffer
 AdministrationServer/Main.java
@@ -127,7 +127,7 @@ Game/Services/GrpcCalls/GrpcCalls.java
  Game.Services.GrpcCalls.GrpcCalls$5
  Game.Services.GrpcCalls.GrpcCalls$6
  Game.Services.GrpcCalls.GrpcCalls$7
-AdministrationServer/Services/MeasurementService.java
- AdministrationServer.Services.MeasurementService
-AdministrationServer/Repositories/MeasurementRepository.java
- AdministrationServer.Repositories.MeasurementRepository
+Game/Global/GlobalState.java
+ Game.Global.GlobalState
+Game/Main.java
+ Game.Main
