@@ -1,0 +1,199 @@
+{
+	"info": {
+		"_postman_id": "3bdd9ab4-adf5-435f-8815-3c7ef744143b",
+		"name": "HideAndSeekREST",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31106613"
+	},
+	"item": [
+		{
+			"name": "PlayerDelete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"xtesdtssdaa2\",\r\n    \"port\":\"2222\",\r\n    \"address\":\"localhost\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:1337/players/delete",
+					"host": [
+						"localhost"
+					],
+					"port": "1337",
+					"path": [
+						"players",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PlayerAdd",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"xtesdtssdaaa2\",\r\n    \"port\":\"2222\",\r\n    \"address\":\"localhost\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:1337/players/add",
+					"host": [
+						"localhost"
+					],
+					"port": "1337",
+					"path": [
+						"players",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Measurements",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:1337/players/measurements",
+					"host": [
+						"localhost"
+					],
+					"port": "1337",
+					"path": [
+						"players",
+						"measurements"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MeasurementsByNAndClientId",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:1337/players/measurements",
+					"host": [
+						"localhost"
+					],
+					"port": "1337",
+					"path": [
+						"players",
+						"measurements"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MeasurementsByTimestamp",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"measurements\":[]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:1337/players/measurements?t1=2024:05:21:15:40:42:589&t2=2024:05:21:15:40:52:638",
+					"host": [
+						"localhost"
+					],
+					"port": "1337",
+					"path": [
+						"players",
+						"measurements"
+					],
+					"query": [
+						{
+							"key": "t1",
+							"value": "2024:05:21:15:40:42:589"
+						},
+						{
+							"key": "t2",
+							"value": "2024:05:21:15:40:52:638"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Players",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:1337/players",
+					"host": [
+						"localhost"
+					],
+					"port": "1337",
+					"path": [
+						"players"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
