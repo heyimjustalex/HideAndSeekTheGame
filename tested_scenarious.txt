@@ -1,0 +1,44 @@
+Scenario 0 (checked)
+- Player 1 joins
+- Game starts
+- Becomes SEEKER
+- Found everybody (nobody)
+- Game Ends
+
+Scenario 1 (CHECKED):
+- Player 1 joins
+- Election starts
+- Player 1 wants to be SEEKER
+- Player 2 with higher priority joins
+- Player 1 cancels being SEEKER (becomes HIDER) and Player 2 becomes SEEKER
+
+Scenario 2 (CHECKED):
+- Player 1 joins
+- Election starts
+- Player 1 wants to be SEEKER
+- Player 2 with lower priority joins
+- Player 1 continues election as SEEKER and Player 2 becomes HIDER
+
+Scenario 3 (CHECKED):
+- Player 1 joins
+- Election starts
+- Player 1 becomes SEEKER
+- Player 2 joins and becomes HIDER
+- They play
+
+Scenario 4 (CHECKED):
+- 4 players :
+- Player 1,2,3 joins
+- Election starts
+- Player 4 with lower priority joins during election
+- Player 4 becomes SEEKER
+- They play
+
+Scenario 5 (CHECKED):
+- 4 players :
+- Player 1,2,3 joins
+- Election starts
+- Election ends
+- Players start requesting resource
+- Player 4 with lower priority joins during election
+- Player 4 becomes HIDER
