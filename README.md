@@ -32,7 +32,17 @@
 - **Administration Client** - Interface for game management and health status monitoring.
 - **MQTT Broker** - For communication of game status and messages.
 
-![image](https://github.com/heyimjustalex/HideAndSeekTheGame/assets/21158649/90915b49-8172-44a4-a18e-b12d870f57bc)
+![image](https://github.com/heyimjustalex/HideAndSeekTheGame/assets/21158649/90915b49-8172-44a4-a18e-b12d870f57bc) <br/>
+
+## REST Administration Server architecture
+
+- **Controllers** - REST endpoints defined
+- **Services** - business logic
+- **Repositories** - Data access layer with relevant collections
+- **Models** - Model classes for serialization and deserialization of Player and Measurement
+- **Schemas** - Model classes for HTTP requests and responses
+
+![image](https://github.com/heyimjustalex/HideAndSeekTheGame/assets/21158649/8426260a-75e1-4906-bb6e-c3dfcb1fe55a) <br/>
 
 ## How do the Game/Player processes work?
 
@@ -67,6 +77,10 @@ Players make decisions based on their state, state of their game and the message
      - Else (if I got ACK): <br/>
        - Just set the ELECTION_STARTED, so I start the election process <br/>
 
+![image](https://github.com/heyimjustalex/HideAndSeekTheGame/assets/21158649/ff34a70f-0ae8-4b0c-8798-e06fb84b6aa3) <br/>
+
+![image](https://github.com/heyimjustalex/HideAndSeekTheGame/assets/21158649/1035b88c-fdac-4175-94b7-224d1c4ea17a) <br/>
+
 **Stage 2 - election with Bully**
 
 - If you are the only player just elect yourself the Seeker, set gameState to ELECTION_ENDED 
@@ -83,7 +97,14 @@ Players make decisions based on their state, state of their game and the message
   - If you have become SEEKER then send COORDINATOR messages and set your role to SEEKER and gameState ELECTION_ENDED <br/>
   - If you got COORDINATOR message then set the player you got it from in your local collection to SEEKER, set yourself to HIDER and set gameState to ELECTION_ENDED <br/>
 
-**Stage 3 - Mutual exclusion - Ricart & Agrawala algorithm (total order assumption)**
+![image](https://github.com/heyimjustalex/HideAndSeekTheGame/assets/21158649/53478039-1198-4722-a6e6-517d4575cdec) <br/>
+![image](https://github.com/heyimjustalex/HideAndSeekTheGame/assets/21158649/27e0892b-e1f0-44c3-96c8-268e026f0b3b) <br/>
+![image](https://github.com/heyimjustalex/HideAndSeekTheGame/assets/21158649/f163dff5-9a0d-42e4-95ac-aa35fff88f4c) <br />
+
+
+
+### Mutual-exclusion algorithm Ricart & Agrawala algorithm with modifications (total order assumption)*
+**Stage 3 - Process cooperation and playing**
 
 - If you are HIDER:  <br/>
     - Send resource request to all HIDERS <br/>
@@ -91,6 +112,11 @@ Players make decisions based on their state, state of their game and the message
     - Else wait and answer other with your gRPC according to this logic: <br/>
       - If coming request has lower timestamp than my request's timestamp, then send ACCESS_GRANTED <br/>
       - Else, put request in queue and when you finish working on the shared resource (exit the base), send responses to all of the waiting HIDERS <br/>
+      
+![image](https://github.com/heyimjustalex/HideAndSeekTheGame/assets/21158649/d27d8c83-0501-4c56-98f0-45b10badd263) <br/>
+![image](https://github.com/heyimjustalex/HideAndSeekTheGame/assets/21158649/639b1ee1-f04f-44e2-aeb2-832f7d908484)  <br/>
+![image](https://github.com/heyimjustalex/HideAndSeekTheGame/assets/21158649/06a74cf5-3c41-42db-8950-75a54598fce1) <br/>
+![image](https://github.com/heyimjustalex/HideAndSeekTheGame/assets/21158649/343fa527-a7d2-4144-a882-30b4fd55101c) <br/>
 
 - If you are SEEKER: <br/>
     - You don't take part in mutual exclusion algorithm <br/>
@@ -100,3 +126,7 @@ Players make decisions based on their state, state of their game and the message
       - Else he responds with TAGGED state and the Seeker eliminated the hider <br/>
     - You try all of these steps until all player have either WINNER or TAGGED states (playerState) <br/>
 - The game ends
+
+![image](https://github.com/heyimjustalex/HideAndSeekTheGame/assets/21158649/740b87c3-9449-4430-b285-a41ed0346b0d)<br/>
+![image](https://github.com/heyimjustalex/HideAndSeekTheGame/assets/21158649/568f34ea-6c2e-4874-af6e-db6811ac67d3)<br/>
+
