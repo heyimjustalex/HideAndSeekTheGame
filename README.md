@@ -52,20 +52,20 @@ Players make decisions based on their state, state of their game and the message
 
 **Stage 1 - Greeting (prerequisites)**
 
-- Players join, add their data to AdministrationServer which responds by giving them data of all players previously registered
-- Player greets all the players (GREETING) he was given information
-- Players examine their state, add the Player if they didn't know about him respond accordingly to this logic (Player that is greeted perspective): <br/>
+- Players join, add their data to AdministrationServer, which - in case of non-confilicting ids - responds by giving them data of all players (both previously registered and the current one, along with an assigned position on the grid)
+- Player greets all the players (GREETING) he was given information about
+- Players examine their state, add the Player if they didn't know about him, and respond accordingly to the following logic (Player that is greeted perspective): <br/>
      - If I have started election process <br/>
-       - Compare election priorities, and cancel election if you are trying to be the Seeker. Then send ACK. <br/>
-       - Send GREETING_OK <br/>
+       - Compare election priorities and if my election priority is lower, then cancel my election if I am trying to be the Seeker. Then send ACK. (edge case) <br/>
+       - Else send GREETING_OK <br/>
      - Else just send GREETING_OK <br/>
-- Player that started the greeting reacts to the responses:
+- Player that started the greeting reacts to the responses: <br/>
      - If I got GREETING_OK <br/>
        - If ELECTION_ENDED just modify one of the players to be the Seeker <br/>
-       - Set any higher state than mine <br/>
-       - Cancel trying to be Seeker in case other party has election going on and his priority is higher (edge case when one party greeted and I set the GameState to for ex. Election Started) <br/>
-     - Else: <br/>
-       - Just set the ELECTION_STARTED, so I take part in the election <br/>
+       - Set any higher gameState than mine <br/>
+       - Cancel trying to be Seeker in case other party has election going on and his priority is higher  <br/>
+     - Else (if I got ACK): <br/>
+       - Just set the ELECTION_STARTED, so I start the election process <br/>
 
 **Stage 2 - election with Bully**
 
