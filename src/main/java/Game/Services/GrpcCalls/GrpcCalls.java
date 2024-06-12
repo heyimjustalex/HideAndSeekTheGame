@@ -139,6 +139,10 @@ public class GrpcCalls {
         final CustomConcurrentHashMap<String, Boolean> electionFutureProcessed = GlobalState.getStateObject().getElectionFutureProcessed();
         PlayerMessageRequest request = createElectionRequest();
 
+        if (GlobalState.getStateObject().getGameState().ordinal() < GameState.ELECTION_MESSAGES_SENT.ordinal()) {
+            GlobalState.getStateObject().setGameState(GameState.ELECTION_MESSAGES_SENT);
+        }
+
         stub.election(request, new StreamObserver<PlayerMessageResponse>() {
             @Override
             public void onNext(PlayerMessageResponse response) {
@@ -146,7 +150,7 @@ public class GrpcCalls {
                 // You can cancel becoming SEEKER and set your role as hider
                 if (MessageType.valueOf(response.getMessageType()) == MessageType.ELECTION_OK) {
 
-                    if (timeoutFutureHolderElection != null) {
+                    if (electionFutureProcessed.putIfAbsent("ELECTION", true) != null) {
                         System.out.println("GRPCalls, electionCallAsync: Player: " + myId + " I CANCEL LEADER ELECTION, Role set to HIDER because i got OK message from Player: " + response.getId());
                         timeoutFutureHolderElection.cancel(true);
                     }
@@ -384,7 +388,10 @@ public class GrpcCalls {
                 PlayerState responsePlayerState = PlayerState.valueOf(response.getPlayerState());
                 System.out.println("GRPCalls, seekerAskingRequestCallAsync: Player: " + request.getId() + " to Player " + response.getId() + " state " + responsePlayerState);
 
-                if (responsePlayerState == PlayerState.WINNER || responsePlayerState == PlayerState.TAGGED) {
+                if (responsePlayerState == PlayerState.GOING_TO_BASE) {
+                    GlobalState.getStateObject().removePlayerFromTagListByPlayerId(response.getId());
+                    GlobalState.getStateObject().addToFinalMapOfPlayers(response.getId(), PlayerState.WINNER);
+                } else if (responsePlayerState == PlayerState.WINNER || responsePlayerState == PlayerState.TAGGED) {
                     GlobalState.getStateObject().removePlayerFromTagListByPlayerId(response.getId());
                     GlobalState.getStateObject().addToFinalMapOfPlayers(response.getId(), responsePlayerState);
                 }
