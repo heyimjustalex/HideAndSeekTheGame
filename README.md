@@ -69,10 +69,10 @@ Players make decisions based on their state, state of their game and the message
 
 **Stage 2 - election with Bully**
 
-- If you are the only player just elect yourself a Seeker, set gameState to ELECTION_ENDED <br/>
+- If you are the only player just elect yourself the Seeker, set gameState to ELECTION_ENDED 
 - Else <br/>
-    - Place Future that in 12s will make you Seeker and you will send COORDINATOR messages to all of the players (edge case if I missed other's election messages and other will cancel when greeting with you) <br/>
-    - Call gRPC election service of all players sending them ELECTION and your distnace/priority <br/>
+    - Place Future that in 12s will make you the Seeker and you will send COORDINATOR messages to all of the players (edge case if I missed other's election messages and other will cancel when greeting) <br/>
+    - Call gRPC election service of the players with higher priority sending them ELECTION and your distnace/priority <br/>
     - If you get ELECTION_OK message then cancel election and set role to HIDER <br/>
 
   - If you got on your gRPC service election message then: <br/>
@@ -88,14 +88,14 @@ Players make decisions based on their state, state of their game and the message
 - If you are HIDER:  <br/>
     - Send resource request to all HIDERS <br/>
     - If you get as many ACCESS_GRANTED as you have sent requests, then try going to Base (shared resource) <br/>
-    - Else wait and answer other with your gRPC service with this logic: <br/>
+    - Else wait and answer other with your gRPC according to this logic: <br/>
       - If coming request has lower timestamp than my request's timestamp, then send ACCESS_GRANTED <br/>
-      - Else, put request in queue and when you get ACCESS_GRANTED, send responses to all of the waiting HIDERS <br/>
+      - Else, put request in queue and when you finish working on the shared resource (exit the base), send responses to all of the waiting HIDERS <br/>
 
 - If you are SEEKER: <br/>
     - You don't take part in mutual exclusion algorithm <br/>
     - Instead you send SEEKER_ASKING message to get to know the state of the HIDERS <br/>
-    - You choose the one that is closest to you and when you reach his position you try to send him SEEKER_TAGGING <br/>
+    - You choose the one that is available (not TAGGED and not WINNER) and closest to you and when you reach his position you try to send him SEEKER_TAGGING <br/>
       - If he moved by this time, then he responds with WINNER state <br/>
       - Else he responds with TAGGED state and the Seeker eliminated the hider <br/>
     - You try all of these steps until all player have either WINNER or TAGGED states (playerState) <br/>
