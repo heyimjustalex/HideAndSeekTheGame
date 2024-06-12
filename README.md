@@ -75,24 +75,24 @@ Players make decisions based on their state, state of their game and the message
     - Call gRPC election service of all players sending them ELECTION and your distnace/priority <br/>
     - If you get ELECTION_OK message then cancel election and set role to HIDER <br/>
 
-- If you got on your gRPC service election message then:
-    - Check if you have newest state in case you lost MQTT message <br/>
-    - Place Future that in 12s will make you Seeker and you will send COORDINATOR messages <br/>
-    - If your priority is higher then respond with ELECTION_OK to the other party <br/>
-    - Else, cancel your election <br/>
-- If you have become SEEKER then send COORDINATOR messages and set your role to SEEKER and gameState ELECTION_ENDED <br/>
-- If you got COORDINATOR message then set the player you got it from in your local collection to SEEKER, set yourself to HIDER and set gameState to ELECTION_ENDED <br/>
+  - If you got on your gRPC service election message then: <br/>
+      - Check if you have newest state in case you lost MQTT message <br/>
+      - Place Future that in 12s will make you Seeker and you will send COORDINATOR messages <br/>
+      - If your priority is higher then respond with ELECTION_OK to the other party <br/>
+      - Else, cancel your election <br/>
+  - If you have become SEEKER then send COORDINATOR messages and set your role to SEEKER and gameState ELECTION_ENDED <br/>
+  - If you got COORDINATOR message then set the player you got it from in your local collection to SEEKER, set yourself to HIDER and set gameState to ELECTION_ENDED <br/>
 
 **Stage 3 - Mutual exclusion - Ricart & Agrawala algorithm (total order assumption)**
 
-- If you are HIDER
+- If you are HIDER:  <br/>
     - Send resource request to all HIDERS <br/>
     - If you get as many ACCESS_GRANTED as you have sent requests, then try going to Base (shared resource) <br/>
     - Else wait and answer other with your gRPC service with this logic: <br/>
       - If coming request has lower timestamp than my request's timestamp, then send ACCESS_GRANTED <br/>
       - Else, put request in queue and when you get ACCESS_GRANTED, send responses to all of the waiting HIDERS <br/>
 
-- If you are SEEKER:
+- If you are SEEKER: <br/>
     - You don't take part in mutual exclusion algorithm <br/>
     - Instead you send SEEKER_ASKING message to get to know the state of the HIDERS <br/>
     - You choose the one that is closest to you and when you reach his position you try to send him SEEKER_TAGGING <br/>
